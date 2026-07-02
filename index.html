@@ -2126,8 +2126,13 @@ footer {
   .about-social-btn-col { padding-top: 0; }
   .why-grid { grid-template-columns: 1fr; }
   .why-card { border-right: none; }
-  .cps-fc-grid { grid-template-columns: 1fr; }
-  .cps-fc-card { border-right: none; }
+  .cps-fc-grid,
+  .cps-fc-grid[data-cols="2"],
+  .cps-fc-grid[data-cols="3"],
+  .cps-fc-grid[data-cols="4"] { grid-template-columns: 1fr; }
+  .cps-fc-card,
+  .cps-fc-grid[data-cols="3"] .cps-fc-card:nth-child(2n),
+  .cps-fc-grid[data-cols="4"] .cps-fc-card:nth-child(2n) { border-right: none; }
   .cps-fc-header { flex-direction: column; }
   .cps-fc-badge { display: none; }
   .services-grid .service-card,
