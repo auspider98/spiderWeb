@@ -1993,6 +1993,14 @@ function setVal(id, val) {
   const el = document.getElementById(id);
   if (el) el.value = val != null ? val : '';
 }
+// Cleans a collected field value: strips accidental leading blank lines and
+// trailing whitespace (the useful part of .trim()), but preserves intentional
+// leading spaces on real content — e.g. "  - indented item" — so formatBody()
+// can render them as indentation instead of them being silently deleted here.
+function cleanFieldValue(val) {
+  if (typeof val !== 'string') return val;
+  return val.replace(/^[\r\n]+/, '').replace(/\s+$/, '');
+}
 function getVal(id) {
   const el = document.getElementById(id);
   return el ? el.value : '';
@@ -2902,9 +2910,9 @@ function collectData() {
   DATA.pageHeaders = {};
   phPages.forEach(p => {
     DATA.pageHeaders[p] = {};
-    phFields.forEach(f => { const el = document.getElementById('ph_'+p+'_'+f); DATA.pageHeaders[p][f] = el ? el.value.trim() : ''; });
+    phFields.forEach(f => { const el = document.getElementById('ph_'+p+'_'+f); DATA.pageHeaders[p][f] = el ? cleanFieldValue(el.value) : ''; });
   });
-  DATA.pageHeaders.contact = { label: (document.getElementById('ph_contact_label')||{value:''}).value.trim() };
+  DATA.pageHeaders.contact = { label: cleanFieldValue((document.getElementById('ph_contact_label')||{value:''}).value) };
   DATA.locations = collectLocations();
   // Mirror first location into legacy flat fields for backwards compat
   const loc0 = (DATA.locations && DATA.locations[0]) || {};
@@ -3046,7 +3054,7 @@ function collectArray(listId, fields) {
     fields.forEach(f => {
       const el = item.querySelector(`[data-field="${f}"]`);
       if (!el) { obj[f] = ''; return; }
-      obj[f] = el.type === 'checkbox' ? el.checked : el.value.trim();
+      obj[f] = el.type === 'checkbox' ? el.checked : cleanFieldValue(el.value);
     });
     return obj;
   });
@@ -3058,7 +3066,7 @@ function collectNumberedArray(listId, fields) {
 function collectSingleArray(listId, field) {
   const list = document.getElementById(listId);
   if (!list) return [];
-  return Array.from(list.querySelectorAll(`[data-field="${field}"]`)).map(el => el.value.trim()).filter(Boolean);
+  return Array.from(list.querySelectorAll(`[data-field="${field}"]`)).map(el => el.value.replace(/\s+$/,'')).filter(s => s.trim().length > 0);
 }
 
 /* =============================================
@@ -3294,8 +3302,8 @@ function collectAttorneys() {
   const container = document.getElementById('attorney-accordions');
   if (!container) return DATA.attorneys||[];
   return Array.from(container.querySelectorAll('.attorney-accordion')).map((panel, i) => {
-    const get = f => { const el = panel.querySelector(`[data-field="${f}"]`); return el ? el.value.trim() : ''; };
-    const getA = f => { const el = panel.querySelector(`[data-a="${i}"][data-field="${f}"]`); return el ? el.value.trim() : ''; };
+    const get = f => { const el = panel.querySelector(`[data-field="${f}"]`); return el ? cleanFieldValue(el.value) : ''; };
+    const getA = f => { const el = panel.querySelector(`[data-a="${i}"][data-field="${f}"]`); return el ? cleanFieldValue(el.value) : ''; };
     // Collect social links
     const socialLinks = Array.from(panel.querySelectorAll(`[data-a-social="${i}"]`)).map((row, si) => ({
       platform: panel.querySelector(`[data-a="${i}"][data-field="social-platform"][data-si="${si}"]`)?.value || 'linkedin',
@@ -3308,8 +3316,8 @@ function collectAttorneys() {
       : (panel.querySelector(`[data-a="${i}"][data-field="btnLinkUrl-url"]`)?.value.trim() || '');
     return {
       name:        get('name'),
-      degree:      panel.querySelector(`[data-a="${i}"][data-field="education"][data-ei="0"]`)?.value.trim() || get('degree') || '',
-      education:   Array.from(panel.querySelectorAll(`[data-a="${i}"][data-field="education"]`)).map(el => el.value.trim()).filter(Boolean),
+      degree:      cleanFieldValue(panel.querySelector(`[data-a="${i}"][data-field="education"][data-ei="0"]`)?.value) || get('degree') || '',
+      education:   Array.from(panel.querySelectorAll(`[data-a="${i}"][data-field="education"]`)).map(el => el.value.replace(/\s+$/,'')).filter(s => s.trim().length > 0),
       photo:       get('photo'),
       credentials: get('credentials-text').split('\n').map(s=>s.trim()).filter(Boolean),
       bio1:        get('bio1'),
@@ -3624,10 +3632,10 @@ function collectLocations() {
   const container = document.getElementById('locations-list');
   if (!container) return DATA.locations || [];
   return Array.from(container.querySelectorAll('.location-panel')).map((panel, li) => {
-    const g = f => panel.querySelector(`[data-loc="${li}"][data-field="${f}"]`)?.value.trim() || '';
+    const g = f => cleanFieldValue(panel.querySelector(`[data-loc="${li}"][data-field="${f}"]`)?.value) || '';
     const hours = Array.from(panel.querySelectorAll(`[data-loc="${li}"][data-field="hours-days"]`)).map((el, hi) => ({
-      days:  el.value.trim(),
-      hours: panel.querySelector(`[data-loc="${li}"][data-field="hours-time"][data-hi="${hi}"]`)?.value.trim() || '',
+      days:  cleanFieldValue(el.value),
+      hours: cleanFieldValue(panel.querySelector(`[data-loc="${li}"][data-field="hours-time"][data-hi="${hi}"]`)?.value) || '',
     }));
     return { name:g('name'), phone:g('phone'), phoneRaw:g('phoneRaw'), fax:g('fax'), email:g('email'), address:g('address'), city:g('city'), state:g('state'), stateAbbr:g('stateAbbr'), zip:g('zip'), hours };
   });
@@ -3974,8 +3982,8 @@ function collectContactForm() {
     const opts = optEl ? optEl.value.split('\n').map(s => s.trim()).filter(Boolean) : [];
     return {
       type:        get('type')?.value        || 'text',
-      label:       get('label')?.value.trim() || '',
-      placeholder: get('placeholder')?.value.trim() || '',
+      label:       cleanFieldValue(get('label')?.value) || '',
+      placeholder: cleanFieldValue(get('placeholder')?.value) || '',
       required:    get('required')?.checked   || false,
       halfWidth:   get('halfWidth')?.checked  || false,
       options:     opts,
@@ -4152,7 +4160,7 @@ function updateFeeLabels(pi, si) {
   const defaults = { '1': 'Name', '2': 'Value', '3': 'Details' };
   [1, 2, 3].forEach(col => {
     const inp = secCard.querySelector(`[data-fee-col="${col}"]`);
-    const newLabel = inp ? (inp.value.trim() || defaults[String(col)]) : defaults[String(col)];
+    const newLabel = inp ? (cleanFieldValue(inp.value) || defaults[String(col)]) : defaults[String(col)];
     secCard.querySelectorAll(`[data-fee-label="${col}"]`).forEach(lbl => {
       lbl.textContent = newLabel;
     });
@@ -4573,7 +4581,7 @@ function collectBlogPosts() {
   return Array.from(list.querySelectorAll('.blog-admin-card')).map((card, i) => {
     const get = field => {
       const el = card.querySelector(`[data-bi="${i}"][data-field="${field}"]`);
-      return el ? el.value.trim() : '';
+      return el ? cleanFieldValue(el.value) : '';
     };
     const getCheck = field => {
       const el = card.querySelector(`[data-bi="${i}"][data-field="${field}"]`);
@@ -4857,7 +4865,7 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
       }
       return true;
     });
-    return visible ? visible.value.trim() : (existing[field] ?? '');
+    return visible ? cleanFieldValue(visible.value) : (existing[field] ?? '');
   };
 
   const sec = {
@@ -4895,7 +4903,7 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
         const els = Array.from(item.querySelectorAll('[data-field="' + f + '"]'));
         if (!els.length) { obj[f] = ''; return; }
         if (els.length === 1) {
-          obj[f] = els[0].type === 'checkbox' ? els[0].checked : els[0].value.trim();
+          obj[f] = els[0].type === 'checkbox' ? els[0].checked : cleanFieldValue(els[0].value);
           return;
         }
         // Multiple elements (e.g. linkUrl has both internal select and external input)
@@ -4908,7 +4916,7 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
           }
           return true;
         }) || els[0];
-        obj[f] = visible.type === 'checkbox' ? visible.checked : visible.value.trim();
+        obj[f] = visible.type === 'checkbox' ? visible.checked : cleanFieldValue(visible.value);
       });
       return obj;
     });
@@ -4928,9 +4936,9 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
   if (type === 'checklist') {
     sec.fullWidth  = secCard.querySelector('[data-field="fullWidth"]')?.checked || false;
     sec.categories = Array.from(secCard.querySelectorAll('.cp-checklist-category')).map(cat => ({
-      title: cat.querySelector('[data-field="catTitle"]')?.value.trim() || '',
+      title: cleanFieldValue(cat.querySelector('[data-field="catTitle"]')?.value) || '',
       items: Array.from(cat.querySelectorAll('.cp-checklist-item')).map(item => ({
-        text: item.querySelector('[data-field="itemText"]')?.value.trim() || ''
+        text: cleanFieldValue(item.querySelector('[data-field="itemText"]')?.value) || ''
       }))
     }));
   }
@@ -4942,11 +4950,11 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
     sec.successMsg = get('successMsg');
     sec.fields = Array.from(secCard.querySelectorAll('.cp-form-field-item')).map(item => ({
       type: item.querySelector('[data-field="fieldType"]')?.value || 'text',
-      label: item.querySelector('[data-field="fieldLabel"]')?.value.trim() || '',
-      placeholder: item.querySelector('[data-field="fieldPlaceholder"]')?.value.trim() || '',
+      label: cleanFieldValue(item.querySelector('[data-field="fieldLabel"]')?.value) || '',
+      placeholder: cleanFieldValue(item.querySelector('[data-field="fieldPlaceholder"]')?.value) || '',
       required: item.querySelector('[data-field="fieldRequired"]')?.checked || false,
       half: item.querySelector('[data-field="fieldHalf"]')?.checked || false,
-      options: item.querySelector('[data-field="fieldOptions"]')?.value.trim() || '',
+      options: cleanFieldValue(item.querySelector('[data-field="fieldOptions"]')?.value) || '',
     }));
   }
 
@@ -4982,12 +4990,12 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
     sec.readAllLabel = get('readAllLabel') || 'Read All Reviews';
     sec.primarySource = secCard.querySelector('[data-field="primarySource"]')?.checked || false;
     sec.items = Array.from(secCard.querySelectorAll('.cp-sub-item')).map(item => ({
-      name:     item.querySelector('[data-field="name"]')?.value.trim() || '',
-      initials: item.querySelector('[data-field="initials"]')?.value.trim() || '',
-      stars:    item.querySelector('[data-field="stars"]')?.value.trim() || '5',
-      text:     item.querySelector('[data-field="text"]')?.value.trim() || '',
-      meta:     item.querySelector('[data-field="meta"]')?.value.trim() || '',
-      date:     item.querySelector('[data-field="date"]')?.value.trim() || '',
+      name:     cleanFieldValue(item.querySelector('[data-field="name"]')?.value) || '',
+      initials: cleanFieldValue(item.querySelector('[data-field="initials"]')?.value) || '',
+      stars:    cleanFieldValue(item.querySelector('[data-field="stars"]')?.value) || '5',
+      text:     cleanFieldValue(item.querySelector('[data-field="text"]')?.value) || '',
+      meta:     cleanFieldValue(item.querySelector('[data-field="meta"]')?.value) || '',
+      date:     cleanFieldValue(item.querySelector('[data-field="date"]')?.value) || '',
     }));
   }
 
@@ -5083,7 +5091,7 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
     sec.maxCols = parseInt(get('maxCols')) || 3;
     sec.colFullWidth = secCard.querySelector('[data-field="colFullWidth"]')?.checked || false;
     sec.items = Array.from(secCard.querySelectorAll('.cp-sub-item[data-sub-idx]')).map((cardEl, ci) => {
-      const g  = f => cardEl.querySelector('[data-field="' + f + '"]')?.value.trim() || '';
+      const g  = f => cleanFieldValue(cardEl.querySelector('[data-field="' + f + '"]')?.value) || '';
       const gb = f => cardEl.querySelector('[data-field="' + f + '"]')?.checked || false;
       const featureEls = secCard.querySelectorAll('[data-feature-list="' + ci + '"] [data-feature-idx]');
       return {
@@ -5096,7 +5104,7 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
         cta_linkUrl:   g('cta_linkUrl'),
         cta_anchorId:  g('cta_anchorId'),
         features: Array.from(featureEls).map(fel => ({
-          label:   fel.querySelector('[data-field="flabel"]')?.value.trim() || '',
+          label:   cleanFieldValue(fel.querySelector('[data-field="flabel"]')?.value) || '',
           status:  fel.querySelector('[data-field="fstatus"]')?.value       || '',
           isGroup: fel.querySelector('[data-field="isGroup"]')?.checked     || false,
         })),
@@ -5129,17 +5137,17 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
   if (type === 'gallery') {
     sec.items = Array.from(secCard.querySelectorAll('.cp-sub-item')).map(item => ({
       imagePath: item.querySelector('[data-field="imagePath"]')?.value.trim() || '',
-      alt:       item.querySelector('[data-field="alt"]')?.value.trim()       || '',
-      title:     item.querySelector('[data-field="title"]')?.value.trim()     || '',
-      caption:   item.querySelector('[data-field="caption"]')?.value.trim()   || '',
+      alt:       cleanFieldValue(item.querySelector('[data-field="alt"]')?.value)       || '',
+      title:     cleanFieldValue(item.querySelector('[data-field="title"]')?.value)     || '',
+      caption:   cleanFieldValue(item.querySelector('[data-field="caption"]')?.value)   || '',
     }));
   }
 
   // Accordion
   if (type === 'accordion') {
     sec.items = Array.from(secCard.querySelectorAll('.cp-sub-item')).map(item => ({
-      title:     item.querySelector('[data-field="title"]')?.value.trim() || '',
-      body:      item.querySelector('[data-field="body"]')?.value.trim() || '',
+      title:     cleanFieldValue(item.querySelector('[data-field="title"]')?.value) || '',
+      body:      cleanFieldValue(item.querySelector('[data-field="body"]')?.value) || '',
       imagePath: item.querySelector('[data-field="imagePath"]')?.value.trim() || '',
       imagePos:  item.querySelector('[data-field="imagePos"]')?.value || 'none',
     }));
@@ -5152,8 +5160,8 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
     sec.logoSize = get('logoSize') || 'medium';
     sec.items = Array.from(secCard.querySelectorAll('.cp-sub-item')).map(item => ({
       imagePath: item.querySelector('[data-field="imagePath"]')?.value.trim() || '',
-      alt:       item.querySelector('[data-field="alt"]')?.value.trim() || '',
-      caption:   item.querySelector('[data-field="caption"]')?.value.trim() || '',
+      alt:       cleanFieldValue(item.querySelector('[data-field="alt"]')?.value) || '',
+      caption:   cleanFieldValue(item.querySelector('[data-field="caption"]')?.value) || '',
       linkUrl:   item.querySelector('[data-field="linkUrl"]')?.value.trim() || '',
     }));
   }
@@ -5190,9 +5198,9 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
         linkUrl = item.querySelector('input[data-field="linkUrl"]')?.value.trim() || '';
       }
       return {
-        text:        item.querySelector('[data-field="text"]')?.value.trim() || '',
+        text:        cleanFieldValue(item.querySelector('[data-field="text"]')?.value) || '',
         imagePath:   item.querySelector('[data-field="imagePath"]')?.value.trim() || '',
-        alt:         item.querySelector('[data-field="alt"]')?.value.trim() || '',
+        alt:         cleanFieldValue(item.querySelector('[data-field="alt"]')?.value) || '',
         sizeOverride: item.querySelector('[data-field="sizeOverride"]')?.value.trim() || '',
         linkType,
         linkUrl,
@@ -5227,7 +5235,7 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
       const typeEl = secCard.querySelector('[data-field="' + pref + '_linkType"]');
       if (typeEl) sec[pref + '_linkType'] = typeEl.value;
       const labelEl = secCard.querySelector('[data-field="' + pref + '_linkLabel"]');
-      if (labelEl) sec[pref + '_linkLabel'] = labelEl.value.trim();
+      if (labelEl) sec[pref + '_linkLabel'] = cleanFieldValue(labelEl.value);
       // Find the visible linkUrl element (internal select vs external input)
       const urlEls = Array.from(secCard.querySelectorAll('[data-field="' + pref + '_linkUrl"]'));
       const visibleUrl = urlEls.find(el => {
@@ -8171,7 +8179,7 @@ function savePageSettings() {
   page.hiddenFromMainNav   = document.getElementById('psm-hidden-main').checked;
   page.hiddenFromFooterNav = document.getElementById('psm-hidden-footer').checked;
   page.emoji        = document.getElementById('psm-emoji').value.trim() || '📄';
-  page.navLabel     = document.getElementById('psm-label').value.trim();
+  page.navLabel     = cleanFieldValue(document.getElementById('psm-label').value);
   const newSlug     = document.getElementById('psm-slug').value.trim();
   if (newSlug && newSlug !== page.slug) _cpSlugManual.add(pi); // treat as manual if changed
   page.slug         = newSlug;
@@ -8945,7 +8953,7 @@ function collectCustomPages() {
     // Read page-level fields
     const get = (field) => {
       const el = panel.querySelector('[data-cp="' + pi + '"][data-field="' + field + '"]');
-      return el ? el.value.trim() : (page[field] ?? '');
+      return el ? cleanFieldValue(el.value) : (page[field] ?? '');
     };
 
     const newPage = {
@@ -8982,7 +8990,7 @@ function collectCpSections(card, pi, existingSections) {
         }
         return true;
       });
-      return (visible || els[0]).value.trim();
+      return cleanFieldValue((visible || els[0]).value);
     };
     const getCheck = (field) => {
       const el = secCard.querySelector(`[data-cp="${pi}"][data-sec="${renderedSi}"][data-field="${field}"]`);
@@ -9114,7 +9122,7 @@ function collectCpSections(card, pi, existingSections) {
         sec.heading   = get('heading'); sec.subtitle = get('subtitle'); sec.maxCols = parseInt(get('maxCols')) || 3;
         sec.colFullWidth = secCard.querySelector('[data-field="colFullWidth"]')?.checked || false;
         sec.items = Array.from(secCard.querySelectorAll('.cp-sub-item[data-sub-idx]')).map((cardEl, ci) => {
-          const cg  = f => cardEl.querySelector('[data-field="' + f + '"]')?.value.trim() || '';
+          const cg  = f => cleanFieldValue(cardEl.querySelector('[data-field="' + f + '"]')?.value) || '';
           const cgVisible = f => {
             const matches = Array.from(cardEl.querySelectorAll('[data-field="' + f + '"]'));
             if (!matches.length) return '';
@@ -9126,7 +9134,7 @@ function collectCpSections(card, pi, existingSections) {
               }
               return true;
             });
-            return (visible || matches[0]).value.trim();
+            return cleanFieldValue((visible || matches[0]).value);
           };
           const cgb = f => cardEl.querySelector('[data-field="' + f + '"]')?.checked || false;
           const featureEls = secCard.querySelectorAll('[data-feature-list="' + ci + '"] [data-feature-idx]');
@@ -9140,7 +9148,7 @@ function collectCpSections(card, pi, existingSections) {
             cta_linkUrl:   cgVisible('cta_linkUrl'),
             cta_anchorId:  cg('cta_anchorId'),
             features: Array.from(featureEls).map(fel => ({
-              label:   fel.querySelector('[data-field="flabel"]')?.value.trim() || '',
+              label:   cleanFieldValue(fel.querySelector('[data-field="flabel"]')?.value) || '',
               status:  fel.querySelector('[data-field="fstatus"]')?.value       || '',
               isGroup: fel.querySelector('[data-field="isGroup"]')?.checked     || false,
             })),
@@ -9151,7 +9159,7 @@ function collectCpSections(card, pi, existingSections) {
         sec.heading   = get('heading'); sec.subtitle = get('subtitle'); sec.maxCols = parseInt(get('maxCols')) || 3;
         sec.colFullWidth = secCard.querySelector('[data-field="colFullWidth"]')?.checked || false;
         sec.items = Array.from(secCard.querySelectorAll('.cp-sub-item[data-sub-idx]')).map((cardEl, ci) => {
-          const cg  = f => cardEl.querySelector('[data-field="' + f + '"]')?.value.trim() || '';
+          const cg  = f => cleanFieldValue(cardEl.querySelector('[data-field="' + f + '"]')?.value) || '';
           const cgVisible = f => {
             const matches = Array.from(cardEl.querySelectorAll('[data-field="' + f + '"]'));
             if (!matches.length) return '';
@@ -9163,7 +9171,7 @@ function collectCpSections(card, pi, existingSections) {
               }
               return true;
             });
-            return (visible || matches[0]).value.trim();
+            return cleanFieldValue((visible || matches[0]).value);
           };
           const cgb = f => cardEl.querySelector('[data-field="' + f + '"]')?.checked || false;
           const featureEls = secCard.querySelectorAll('[data-feature-list="' + ci + '"] [data-feature-idx]');
@@ -9178,7 +9186,7 @@ function collectCpSections(card, pi, existingSections) {
             cta_linkUrl:   cgVisible('cta_linkUrl'),
             cta_anchorId:  cg('cta_anchorId'),
             features: Array.from(featureEls).map(fel => ({
-              label:   fel.querySelector('[data-field="flabel"]')?.value.trim() || '',
+              label:   cleanFieldValue(fel.querySelector('[data-field="flabel"]')?.value) || '',
               status:  fel.querySelector('[data-field="fstatus"]')?.value       || '',
               isGroup: fel.querySelector('[data-field="isGroup"]')?.checked     || false,
             })),
@@ -9233,7 +9241,7 @@ function collectCpSections(card, pi, existingSections) {
           const allItems = Array.from(secCard.querySelectorAll(`[data-cp="${pi}"][data-sec="${renderedSi}"][data-arr="items"][data-idx]`));
           const idxSet = [...new Set(allItems.map(e => e.dataset.idx))];
           return idxSet.map(idx => {
-            const g = f => secCard.querySelector(`[data-cp="${pi}"][data-sec="${renderedSi}"][data-arr="items"][data-idx="${idx}"][data-field="${f}"]`)?.value.trim() || '';
+            const g = f => cleanFieldValue(secCard.querySelector(`[data-cp="${pi}"][data-sec="${renderedSi}"][data-arr="items"][data-idx="${idx}"][data-field="${f}"]`)?.value) || '';
             const linkType = secCard.querySelector(`[data-cp="${pi}"][data-sec="${renderedSi}"][data-arr="items"][data-idx="${idx}"][data-field="linkType"]`)?.value || 'none';
             let linkUrl = '';
             if (linkType === 'internal') {
@@ -9308,7 +9316,7 @@ function collectCpSubItems(secCard, pi, si, fields) {
       });
       const el = visible || matches[0];
       if (el.type === 'checkbox') obj[f] = el.checked;
-      else obj[f] = el.value.trim();
+      else obj[f] = cleanFieldValue(el.value);
     });
     items.push(obj);
   });
@@ -9321,8 +9329,8 @@ function collectCpChecklistCategories(secCard, pi, si) {
   titleEls.forEach((titleEl, ci) => {
     const itemsEl = secCard.querySelector(`[data-cp="${pi}"][data-sec="${si}"][data-arr="categories"][data-idx="${ci}"][data-field="items-text"]`);
     cats.push({
-      title: titleEl.value.trim(),
-      items: itemsEl ? itemsEl.value.split('\n').map(s=>s.trim()).filter(Boolean) : []
+      title: cleanFieldValue(titleEl.value),
+      items: itemsEl ? itemsEl.value.split('\n').map(s => s.replace(/\s+$/,'')).filter(s => s.trim().length > 0) : []
     });
   });
   return cats;
@@ -9334,7 +9342,7 @@ function collectFormFields(secCard, pi, si) {
   fieldItems.forEach((item, fi) => {
     const get = (field) => {
       const el = item.querySelector(`[data-cp="${pi}"][data-sec="${si}"][data-ff="${fi}"][data-field="${field}"]`);
-      return el ? el.value.trim() : '';
+      return el ? cleanFieldValue(el.value) : '';
     };
     const getCheck = (field) => {
       const el = item.querySelector(`[data-cp="${pi}"][data-sec="${si}"][data-ff="${fi}"][data-field="${field}"]`);
