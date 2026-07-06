@@ -1154,7 +1154,7 @@ h2.section-title {
 .cps-section-dark .cps-fc-grid { border-color: rgba(255,255,255,0.12); }
 .cps-section-dark .cps-fc-card { border-color: rgba(255,255,255,0.12); }
 .cps-section-dark .cps-fc-card:hover { background: rgba(255,255,255,0.05); }
-.cps-section-dark .cps-fc-num { color: rgba(255,255,255,0.06); }
+.cps-section-dark .cps-fc-num { color: rgba(255,255,255,0.16); }
 .cps-section-dark .cps-fc-card:hover .cps-fc-num { color: rgba(var(--gold-rgb),0.2); }
 .cps-section-dark .cps-fc-card h3 { color: #fff; }
 .cps-section-dark .cps-fc-card p { color: rgba(255,255,255,0.65); }
@@ -1243,8 +1243,13 @@ h2.section-title {
 }
 .service-card:hover .service-more { gap: 10px; }
 .service-card:hover .service-more { color: var(--gold); }
+.cps-section-dark .services-grid { background: rgba(255,255,255,0.12); }
+.cps-section-dark .service-card { background: transparent; }
+.cps-section-dark .service-card:hover { background: rgba(255,255,255,0.05); }
+.cps-section-dark .service-title { color: #fff; }
+.cps-section-dark .service-desc { color: rgba(255,255,255,0.65); }
 .cps-section-dark .service-more { color: var(--gold); }
-.cps-section-dark .service-card:hover .service-more { color: var(--gold-light); }
+.cps-section-dark .service-card:hover .service-more { color: #fff; }
 
 /* Service modal */
 .modal-overlay {
@@ -1443,7 +1448,7 @@ h2.section-title {
 /* No global ::before line — each step has its own fading segment */
 .process-step {
   display: flex; gap: 40px;
-  padding: 28px 0;
+  padding: 28px 16px;
   border-bottom: 1px solid rgba(255,255,255,0.06);
   position: relative;
 }
@@ -1464,7 +1469,7 @@ h2.section-title {
 /* Per-step vertical line — fades out toward the bottom of each step */
 .step-line {
   position: absolute;
-  left: 28px; top: 84px; bottom: 0;
+  left: 44px; top: 84px; bottom: 0;
   width: 1px;
   background: linear-gradient(to bottom, rgba(var(--gold-rgb),0.5) 0%, rgba(var(--gold-rgb),0.05) 100%);
   z-index: 0;
@@ -1473,7 +1478,7 @@ h2.section-title {
 /* Mobile: shrink sm image so text has room */
 @media (max-width: 580px) {
   .step-img--sm { width: 100px; height: 100px; }
-  .step-line { left: 40px; top: 128px; }
+  .step-line { left: 56px; top: 128px; }
 }
 /* Full-width image step: stack vertically */
 .process-step.has-full-img { flex-direction: column; gap: 0; }
@@ -1541,6 +1546,12 @@ h2.section-title {
 .cps-section-alt .step-desc { color: var(--text-muted); }
 .cps-section-light .process-step.step-active .step-desc,
 .cps-section-alt .process-step.step-active .step-desc { color: var(--text-body); }
+
+/* Process step hover — additive, matches this component's dark-default convention */
+.process-step { transition: background 0.25s; }
+.process-step:hover { background: rgba(255,255,255,0.05); }
+.cps-section-light .process-step:hover,
+.cps-section-alt .process-step:hover { background: rgba(var(--navy-rgb),0.06); }
 
 /* =============================================
    TESTIMONIALS
@@ -1752,6 +1763,7 @@ h2.section-title {
   overflow: hidden;
   min-height: 110px;
 }
+.blog-card-top > * { position: relative; z-index: 1; }
 .blog-card-top-img {
   position: absolute; inset: 0;
   background-size: cover;
@@ -1761,7 +1773,6 @@ h2.section-title {
   position: absolute; inset: 0;
   background: rgba(15,35,64,0.45);
 }
-.blog-card-top > * { position: relative; z-index: 1; }
 .blog-emoji { font-size: 32px; }
 .blog-tag {
   font-size: 10px;
@@ -1821,11 +1832,13 @@ h2.section-title {
 }
 .blog-card.has-link:hover .blog-cta { color: var(--gold-light); border-color: var(--gold-light); }
 /* Dark section overrides */
-.cps-section-dark .blog-card { border-color: rgba(255,255,255,0.1); }
+.cps-section-dark .blog-card { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.1); }
 .cps-section-dark .blog-card.has-link:hover { box-shadow: 0 12px 40px rgba(0,0,0,0.3); }
 .cps-section-dark .blog-title { color: #fff; }
-.cps-section-dark .blog-excerpt { color: rgba(255,255,255,0.6); }
+.cps-section-dark .blog-excerpt { color: rgba(255,255,255,0.65); }
 .cps-section-dark .blog-card-meta { border-top-color: rgba(255,255,255,0.1); color: rgba(255,255,255,0.4); }
+.cps-section-dark .blog-date,
+.cps-section-dark .blog-read-time { color: rgba(255,255,255,0.4); }
 @media (max-width: 900px) {
   .blog-grid { grid-template-columns: 1fr 1fr; }
   .blog-card.blog-featured { flex-direction: column; }
@@ -2248,15 +2261,15 @@ footer {
   grid-template-columns: repeat(2, 1fr);
   gap: 0;
   margin-top: 40px;
-  border: 1px solid #e8e3d8;
+  border: 1px solid currentColor;
 }
 .cps-bullet-item {
   display: flex;
   align-items: flex-start;
   gap: 16px;
   padding: clamp(20px, 3vw, 32px);
-  border-right: 1px solid #e8e3d8;
-  border-bottom: 1px solid #e8e3d8;
+  border-right: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
   transition: background 0.25s;
 }
 .cps-bullet-item:nth-child(2n) { border-right: none; }
@@ -2264,6 +2277,8 @@ footer {
 .cps-bullets-list--full .cps-bullet-item { border-right: none; }
 .cps-bullet-item:hover { background: var(--gold-pale); }
 .cps-bullet-linked:hover { background: var(--gold-pale); }
+.cps-section-alt .cps-bullet-item:hover { background: rgba(var(--navy-rgb),0.06); }
+.cps-section-alt .cps-bullet-linked:hover { background: rgba(var(--navy-rgb),0.06); }
 .cps-bullet-linked .cps-bullet-text h4 { color: var(--navy); }
 .cps-bullet-arrow { margin-left: 6px; font-size: 13px; color: var(--gold); opacity: 0; transition: opacity 0.2s, transform 0.2s; display: inline-block; transform: translateX(-4px); }
 .cps-bullet-linked:hover .cps-bullet-arrow { opacity: 1; transform: translateX(0); }
@@ -2300,8 +2315,7 @@ footer {
 .cps-section-dark .cps-bullet-icon { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.25); color: var(--gold); }
 .cps-section-dark .cps-bullet-text h4 { color: #fff; }
 .cps-section-dark .cps-bullet-text p { color: rgba(255,255,255,0.65); }
-.cps-section-alt .cps-bullets-list,
-.cps-section-alt .cps-bullet-item { border-color: var(--border); }
+/* Alt Bullets border inherits from base rule via currentColor */
 
 /* CTA Banner */
 .cps-cta-banner {
@@ -2352,7 +2366,7 @@ footer {
 .cps-doc-checklist { }
 .cps-doc-category {
   margin-bottom: 32px;
-  border: 1px solid #e8e3d8;
+  border: 1px solid currentColor;
   border-radius: 2px;
   overflow: hidden;
 }
@@ -2376,8 +2390,8 @@ footer {
   align-items: center;
   gap: 12px;
   padding: 14px 24px;
-  border-right: 1px solid #e8e3d8;
-  border-bottom: 1px solid #e8e3d8;
+  border-right: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
   font-size: 14px;
   color: var(--text-body);
 }
@@ -2388,7 +2402,7 @@ footer {
 /* Full-width (single column) overrides */
 .cps-doc-items--full { grid-template-columns: 1fr; }
 .cps-doc-items--full .cps-doc-item { border-right: none; }
-.cps-doc-items--full .cps-doc-item:nth-last-child(2):nth-child(n) { border-bottom: 1px solid #e8e3d8; }
+.cps-doc-items--full .cps-doc-item:nth-last-child(2):nth-child(n) { border-bottom: 1px solid currentColor; }
 .cps-doc-items--full .cps-doc-item:last-child { border-bottom: none; }
 .cps-doc-check {
   width: 18px; height: 18px;
@@ -2403,7 +2417,7 @@ footer {
 @media (max-width: 600px) {
   .cps-doc-items { grid-template-columns: 1fr; }
   .cps-doc-item { border-right: none; }
-  .cps-doc-items .cps-doc-item:nth-last-child(2):nth-child(odd) { border-bottom: 1px solid #e8e3d8; }
+  .cps-doc-items .cps-doc-item:nth-last-child(2):nth-child(odd) { border-bottom: 1px solid currentColor; }
 }
 
 /* Checklist dark section theming */
@@ -2413,17 +2427,21 @@ footer {
 .cps-section-dark .cps-doc-items--full .cps-doc-item:nth-last-child(2):nth-child(n) { border-bottom-color: rgba(255,255,255,0.08); }
 .cps-section-dark .cps-doc-check { background: rgba(255,255,255,0.06); border-color: rgba(var(--gold-rgb),0.5); color: var(--gold); }
 
+/* Checklist item hover — additive */
+.cps-doc-item { transition: background 0.25s; }
+.cps-doc-item:hover { background: var(--gold-pale); }
+.cps-section-dark .cps-doc-item:hover { background: rgba(255,255,255,0.05); }
+.cps-section-alt .cps-doc-item:hover { background: rgba(var(--navy-rgb),0.06); }
+
 /* Checklist alt section theming */
-.cps-section-alt .cps-doc-category { border-color: var(--border); }
-.cps-section-alt .cps-doc-item { border-right-color: var(--border); border-bottom-color: var(--border); }
-.cps-section-alt .cps-doc-items--full .cps-doc-item:nth-last-child(2):nth-child(n) { border-bottom-color: var(--border); }
+/* Alt Checklist border inherits from base rules via currentColor */
 
 /* Timeline */
 .cps-timeline { }
 .cps-timeline-item {
   display: flex;
   gap: 32px;
-  padding: 0 0 40px;
+  padding: 12px 16px 40px 16px;
   position: relative;
 }
 .cps-timeline-item:last-child { padding-bottom: 0; }
@@ -2506,6 +2524,12 @@ footer {
 .cps-section-dark .cps-timeline-text { color: rgba(255,255,255,0.65); }
 .cps-section-alt .cps-timeline-body h4 { color: var(--navy); }
 
+/* Timeline item hover — additive */
+.cps-timeline-item { transition: background 0.25s; }
+.cps-timeline-item:hover { background: var(--gold-pale); }
+.cps-section-dark .cps-timeline-item:hover { background: rgba(255,255,255,0.05); }
+.cps-section-alt .cps-timeline-item:hover { background: rgba(var(--navy-rgb),0.06); }
+
 /* Data Table */
 .cps-fee-table {
   width: 100%;
@@ -2529,7 +2553,7 @@ footer {
 }
 .cps-fee-table td {
   padding: 14px 20px;
-  border-bottom: 1px solid #e8e3d8;
+  border-bottom: 1px solid currentColor;
   color: var(--text-body);
   vertical-align: top;
 }
@@ -2568,7 +2592,7 @@ footer {
 }
 .cps-tbl td {
   padding: 14px 20px;
-  border-bottom: 1px solid #e8e3d8;
+  border-bottom: 1px solid currentColor;
   color: var(--text-body);
   vertical-align: top;
   line-height: 1.5;
@@ -2583,7 +2607,8 @@ footer {
 .cps-section-dark .cps-tbl td { border-bottom-color: rgba(255,255,255,0.1); color: rgba(255,255,255,0.75); }
 .cps-section-dark .cps-tbl td.col-row-hdr { color: #fff; }
 .cps-section-dark .cps-tbl tbody tr:hover td { background: rgba(255,255,255,0.05); }
-.cps-section-alt .cps-tbl td { border-bottom-color: var(--border); }
+.cps-section-alt .cps-tbl tbody tr:hover td { background: rgba(var(--navy-rgb),0.06); }
+/* Alt Table border inherits from base rule via currentColor */
 @media (max-width: 580px) {
   .cps-tbl th, .cps-tbl td { padding: 10px 12px; }
 }
@@ -2788,9 +2813,10 @@ footer {
 .cps-section-dark .cps-fee-table td { border-bottom-color: rgba(255,255,255,0.1); color: rgba(255,255,255,0.75); }
 .cps-section-dark .cps-fee-detail { color: rgba(255,255,255,0.5); }
 .cps-section-dark .cps-fee-table tbody tr:hover td { background: rgba(255,255,255,0.05); }
+.cps-section-alt .cps-fee-table tbody tr:hover td { background: rgba(var(--navy-rgb),0.06); }
 .cps-section-dark .cps-fee-amount { color: #fff; }
 .cps-section-dark .cps-fee-note { color: rgba(255,255,255,0.4); }
-.cps-section-alt .cps-fee-table td { border-bottom-color: var(--border); }
+/* Alt Fee table border/hover inherit from base rules via currentColor + the alt hover override above */
 
 /* Mobile card layout */
 @media (max-width: 600px) {
@@ -2798,14 +2824,16 @@ footer {
   .cps-fee-table thead { display: none; }
   .cps-fee-table tbody, .cps-fee-table tr, .cps-fee-table td { display: block; width: 100%; }
   .cps-fee-table tr {
-    border: 1px solid #e8e3d8;
+    border: 1px solid currentColor;
     border-radius: 4px;
-    margin-bottom: 12px;
+    margin-bottom: 22px;
     overflow: hidden;
+    box-shadow: 0 4px 24px rgba(var(--navy-rgb),0.08);
   }
-  .cps-fee-table tbody tr:last-child td { border-bottom: 1px solid #e8e3d8; }
+  .cps-fee-table tbody tr:last-child { margin-bottom: 0; }
+  .cps-fee-table tbody tr:last-child td { border-bottom: 1px solid currentColor; }
   .cps-fee-table tbody tr:last-child td:last-child { border-bottom: none; }
-  .cps-fee-table td { border-bottom: 1px solid #e8e3d8; border-radius: 0; }
+  .cps-fee-table td { border-bottom: 1px solid currentColor; border-radius: 0; }
   .cps-fee-table td::before {
     content: attr(data-label);
     display: block;
@@ -2823,15 +2851,14 @@ footer {
   .cps-section-light .cps-fee-table td::before,
   .cps-section-alt   .cps-fee-table td::before { background: var(--navy); }
   .cps-fee-table tbody tr:hover td { background: var(--gold-pale); }
+  .cps-section-alt .cps-fee-table tbody tr:hover td { background: rgba(var(--navy-rgb),0.06); }
   .cps-section-dark .cps-fee-table tbody tr:hover td { background: rgba(255,255,255,0.05); }
   .cps-fee-amount { white-space: normal; }
   /* Dark mobile card */
-  .cps-section-dark .cps-fee-table tr { border-color: rgba(255,255,255,0.1); }
+  .cps-section-dark .cps-fee-table tr { border-color: rgba(255,255,255,0.1); box-shadow: 0 4px 24px rgba(0,0,0,0.3); }
   .cps-section-dark .cps-fee-table td { border-bottom-color: rgba(255,255,255,0.1); }
   .cps-section-dark .cps-fee-table tbody tr:last-child td:last-child { border-bottom: none; }
-  /* Alt mobile card */
-  .cps-section-alt .cps-fee-table tr { border-color: var(--border); }
-  .cps-section-alt .cps-fee-table td { border-bottom-color: var(--border); }
+  /* Alt mobile card — inherits currentColor border from base rule, same as light */
 }
 
 /* Jurisdiction Notice */
@@ -2870,6 +2897,10 @@ footer {
 }
 .cps-jurisdiction-link:hover { opacity: 0.75; }
 .cps-jurisdiction-body p { margin-bottom: 10px; }
+.cps-section-dark .cps-jurisdiction { background: rgba(var(--gold-rgb),0.08); }
+.cps-section-dark .cps-jurisdiction-title { color: #fff; }
+.cps-section-dark .cps-jurisdiction-body { color: rgba(255,255,255,0.65); }
+.cps-section-dark .cps-jurisdiction-link:hover { color: #fff; }
 
 /* Team Block (on custom pages) */
 .cps-team-grid {
@@ -5228,7 +5259,7 @@ function buildBlogCardHtml(p, i, delayClass, noFeatured) {
     : '';
   const topContent = `
     ${topImg}
-    <div class="blog-emoji">${p.emoji || '📋'}</div>
+    ${!p.imagePath ? `<div class="blog-emoji">${p.emoji || '📋'}</div>` : ''}
     <div class="blog-tag">${p.tag || 'Article'}</div>`;
 
   // Meta row — date left, read time right
@@ -8316,7 +8347,8 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
       const mqPause = sec.mqPause !== false;
       const mqSep = sec.mqSeparator || '·';
       const speedMap = { slow: '50s', medium: '30s', fast: '15s' };
-      const dur = speedMap[mqSpeed] || '30s';
+      const logoSpeedMap = { slow: '170s', medium: '100s', fast: '50s' };
+      const dur = (mqMode === 'logos' ? logoSpeedMap : speedMap)[mqSpeed] || (mqMode === 'logos' ? '100s' : '30s');
       const logoSizeMap = { sm: '32px', md: '48px', lg: '64px', xl: '96px' };
       const mqLogoH = logoSizeMap[sec.mqLogoSize] || '48px';
       const logoGapMap = { tight: '16px', normal: '32px', wide: '48px', xl: '64px' };
@@ -8336,7 +8368,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
           const tickerId = 'mq-ticker-' + Math.random().toString(36).slice(2,8);
           const holdMs  = (parseInt(sec.mqTickerHold)  || 3) * 1000;
           const transMs = ({ fast: 300, normal: 500, slow: 800 })[sec.mqTickerSpeed || 'normal'] || 500;
-          const tickerItems = textItems.map(it => {
+          const tickerItemHtmls = textItems.map(it => {
             const hasLnk = it.linkType && it.linkType !== 'none' && it.linkUrl;
             const onClick = hasLnk
               ? (it.linkType === 'internal'
@@ -8345,7 +8377,10 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
               : '';
             const linkClass = hasLnk ? ' has-link' : '';
             return '<div class="cps-mq-ticker-item' + linkClass + '"' + onClick + '>' + (it.text || '') + '</div>';
-          }).join('');
+          });
+          // Append a clone of the first item so the track can scroll continuously into it
+          // (visually identical to the real first item) instead of needing to jump.
+          const tickerItems = tickerItemHtmls.join('') + (tickerItemHtmls.length > 1 ? tickerItemHtmls[0] : '');
           const hasHeader = sec.heading || sec.subtitle || sec.label;
           wrapper.classList.add('cps-section-marquee');
           wrapper.innerHTML = '<div class="container">' +
@@ -8359,21 +8394,26 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
           // Init ticker after insertion into DOM
           requestAnimationFrame(() => {
             const inner = document.getElementById(tickerId);
-            if (!inner || inner.children.length < 2) return;
+            if (!inner || inner.children.length < 3) return;
             let idx = 0;
-            const total = inner.children.length;
+            const realTotal = inner.children.length - 1; // exclude the cloned first item
+            const itemFontPx = parseFloat(getComputedStyle(inner.children[0]).fontSize) || 16;
+            const itemH = itemFontPx * 2; // matches CSS: .cps-mq-ticker-item { height: 2em; }
             inner.style.transition = 'none';
             inner.style.transform = 'translateY(0)';
             const tick = () => {
               idx++;
               inner.style.transition = 'transform ' + transMs + 'ms ease-in-out';
-              inner.style.transform = 'translateY(-' + (idx * 2) + 'em)';
-              if (idx >= total - 1) {
+              inner.style.transform = 'translateY(-' + (idx * itemH) + 'px)';
+              if (idx >= realTotal) {
+                // Just scrolled into the cloned first item — once that transition
+                // finishes, snap back instantly to the real first item (visually
+                // identical, so the swap is invisible) well ahead of the next tick.
                 setTimeout(() => {
                   inner.style.transition = 'none';
                   inner.style.transform = 'translateY(0)';
                   idx = 0;
-                }, transMs + 50);
+                }, transMs);
               }
             };
             setInterval(tick, holdMs + transMs);
@@ -8406,7 +8446,8 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
           }
           return '<div class="cps-mq-logo-item">' + imgTag + '</div>';
         }).join('');
-        trackInner = logoItems + logoItems;
+        const halfTrack = logoItems.repeat(10);
+        trackInner = halfTrack + halfTrack;
       }
       const dirClass = 'dir-' + mqDir;
       const pauseClass = mqPause ? ' pause-hover' : '';

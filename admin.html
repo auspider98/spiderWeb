@@ -212,7 +212,7 @@ html, body { height: 100%; font-family: 'DM Sans', system-ui, sans-serif; backgr
   cursor: pointer;
   transition: border-color 0.2s, background 0.2s;
 }
-.import-zone:hover, .import-zone.drag-over { border-color: var(--gold); background: rgba(201,168,76,0.07); }
+.import-zone:hover, .import-zone.drag-over { border-color: var(--gold); background: rgba(201,168,76,0.07); color: var(--text); }
 .import-zone-icon { font-size: 28px; margin-bottom: 8px; pointer-events: none; }
 .import-zone p { font-size: 13px; line-height: 1.6; pointer-events: none; }
 .import-zone strong { color: var(--gold); }
@@ -785,7 +785,6 @@ html, body { height: 100%; font-family: 'DM Sans', system-ui, sans-serif; backgr
     </div>
     <a href="index.html" target="_blank" class="btn btn-ghost btn-sm"
       onmousedown="saveData()" ontouchstart="saveData()">💾 Save &amp; Preview</a>
-    <button class="btn btn-outline btn-sm" onclick="exportConfig()">⬇ Export config.js</button>
     <button class="btn btn-gold btn-sm" onclick="exportConfig()">⬇ Export config.js</button>
   </div>
 </div>
@@ -2824,9 +2823,13 @@ function onMqModeChange(pi, si, sel) {
   const textFields   = secCard.querySelector('[data-mq-text-fields]');
   const logoFields   = secCard.querySelector('[data-mq-logo-fields]');
   const tickerFields = secCard.querySelector('[data-mq-ticker-fields]');
+  const itemsFields  = secCard.querySelector('[data-mq-items-fields]');
+  const nonTickerFields = secCard.querySelector('[data-mq-nonticker-fields]');
   if (textFields)   textFields.style.display   = mode === 'text'   ? '' : 'none';
   if (logoFields)   logoFields.style.display   = mode === 'logos'  ? '' : 'none';
   if (tickerFields) tickerFields.style.display = mode === 'ticker' ? '' : 'none';
+  if (itemsFields)  itemsFields.style.display  = (mode === 'text' || mode === 'ticker') ? '' : 'none';
+  if (nonTickerFields) nonTickerFields.style.display = mode === 'ticker' ? 'none' : '';
   autosave();
 }
 
@@ -7571,11 +7574,11 @@ function buildCpSectionTypeFields(sec, pi, si) {
               <option value="fast"   ${mqSpeed==='fast'  ?'selected':''}>Fast</option>
             </select></div>
         </div>
-        <div class="form-row-2" style="margin-bottom:12px;">
+        <div class="form-row-2" data-mq-nonticker-fields style="margin-bottom:12px;${mqMode==='ticker'?'display:none;':''}">
           <div class="field-group" style="margin:0;"><label>Direction</label>
             <select ${p} data-field="mqDir">
-              <option value="left"  ${mqDir==='left' ?'selected':''}>Left (→)</option>
-              <option value="right" ${mqDir==='right'?'selected':''}>Right (←)</option>
+              <option value="left"  ${mqDir==='left' ?'selected':''}>Left (←)</option>
+              <option value="right" ${mqDir==='right'?'selected':''}>Right (→)</option>
             </select></div>
           <div class="field-group" style="margin:0;"><label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
             <label class="switch" style="margin:0;"><input type="checkbox" ${p} data-field="mqPause" ${mqPause?'checked':''}/><span class="switch-slider"></span></label>
@@ -7584,8 +7587,6 @@ function buildCpSectionTypeFields(sec, pi, si) {
              <div data-mq-text-fields style="${mqMode==='text'?'':'display:none;'}">
           <div class="field-group"><label>Separator Character</label>
             <input type="text" ${p} data-field="mqSeparator" value="${v('mqSeparator','·')}" placeholder="·" style="max-width:80px;"/></div>
-          <div class="cp-sub-items" data-cp-drag="${pi}-${si}-items" data-mq-primary>${textRows}</div>
-          <button class="btn-add" onclick="addCpSubItem(${typeof pi==='string'?('\'' + pi + '\''):pi},${si},'items',{text:'',linkType:'none',linkUrl:''})">+ Add Item</button>
         </div>
         <div data-mq-ticker-fields style="${mqMode==='ticker'?'':'display:none;'}">
           <div class="form-row-2" style="margin-bottom:12px;">
@@ -7603,7 +7604,10 @@ function buildCpSectionTypeFields(sec, pi, si) {
                 <option value="slow"   ${(sec.mqTickerSpeed||'normal')==='slow'  ?'selected':''}>Slow</option>
               </select></div>
           </div>
-          <p style="font-size:11px;color:var(--muted);margin:0 0 8px;">Items are shared with Scrolling Text mode — switch to Scrolling Text to add or edit items.</p>
+        </div>
+        <div data-mq-items-fields style="${(mqMode==='text'||mqMode==='ticker')?'':'display:none;'}">
+          <div class="cp-sub-items" data-cp-drag="${pi}-${si}-items" data-mq-primary>${textRows}</div>
+          <button class="btn-add" onclick="addCpSubItem(${typeof pi==='string'?('\'' + pi + '\''):pi},${si},'items',{text:'',linkType:'none',linkUrl:''})">+ Add Item</button>
         </div>
         <div data-mq-logo-fields style="${mqMode==='logos'?'':'display:none;'}">
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
