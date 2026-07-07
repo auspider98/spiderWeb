@@ -1110,6 +1110,7 @@ h2.section-title {
   position: relative;
   overflow: hidden;
 }
+.cps-section-light .service-card { background: var(--cream); }
 .service-card::before {
   content: '';
   position: absolute; top: 0; left: 0;
@@ -1717,6 +1718,8 @@ h2.section-title {
   margin-bottom: 10px;
 }
 .blog-excerpt { font-size: 13px; line-height: 1.75; color: var(--text-muted); }
+.blog-excerpt p { margin: 0 0 0.5em; }
+.blog-excerpt p:last-child { margin-bottom: 0; }
 .blog-card-meta {
   display: flex;
   align-items: center;
@@ -2221,7 +2224,9 @@ footer {
   font-size: 13.5px;
   line-height: 1.7;
   color: var(--text-muted);
+  margin: 0 0 0.5em;
 }
+.cps-bullet-text p:last-child { margin-bottom: 0; }
 @media (max-width: 640px) { .cps-bullets-list { grid-template-columns: 1fr; } .cps-bullet-item { border-right: none; } }
 
 /* Bullets dark/alt section theming */
@@ -4300,6 +4305,8 @@ section.cps-img-section { padding-bottom: 8px; }
 .cps-flip-front--dark .cps-flip-name { color: var(--gold-light); }
 .cps-flip-front--gold .cps-flip-name { color: var(--navy); opacity: 0.7; }
 .cps-flip-tagline { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5; }
+.cps-flip-tagline p { margin: 0 0 0.5em; }
+.cps-flip-tagline p:last-child { margin-bottom: 0; }
 .cps-flip-front--dark .cps-flip-tagline { color: rgba(255,255,255,0.55); }
 .cps-flip-front--gold .cps-flip-tagline { color: rgba(15,35,64,0.65); }
 .cps-flip-price-wrap { display: flex; align-items: baseline; gap: 4px; margin-bottom: 4px; }
@@ -5242,7 +5249,7 @@ function buildBlogCardHtml(p, i, delayClass, noFeatured) {
     <div class="blog-card-top">${topContent}</div>
     <div class="blog-card-body">
       <h3 class="blog-title">${p.title}</h3>
-      <p class="blog-excerpt">${p.excerpt}</p>
+      <div class="blog-excerpt">${formatBody(p.excerpt || '')}</div>
       ${cta}
       <div style="flex:1;"></div>
       ${meta}
@@ -6962,7 +6969,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
           <div class="cps-fc-header-text">
             ${labelHTML}
             ${sec.heading ? `<${headTag} class="${headClass} reveal">${sec.heading}</${headTag}>` : ''}
-            ${sec.body ? `<p class="section-subtitle reveal reveal-delay-1" style="${subtitleStyle}">${formatBody(sec.body)}</p>` : ''}
+            ${sec.body ? `<div class="section-subtitle reveal reveal-delay-1" style="${subtitleStyle}">${formatBody(sec.body)}</div>` : ''}
           </div>
           ${badgeHtml}
         </div>` : labelHTML;
@@ -6988,7 +6995,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
           <div class="cps-bullet-icon">${item.icon || '✓'}</div>
           <div class="cps-bullet-text">
             <h4>${item.title}${arrow}</h4>
-            ${item.desc ? `<p>${item.desc}</p>` : ''}
+            ${item.desc ? formatBody(item.desc) : ''}
           </div>
         </div>`;
       }).join('');
@@ -8019,7 +8026,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
             '<div class="cps-flip-body">' +
               frontIconHtml +
               (card.name    ? '<div class="cps-flip-name">'    + card.name    + '</div>' : '') +
-              (card.tagline ? '<div class="cps-flip-tagline">' + card.tagline + '</div>' : '') +
+              (card.tagline ? '<div class="cps-flip-tagline">' + formatBody(card.tagline) + '</div>' : '') +
               priceHtml +
             '</div>' +
             '<div class="cps-flip-hint">↩ tap to flip</div>' +
