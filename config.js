@@ -242,7 +242,7 @@ const SITE_CONFIG = {
   "googleAnalyticsId": "",
   "formEndpoint": "",
   "pageTitles": {
-    "home": "Home Page Title",
+    "home": "spiderWeb",
     "about": "About Page Title",
     "contact": "Contact Page Title",
     "privacy": "Privacy Page Title"
@@ -7238,5 +7238,5 @@ const SITE_CONFIG = {
   },
   "fontDisplayCustom": "Titillium Web",
   "fontBodyCustom": "",
-  "_savedAt": 1783438179812
+  "_savedAt": 1783453854237
 };
