@@ -1926,7 +1926,6 @@ let DATA = {
   heroTrustBullets:[],
   heroPrimaryLabel:"", heroPrimaryLinkType:"internal", heroPrimaryLinkUrl:"contact",
   heroSecondaryLabel:"", heroSecondaryLinkType:"internal", heroSecondaryLinkUrl:"services",
-  whyChooseUs:{heading:"",subtext:"",badgeNum:"",badgeLabel:"",bullets:[]},
   contactHeadline:"",
   contactSubline:"",
   contactFormHeading:"",
@@ -1943,7 +1942,7 @@ let DATA = {
   ctaLabel:"", ctaLinkType:"internal", ctaLinkUrl:"contact",
   navDefaultOpen:false, footerNavDefaultOpen:false, headerAlwaysSolid:false,
   pageToggles:{about:true,contact:true},
-  homeToggles:{stats:true,why:true,testimonials:true},
+  homeToggles:{stats:true,testimonials:true},
   customPages:[],
   aboutSections:[]
 };
@@ -4737,7 +4736,7 @@ function addHomeSection() {
   if (type === 'gallery') { defaults.items = []; defaults.galleryCols = 3; }
   if (type === 'pricing') { defaults.items = []; }
   if (type === 'locations') { defaults.items = []; defaults.displayMode = 'cards'; defaults.layoutMode = 'top'; defaults.mapMode = 'linkout'; defaults.maxCols = 2; defaults.showHours = true; }
-  if (type === 'table') { defaults.cols = 2; defaults.col1Label = 'Column 1'; defaults.col2Label = 'Column 2'; defaults.col3Label = ''; defaults.col1Style = 'normal'; defaults.col2Style = 'normal'; defaults.col3Style = 'normal'; defaults.firstColHeader = false; defaults.items = []; }
+  if (type === 'table') { defaults.cols = 2; defaults.col1Label = 'Column 1'; defaults.col2Label = 'Column 2'; defaults.col3Label = ''; defaults.col1Style = 'normal'; defaults.col2Style = 'normal'; defaults.col3Style = 'normal'; defaults.firstColHeader = false; defaults.mobileStack = false; defaults.items = []; }
   if (type === 'rotating-cards') { defaults.items = []; defaults.visibleCards = 1; defaults.cardHeight = 420; defaults.showDots = true; defaults.showArrows = true; defaults.showPeek = true; defaults.autoplay = false; defaults.autoplaySpeed = 4; }
   if (!Array.isArray(DATA.homeSections)) DATA.homeSections = [];
   DATA.homeSections.push(defaults);
@@ -4807,7 +4806,7 @@ function addAboutSection() {
   if (type === 'gallery') { defaults.items = []; defaults.galleryCols = 3; }
   if (type === 'pricing') { defaults.items = []; }
   if (type === 'locations') { defaults.items = []; defaults.displayMode = 'cards'; defaults.layoutMode = 'top'; defaults.mapMode = 'linkout'; defaults.maxCols = 2; defaults.showHours = true; }
-  if (type === 'table') { defaults.cols = 2; defaults.col1Label = 'Column 1'; defaults.col2Label = 'Column 2'; defaults.col3Label = ''; defaults.col1Style = 'normal'; defaults.col2Style = 'normal'; defaults.col3Style = 'normal'; defaults.firstColHeader = false; defaults.items = []; }
+  if (type === 'table') { defaults.cols = 2; defaults.col1Label = 'Column 1'; defaults.col2Label = 'Column 2'; defaults.col3Label = ''; defaults.col1Style = 'normal'; defaults.col2Style = 'normal'; defaults.col3Style = 'normal'; defaults.firstColHeader = false; defaults.mobileStack = false; defaults.items = []; }
   if (type === 'rotating-cards') { defaults.items = []; defaults.visibleCards = 1; defaults.cardHeight = 420; defaults.showDots = true; defaults.showArrows = true; defaults.showPeek = true; defaults.autoplay = false; defaults.autoplaySpeed = 4; }
   if (!Array.isArray(DATA.aboutSections)) DATA.aboutSections = [];
   DATA.aboutSections.push(defaults);
@@ -5039,6 +5038,7 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
     sec.col2Label      = get('col2Label'); sec.col2Style = get('col2Style') || 'normal';
     sec.col3Label      = get('col3Label'); sec.col3Style = get('col3Style') || 'normal';
     sec.firstColHeader = secCard.querySelector('[data-field="firstColHeader"]')?.checked === true;
+    sec.mobileStack    = secCard.querySelector('[data-field="mobileStack"]')?.checked === true;
   }
 
   // Rotating Cards
@@ -6445,6 +6445,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
 
 
     case 'fees': {
+      const mobileStack = sec.mobileStack !== false;
       const items = (sec.items||[]);
       const rows = items.map((it,ii) => {
         const lt = it.linkType || 'none';
@@ -6521,6 +6522,14 @@ function buildCpSectionTypeFields(sec, pi, si) {
           <div class="field-group" style="margin:0;"><label>Column 2 Label</label><input type="text" ${p} data-field="col2Label" data-fee-col="2" oninput="updateFeeLabels('${pi}',${si})" value="${v('col2Label')}" placeholder="Value"/></div>
           <div class="field-group" style="margin:0;"><label>Column 3 Label</label><input type="text" ${p} data-field="col3Label" data-fee-col="3" oninput="updateFeeLabels('${pi}',${si})" value="${v('col3Label')}" placeholder="Notes"/></div>
         </div>
+        <div class="form-row-2" style="margin-bottom:16px;">
+          <div class="field-group" style="margin:0;">
+            <div class="switch-row" style="margin:0;">
+              <span class="switch-label">Stack as cards on mobile</span>
+              <label class="switch"><input type="checkbox" ${p} data-field="mobileStack" ${mobileStack?'checked':''}/><span class="switch-slider"></span></label>
+            </div>
+          </div>
+        </div>
         <div class="cp-sub-items" data-cp-drag="${pi}-${si}-items">${rows}</div>
         <button class="btn-add" onclick="addCpSubItem(${typeof pi==='string'?("'"+pi+"'"):pi},${si},'items',{service:'',amount:'',detail:'',note:'',linkLabel:'',linkType:'none',linkUrl:''})">+ Add Row</button>
         <div class="field-group" style="margin-top:12px;"><label>Disclaimer (small text below table)</label>
@@ -6536,6 +6545,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
       const col2Style   = sec.col2Style || 'normal';
       const col3Style   = sec.col3Style || 'normal';
       const firstColHdr = sec.firstColHeader === true;
+      const mobileStack = sec.mobileStack === true;
       const items       = sec.items || [];
       const piArg       = typeof pi === 'string' ? "'" + pi + "'" : pi;
 
@@ -6598,6 +6608,14 @@ function buildCpSectionTypeFields(sec, pi, si) {
             <div class="switch-row" style="margin:0;padding-top:22px;">
               <span class="switch-label">First column as row header</span>
               <label class="switch"><input type="checkbox" ${p} data-field="firstColHeader" ${firstColHdr?'checked':''}/><span class="switch-slider"></span></label>
+            </div>
+          </div>
+        </div>
+        <div class="form-row-2" style="margin-bottom:10px;">
+          <div class="field-group" style="margin:0;">
+            <div class="switch-row" style="margin:0;">
+              <span class="switch-label">Stack as cards on mobile</span>
+              <label class="switch"><input type="checkbox" ${p} data-field="mobileStack" ${mobileStack?'checked':''}/><span class="switch-slider"></span></label>
             </div>
           </div>
         </div>
@@ -8265,7 +8283,7 @@ function addCpSection(pi) {
   if (type === 'gallery') { defaults.items = []; defaults.galleryCols = 3; }
   if (type === 'pricing') { defaults.items = []; }
   if (type === 'locations') { defaults.items = []; defaults.displayMode = 'cards'; defaults.layoutMode = 'top'; defaults.mapMode = 'linkout'; defaults.maxCols = 2; defaults.showHours = true; }
-  if (type === 'table') { defaults.cols = 2; defaults.col1Label = 'Column 1'; defaults.col2Label = 'Column 2'; defaults.col3Label = ''; defaults.col1Style = 'normal'; defaults.col2Style = 'normal'; defaults.col3Style = 'normal'; defaults.firstColHeader = false; defaults.items = []; }
+  if (type === 'table') { defaults.cols = 2; defaults.col1Label = 'Column 1'; defaults.col2Label = 'Column 2'; defaults.col3Label = ''; defaults.col1Style = 'normal'; defaults.col2Style = 'normal'; defaults.col3Style = 'normal'; defaults.firstColHeader = false; defaults.mobileStack = false; defaults.items = []; }
   if (type === 'rotating-cards') { defaults.items = []; defaults.visibleCards = 1; defaults.cardHeight = 420; defaults.showDots = true; defaults.showArrows = true; defaults.showPeek = true; defaults.autoplay = false; defaults.autoplaySpeed = 4; }
   if (!DATA.customPages[pi]) return;
   DATA.customPages[pi].sections = DATA.customPages[pi].sections || [];
@@ -9078,6 +9096,7 @@ function collectCpSections(card, pi, existingSections) {
         sec.heading = get('heading'); sec.subtitle = get('subtitle');
         sec.col1Label = get('col1Label'); sec.col2Label = get('col2Label'); sec.col3Label = get('col3Label');
         sec.disclaimer = get('disclaimer');
+        sec.mobileStack = secCard.querySelector('[data-field="mobileStack"]')?.checked !== false;
         sec.items = collectCpSubItems(secCard, pi, si, ['service','amount','detail','note','linkLabel','linkType','linkUrl','anchorId']); break;
       case 'table':
         sec.heading        = get('heading'); sec.subtitle = get('subtitle');
@@ -9086,6 +9105,7 @@ function collectCpSections(card, pi, existingSections) {
         sec.col2Label      = get('col2Label'); sec.col2Style = get('col2Style') || 'normal';
         sec.col3Label      = get('col3Label'); sec.col3Style = get('col3Style') || 'normal';
         sec.firstColHeader = secCard.querySelector('[data-field="firstColHeader"]')?.checked === true;
+        sec.mobileStack    = secCard.querySelector('[data-field="mobileStack"]')?.checked === true;
         sec.items          = collectCpSubItems(secCard, pi, si, ['cell1','cell2','cell3']); break;
       case 'rotating-cards':
         sec.heading       = get('heading'); sec.subtitle = get('subtitle');
@@ -9588,7 +9608,6 @@ function importConfig(input) {
       DATA = Object.assign({}, DATA, imported);
       if (imported.colors)      DATA.colors      = Object.assign({}, DATA.colors,      imported.colors);
       if (imported.fontColors)  DATA.fontColors  = Object.assign({}, DATA.fontColors,  imported.fontColors);
-      if (imported.whyChooseUs) DATA.whyChooseUs = Object.assign({}, DATA.whyChooseUs, imported.whyChooseUs);
       if (imported.heroBg)      DATA.heroBg      = Object.assign({}, DATA.heroBg,      imported.heroBg);
       if (imported.pageTitles)  DATA.pageTitles  = Object.assign({}, DATA.pageTitles,  imported.pageTitles);
       if (imported.pageHeaders) DATA.pageHeaders = Object.assign({}, DATA.pageHeaders, imported.pageHeaders);
@@ -9942,7 +9961,6 @@ window.addEventListener('DOMContentLoaded', () => {
     DATA = Object.assign({}, DATA, parsed);
     if (parsed.colors)      DATA.colors      = Object.assign({}, DATA.colors,      parsed.colors);
     if (parsed.fontColors)  DATA.fontColors  = Object.assign({}, DATA.fontColors,  parsed.fontColors);
-    if (parsed.whyChooseUs) DATA.whyChooseUs = Object.assign({}, DATA.whyChooseUs, parsed.whyChooseUs);
     if (parsed.heroBg)      DATA.heroBg      = Object.assign({}, DATA.heroBg,      parsed.heroBg);
     if (parsed.pageTitles)  DATA.pageTitles  = Object.assign({}, DATA.pageTitles,  parsed.pageTitles);
     if (parsed.pageHeaders) DATA.pageHeaders = Object.assign({}, DATA.pageHeaders, parsed.pageHeaders);

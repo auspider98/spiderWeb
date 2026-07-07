@@ -958,88 +958,6 @@ h2.section-title {
 .section-dark .section-subtitle { color: rgba(255,255,255,0.6); }
 
 /* =============================================
-   WHY CHOOSE US
-   ============================================= */
-#why .why-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0;
-  margin-top: 64px;
-  border: 1px solid #e8e3d8;
-}
-.why-card {
-  padding: clamp(36px, 5vw, 56px);
-  border-right: 1px solid #e8e3d8;
-  border-bottom: 1px solid #e8e3d8;
-  transition: background 0.3s;
-  position: relative;
-  overflow: hidden;
-}
-.why-card::after {
-  content: '';
-  position: absolute; bottom: 0; left: 0;
-  height: 2px; width: 0;
-  background: var(--gold);
-  transition: width 0.4s var(--ease-out);
-}
-.why-card:hover { background: var(--gold-pale); }
-.why-card:hover::after { width: 100%; }
-.why-card:nth-child(2n) { border-right: none; }
-.why-card-num {
-  font-family: var(--font-display);
-  font-size: 52px;
-  font-weight: 400;
-  color: rgba(15,35,64,0.07);
-  line-height: 1;
-  margin-bottom: 16px;
-  transition: color 0.3s;
-}
-.why-card:hover .why-card-num { color: rgba(var(--gold-rgb),0.2); }
-.why-card h3 {
-  font-family: var(--font-display);
-  font-size: 20px;
-  font-weight: 500;
-  color: var(--text-head);
-  margin-bottom: 10px;
-}
-.why-card p {
-  font-size: 14px;
-  line-height: 1.75;
-  color: var(--text-muted);
-}
-
-/* Badge */
-.why-badge-wrap {
-  display: flex; align-items: flex-start; gap: 56px;
-  flex-wrap: wrap;
-}
-.why-text { flex: 1; min-width: 280px; }
-.why-badge {
-  flex-shrink: 0;
-  width: 160px; height: 160px;
-  border-radius: 50%;
-  border: 1px solid var(--gold);
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  text-align: center;
-  margin-top: 8px;
-}
-.why-badge-num {
-  font-family: var(--font-display);
-  font-size: 42px;
-  font-weight: 600;
-  color: var(--navy);
-  line-height: 1;
-}
-.why-badge-label {
-  font-size: 11px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  margin-top: 4px;
-}
-
-/* =============================================
    CUSTOM PAGE — FEATURE CARDS
    ============================================= */
 .cps-fc-header {
@@ -1158,6 +1076,7 @@ h2.section-title {
 .cps-section-dark .cps-fc-card:hover .cps-fc-num { color: rgba(var(--gold-rgb),0.2); }
 .cps-section-dark .cps-fc-card h3 { color: #fff; }
 .cps-section-dark .cps-fc-card p { color: rgba(255,255,255,0.65); }
+.cps-section-alt .cps-fc-card:hover { background: rgba(var(--navy-rgb),0.06); }
 .cps-section-dark .cps-fc-link { color: var(--gold); }
 .cps-section-dark .cps-fc-link:hover { color: #fff; }
 .cps-section-alt .cps-fc-grid { border-color: #ddd8cc; }
@@ -1641,7 +1560,7 @@ h2.section-title {
 }
 .faq-grid.faq-grid-full { grid-template-columns: 1fr; gap: 0; max-width: 780px; }
 .faq-item {
-  border-bottom: 1px solid #e8e3d8;
+  border-bottom: 1px solid currentColor;
   padding: 0;
 }
 .faq-question {
@@ -1707,7 +1626,7 @@ h2.section-title {
 .cps-section-dark .faq-toggle { border-color: rgba(255,255,255,0.25); }
 .cps-section-dark .faq-toggle-icon { color: rgba(255,255,255,0.6); }
 .cps-section-dark .faq-answer-inner { color: rgba(255,255,255,0.65); }
-.cps-section-alt .faq-item { border-color: var(--border); }
+/* Alt FAQ border inherits from base rule via currentColor */
 
 /* =============================================
    BLOG
@@ -2137,8 +2056,6 @@ footer {
   .about-left-col { max-width: 380px; }
   .about-right-col { padding-top: 0; }
   .about-social-btn-col { padding-top: 0; }
-  .why-grid { grid-template-columns: 1fr; }
-  .why-card { border-right: none; }
   .cps-fc-grid,
   .cps-fc-grid[data-cols="2"],
   .cps-fc-grid[data-cols="3"],
@@ -2164,7 +2081,6 @@ footer {
   .footer-links { align-items: center; }
   .footer-nav-group-row { justify-content: center; }
   .footer-bottom { justify-content: center; text-align: center; }
-  .why-badge-wrap { flex-direction: column; }
   .process-timeline::before { display: none; }
 }
 @media (max-width: 480px) {
@@ -2250,8 +2166,8 @@ footer {
 .cps-stats-bar .stats-inner { }
 
 /* Stats bar light/alt section theming */
-.cps-section-light .stat-cell:hover,
-.cps-section-alt .stat-cell:hover { background: var(--gold-pale); }
+.cps-section-light .stat-cell:hover { background: var(--gold-pale); }
+.cps-section-alt .stat-cell:hover { background: rgba(var(--navy-rgb),0.06); }
 .cps-section-light .stat-label,
 .cps-section-alt .stat-label { color: var(--text-muted); }
 
@@ -2324,7 +2240,7 @@ footer {
   text-align: center;
 }
 .cps-section-light .cps-cta-banner { background: var(--cream); }
-.cps-section-alt .cps-cta-banner { background: var(--gold-pale); }
+.cps-section-alt .cps-cta-banner { background: var(--gold-pale); border: 1px solid #ddd8cc; }
 .cps-cta-banner .cps-heading {
   font-family: var(--font-display);
   font-size: clamp(26px, 3.5vw, 44px);
@@ -2613,6 +2529,48 @@ footer {
   .cps-tbl th, .cps-tbl td { padding: 10px 12px; }
 }
 
+/* Table section — optional mobile stacked-card layout (opt-in via "Stack as cards on mobile" toggle) */
+@media (max-width: 600px) {
+  .cps-tbl-wrap--stack { overflow-x: visible; }
+  .cps-tbl-wrap--stack .cps-tbl thead { display: none; }
+  .cps-tbl-wrap--stack .cps-tbl tbody, .cps-tbl-wrap--stack .cps-tbl tr, .cps-tbl-wrap--stack .cps-tbl td { display: block; width: 100%; }
+  .cps-tbl-wrap--stack .cps-tbl tr {
+    border: 1px solid currentColor;
+    border-radius: 4px;
+    margin-bottom: 22px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(var(--navy-rgb),0.08);
+  }
+  .cps-tbl-wrap--stack .cps-tbl tbody tr:last-child { margin-bottom: 0; }
+  .cps-tbl-wrap--stack .cps-tbl tbody tr:last-child td { border-bottom: 1px solid currentColor; }
+  .cps-tbl-wrap--stack .cps-tbl tbody tr:last-child td:last-child { border-bottom: none; }
+  .cps-tbl-wrap--stack .cps-tbl td { border-bottom: 1px solid currentColor; border-radius: 0; padding: 14px 20px; }
+  .cps-tbl-wrap--stack .cps-tbl td::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 600;
+    font-family: var(--font-body);
+    background: var(--navy);
+    margin: -14px -20px 12px -20px;
+    padding: 10px 20px;
+  }
+  .cps-section-dark .cps-tbl-wrap--stack .cps-tbl td::before { background: rgba(255,255,255,0.07); color: var(--gold); }
+  .cps-section-light .cps-tbl-wrap--stack .cps-tbl td::before,
+  .cps-section-alt   .cps-tbl-wrap--stack .cps-tbl td::before { background: var(--navy); }
+  .cps-tbl-wrap--stack .cps-tbl tbody tr:hover td { background: var(--gold-pale); }
+  .cps-section-alt  .cps-tbl-wrap--stack .cps-tbl tbody tr:hover td { background: rgba(var(--navy-rgb),0.06); }
+  .cps-section-dark .cps-tbl-wrap--stack .cps-tbl tbody tr:hover td { background: rgba(255,255,255,0.05); }
+  /* Dark mobile card */
+  .cps-section-dark .cps-tbl-wrap--stack .cps-tbl tr { border-color: rgba(255,255,255,0.1); box-shadow: 0 4px 24px rgba(0,0,0,0.3); }
+  .cps-section-dark .cps-tbl-wrap--stack .cps-tbl td { border-bottom-color: rgba(255,255,255,0.1); }
+  .cps-section-dark .cps-tbl-wrap--stack .cps-tbl tbody tr:last-child td { border-bottom-color: rgba(255,255,255,0.1); }
+  .cps-section-dark .cps-tbl-wrap--stack .cps-tbl tbody tr:last-child td:last-child { border-bottom: none; }
+}
+
 /* =============================================
    ROTATING CARDS SECTION
    ============================================= */
@@ -2818,23 +2776,23 @@ footer {
 .cps-section-dark .cps-fee-note { color: rgba(255,255,255,0.4); }
 /* Alt Fee table border/hover inherit from base rules via currentColor + the alt hover override above */
 
-/* Mobile card layout */
+/* Mobile card layout — opt-in via "Stack as cards on mobile" toggle (defaults on for backward compatibility) */
 @media (max-width: 600px) {
-  .cps-fee-wrap { overflow-x: visible; }
-  .cps-fee-table thead { display: none; }
-  .cps-fee-table tbody, .cps-fee-table tr, .cps-fee-table td { display: block; width: 100%; }
-  .cps-fee-table tr {
+  .cps-fee-wrap--stack { overflow-x: visible; }
+  .cps-fee-wrap--stack .cps-fee-table thead { display: none; }
+  .cps-fee-wrap--stack .cps-fee-table tbody, .cps-fee-wrap--stack .cps-fee-table tr, .cps-fee-wrap--stack .cps-fee-table td { display: block; width: 100%; }
+  .cps-fee-wrap--stack .cps-fee-table tr {
     border: 1px solid currentColor;
     border-radius: 4px;
     margin-bottom: 22px;
     overflow: hidden;
     box-shadow: 0 4px 24px rgba(var(--navy-rgb),0.08);
   }
-  .cps-fee-table tbody tr:last-child { margin-bottom: 0; }
-  .cps-fee-table tbody tr:last-child td { border-bottom: 1px solid currentColor; }
-  .cps-fee-table tbody tr:last-child td:last-child { border-bottom: none; }
-  .cps-fee-table td { border-bottom: 1px solid currentColor; border-radius: 0; }
-  .cps-fee-table td::before {
+  .cps-fee-wrap--stack .cps-fee-table tbody tr:last-child { margin-bottom: 0; }
+  .cps-fee-wrap--stack .cps-fee-table tbody tr:last-child td { border-bottom: 1px solid currentColor; }
+  .cps-fee-wrap--stack .cps-fee-table tbody tr:last-child td:last-child { border-bottom: none; }
+  .cps-fee-wrap--stack .cps-fee-table td { border-bottom: 1px solid currentColor; border-radius: 0; }
+  .cps-fee-wrap--stack .cps-fee-table td::before {
     content: attr(data-label);
     display: block;
     font-size: 10px;
@@ -2847,19 +2805,26 @@ footer {
     margin: -14px -20px 12px -20px;
     padding: 10px 20px;
   }
-  .cps-section-dark .cps-fee-table td::before { background: rgba(255,255,255,0.07); color: var(--gold); }
-  .cps-section-light .cps-fee-table td::before,
-  .cps-section-alt   .cps-fee-table td::before { background: var(--navy); }
-  .cps-fee-table tbody tr:hover td { background: var(--gold-pale); }
-  .cps-section-alt .cps-fee-table tbody tr:hover td { background: rgba(var(--navy-rgb),0.06); }
-  .cps-section-dark .cps-fee-table tbody tr:hover td { background: rgba(255,255,255,0.05); }
-  .cps-fee-amount { white-space: normal; }
+  .cps-section-dark .cps-fee-wrap--stack .cps-fee-table td::before { background: rgba(255,255,255,0.07); color: var(--gold); }
+  .cps-section-light .cps-fee-wrap--stack .cps-fee-table td::before,
+  .cps-section-alt   .cps-fee-wrap--stack .cps-fee-table td::before { background: var(--navy); }
+  .cps-fee-wrap--stack .cps-fee-table tbody tr:hover td { background: var(--gold-pale); }
+  .cps-section-alt .cps-fee-wrap--stack .cps-fee-table tbody tr:hover td { background: rgba(var(--navy-rgb),0.06); }
+  .cps-section-dark .cps-fee-wrap--stack .cps-fee-table tbody tr:hover td { background: rgba(255,255,255,0.05); }
+  .cps-fee-wrap--stack .cps-fee-amount { white-space: normal; }
   /* Dark mobile card */
-  .cps-section-dark .cps-fee-table tr { border-color: rgba(255,255,255,0.1); box-shadow: 0 4px 24px rgba(0,0,0,0.3); }
-  .cps-section-dark .cps-fee-table td { border-bottom-color: rgba(255,255,255,0.1); }
-  .cps-section-dark .cps-fee-table tbody tr:last-child td:last-child { border-bottom: none; }
+  .cps-section-dark .cps-fee-wrap--stack .cps-fee-table tr { border-color: rgba(255,255,255,0.1); box-shadow: 0 4px 24px rgba(0,0,0,0.3); }
+  .cps-section-dark .cps-fee-wrap--stack .cps-fee-table td { border-bottom-color: rgba(255,255,255,0.1); }
+  .cps-section-dark .cps-fee-wrap--stack .cps-fee-table tbody tr:last-child td { border-bottom-color: rgba(255,255,255,0.1); }
+  .cps-section-dark .cps-fee-wrap--stack .cps-fee-table tbody tr:last-child td:last-child { border-bottom: none; }
   /* Alt mobile card — inherits currentColor border from base rule, same as light */
 }
+@media (max-width: 580px) {
+  /* Horizontal-scroll mode (toggle off) — same narrow-screen padding tweak as the generic Table section */
+  .cps-fee-wrap:not(.cps-fee-wrap--stack) .cps-fee-table th,
+  .cps-fee-wrap:not(.cps-fee-wrap--stack) .cps-fee-table td { padding: 10px 12px; }
+}
+
 
 /* Jurisdiction Notice */
 .cps-jurisdiction {
@@ -2924,7 +2889,7 @@ footer {
   .cps-team-grid[data-cols="3"],
   .cps-team-grid[data-cols="4"] { grid-template-columns: 1fr; }
 }.cps-team-card {
-  border: 1px solid #e8e3d8;
+  border: 1px solid currentColor;
   border-radius: 2px;
   overflow: hidden;
   transition: transform 0.3s, box-shadow 0.3s;
@@ -2966,7 +2931,7 @@ footer {
 .cps-section-dark .cps-team-info { background: rgba(255,255,255,0.04); }
 .cps-section-dark .cps-team-name { color: #fff; }
 .cps-section-dark .cps-team-bio { color: rgba(255,255,255,0.65); }
-.cps-section-alt .cps-team-card { border-color: var(--border); }
+/* Alt Team card border inherits from base rule via currentColor */
 
 /* Section wrapper bg variants */
 .cps-first-section {
@@ -4080,9 +4045,9 @@ section.cps-img-section { padding-bottom: 8px; }
   transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out), box-shadow 0.3s;
 }
 .cps-tier-card.visible:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(15,35,64,0.12); }
-.cps-tier-card--light    { background: var(--warm-white); }
+.cps-tier-card--light    { border: 1px solid #e8e3d8; background: var(--warm-white); }
 .cps-tier-card--alt      { border: 1px solid #ddd8cc; background: var(--cream); }
-.cps-tier-card--dark     { border: none; background: var(--navy); }
+.cps-tier-card--dark     { border: 1px solid rgba(255,255,255,0.12); background: var(--navy); }
 .cps-tier-card--gold     { border: none; background: var(--gold); }
 .cps-tier-card--featured { border-top: 3px solid var(--gold); box-shadow: 0 8px 32px rgba(var(--gold-rgb),0.2); }
 .cps-tier-card--dark.cps-tier-card--featured { border-top-color: var(--gold-light); }
@@ -4284,9 +4249,9 @@ section.cps-img-section { padding-bottom: 8px; }
 }
 
 /* Card style variants — front */
-.cps-flip-front--light { background: var(--warm-white); }
+.cps-flip-front--light { border: 1px solid #e8e3d8; background: var(--warm-white); }
 .cps-flip-front--alt   { border: 1px solid #ddd8cc; background: var(--cream); }
-.cps-flip-front--dark  { background: var(--navy); }
+.cps-flip-front--dark  { border: 1px solid rgba(255,255,255,0.12); background: var(--navy); }
 .cps-flip-front--gold  { background: var(--gold); }
 
 /* Featured treatment — border-top on front face */
@@ -4696,7 +4661,6 @@ const SITE_DEFAULTS = {
   heroTrustBullets: [],
   heroPrimaryLabel: "", heroPrimaryLinkType: "internal", heroPrimaryLinkUrl: "contact",
   heroSecondaryLabel: "", heroSecondaryLinkType: "internal", heroSecondaryLinkUrl: "services",
-  whyChooseUs: { heading:"", subtext:"", badgeNum:"", badgeLabel:"", bullets:[] },
   aboutNavLabel:"About Us", aboutBio1:"", aboutBio2:"",
   attorneyPhoto: "",
   contactHeadline: "",
@@ -4732,7 +4696,7 @@ const SITE_DEFAULTS = {
 
 const CFG = Object.assign({}, SITE_DEFAULTS, typeof SITE_CONFIG !== 'undefined' ? SITE_CONFIG : {});
 // Deep merge nested objects
-['colors','fontColors','whyChooseUs','heroBg','splashBg','pageTitles','pageHeaders','search','pinPad','pageAccess'].forEach(k => {
+['colors','fontColors','heroBg','splashBg','pageTitles','pageHeaders','search','pinPad','pageAccess'].forEach(k => {
   if (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG[k]) {
     CFG[k] = Object.assign({}, SITE_DEFAULTS[k], SITE_CONFIG[k]);
   }
@@ -4751,7 +4715,7 @@ if (!Array.isArray(CFG.customPages)) CFG.customPages = [];
         if (Array.isArray(parsed[k]) && parsed[k].length === 0 && Array.isArray(CFG[k]) && CFG[k].length > 0) return;
         CFG[k] = parsed[k];
       });
-      ['colors','fontColors','whyChooseUs','heroBg','splashBg','pageTitles','pageHeaders','search','pinPad','pageAccess'].forEach(k => {
+      ['colors','fontColors','heroBg','splashBg','pageTitles','pageHeaders','search','pinPad','pageAccess'].forEach(k => {
         if (parsed[k]) CFG[k] = Object.assign({}, CFG[k], parsed[k]);
       });
       // Custom pages: fully replace if present in preview, but only if items have valid titles
@@ -5173,7 +5137,7 @@ function buildStats() {
 }
 
 /* =============================================
-   WHY CHOOSE US
+   FAQ / ACCORDION INTERACTIONS
    ============================================= */
 function toggleFaq(el) {
   const item = el.closest('.faq-item');
@@ -5324,7 +5288,7 @@ function buildAbout() {
       : '';
     const delay = idx === 0 ? 'reveal' : 'reveal reveal-delay-1';
 
-    return `<div class="about-member ${delay}" style="${idx > 0 ? 'margin-top:12px;padding-top:12px;border-top:1px solid var(--border);' : ''}">
+    return `<div class="about-member ${delay}" style="${idx > 0 ? 'margin-top:12px;padding-top:12px;border-top:1px solid currentColor;' : ''}">
       <div class="about-top-grid">
         <div class="about-left-col">
           <div class="about-photo-wrap">
@@ -5801,7 +5765,6 @@ function applyHomepageToggles() {
   const ht = CFG.homeToggles || {};
   const el = id => document.getElementById(id);
   if (el('stats-bar'))  el('stats-bar').style.display  = ht.stats === false ? 'none' : '';
-  if (el('why'))        el('why').style.display        = ht.why   === false ? 'none' : '';
   if (el('home-testimonials-section')) el('home-testimonials-section').style.display = ht.testimonials === false ? 'none' : '';
 }
 
@@ -7274,11 +7237,13 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
       const col1Label = sec.col1Label || 'Service';
       const col2Label = sec.col2Label || 'Value';
       const col3Label = sec.col3Label || 'Notes';
+      const mobileStack = sec.mobileStack !== false;
+      const feeWrapClass = 'cps-fee-wrap' + (mobileStack ? ' cps-fee-wrap--stack' : '');
       wrapper.innerHTML = `<div class="container">
         ${labelHTML}
         ${sec.heading ? `<${headTag} class="${headClass} reveal">${sec.heading}</${headTag}>` : ''}
         ${sec.subtitle ? `<div class="section-subtitle reveal reveal-delay-1" style="${subtitleStyle}">${formatBody(sec.subtitle)}</div>` : ''}
-        <div class="reveal reveal-delay-2 cps-fee-wrap">
+        <div class="reveal reveal-delay-2 ${feeWrapClass}">
           <table class="cps-fee-table">
             <thead><tr><th>${col1Label}</th><th>${col2Label}</th><th>${col3Label}</th></tr></thead>
             <tbody>${rows}</tbody>
@@ -7318,6 +7283,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
       const col2Style   = sec.col2Style || 'normal';
       const col3Style   = sec.col3Style || 'normal';
       const firstColHdr = sec.firstColHeader === true;
+      const mobileStack = sec.mobileStack === true;
       const items       = sec.items || [];
       if (!items.length) break;
 
@@ -7337,16 +7303,18 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
         const c1Class = (firstColHdr ? ' col-row-hdr' : '') + styleClass(col1Style);
         const c2Class = styleClass(col2Style);
         const c3Class = styleClass(col3Style);
-        const c3td = cols >= 3 ? `<td class="${c3Class}">${it.cell3||''}</td>` : '';
-        return `<tr><td class="${c1Class}">${it.cell1||''}</td><td class="${c2Class}">${it.cell2||''}</td>${c3td}</tr>`;
+        const c3td = cols >= 3 ? `<td class="${c3Class}" data-label="${escAttr(col3Label)}">${it.cell3||''}</td>` : '';
+        return `<tr><td class="${c1Class}" data-label="${escAttr(col1Label)}">${it.cell1||''}</td><td class="${c2Class}" data-label="${escAttr(col2Label)}">${it.cell2||''}</td>${c3td}</tr>`;
       }).join('');
+
+      const tblWrapClass = 'cps-tbl-wrap' + (mobileStack ? ' cps-tbl-wrap--stack' : '');
 
       wrapper.innerHTML =
         '<div class="container">' +
           labelHTML +
           (sec.heading  ? '<' + headTag + ' class="' + headClass + ' cps-heading reveal">' + sec.heading + '</' + headTag + '>' : '') +
           (sec.subtitle ? '<div class="section-subtitle reveal reveal-delay-1" style="' + subtitleStyle + '">' + formatBody(sec.subtitle) + '</div>' : '') +
-          '<div class="reveal reveal-delay-2 cps-tbl-wrap"><table class="cps-tbl">' + thead + '<tbody>' + tbodyRows + '</tbody></table></div>' +
+          '<div class="reveal reveal-delay-2 ' + tblWrapClass + '"><table class="cps-tbl">' + thead + '<tbody>' + tbodyRows + '</tbody></table></div>' +
         '</div>';
       break;
     }
