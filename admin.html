@@ -5505,6 +5505,7 @@ function buildCustomSectionHtml(sec, pi, si) {
   const isRichtext  = sec.type === 'richtext';
   const isLogoStrip = sec.type === 'logo-strip';
   const isImageSection = sec.type === 'image';
+  const isStats = sec.type === 'stats';
   const bgOpts = CP_BG_OPTIONS
     .filter(bg => isAppendage ? bg.value !== 'inherit' : true)
     .map(bg =>
@@ -5514,10 +5515,11 @@ function buildCustomSectionHtml(sec, pi, si) {
 
   const commonFields = (isAppendage || isRichtext || isLogoStrip || isImageSection) ? '' : `
     <div class="form-row-2" style="margin-bottom:12px;">
+      ${isStats ? '' : `
       <div class="field-group">
         <label>Section Label (small gold text)</label>
         <input type="text" data-cp="${pi}" data-sec="${si}" data-field="label" value="${escHtml(sec.label||'')}" placeholder="Practice Area"/>
-      </div>
+      </div>`}
       <div class="field-group">
         <label>Background</label>
         <div class="cp-bg-selector">${bgOpts}</div>

@@ -1077,9 +1077,9 @@ const SITE_CONFIG = {
           "type": "feature-cards",
           "label": "Feature Cards Options",
           "background": "light",
-          "anchorId": "feature-cards-heading-1-column-light",
+          "anchorId": "feature-cards-sections",
           "heading": "Feature Cards Sections",
-          "body": "Feature Cards Body / Subtext\n  - Background Color Options (Inherit, Light, Alt, Dark)\n  - Column Options (1-3 Columns)\n    - 1 Column Option for Full Width\n  - Badge Optional",
+          "body": "Feature Cards\n  - Background Color Options (Inherit, Light, Alt, Dark)\n  - Column Options (1-3 Columns)\n    - 1 Column Option for Full Width\n  - Badge Optional",
           "badgeNum": "##",
           "badgeLabel": "Badge Label",
           "fullWidth": false,
@@ -1269,7 +1269,7 @@ const SITE_CONFIG = {
           "type": "services",
           "label": "Services Grid Options",
           "background": "light",
-          "anchorId": "services-grid-heading",
+          "anchorId": "services-grid-sections",
           "heading": "Services Grid Sections",
           "subtitle": "Services Grid Subtitle\n  - Background Color Options (Inherit, Light, Alt, Dark)\n  - Column Options (1-4 Columns)\n    - 1 Column Option for Full Width",
           "maxCols": 1,
@@ -1628,7 +1628,7 @@ const SITE_CONFIG = {
           "type": "pricing",
           "label": "Tier Cards Options",
           "background": "light",
-          "anchorId": "tier-cards-heading-1-column-light-2",
+          "anchorId": "tier-cards-sections",
           "heading": "Tier Cards Sections",
           "subtitle": "Tier Cards Subtitle\n  - Background Color Options (Inherit, Light, Alt, Dark)\n  - Column Options (1-4 Columns)\n    - 1 Column Option for Full Width",
           "maxCols": 1,
@@ -2277,7 +2277,7 @@ const SITE_CONFIG = {
           "type": "flip-cards",
           "label": "Flip Cards Options",
           "background": "light",
-          "anchorId": "flip-cards-heading-1-column-light",
+          "anchorId": "flip-cards-sections",
           "heading": "Flip Cards Sections",
           "subtitle": "Flip Cards Subtitle\n  - Background Color Options (Inherit, Light, Alt, Dark)\n  - Column Options (1-4 Columns)\n    - 1 Column Option for Full Width",
           "maxCols": 1,
@@ -2917,7 +2917,7 @@ const SITE_CONFIG = {
           "type": "rotating-cards",
           "label": "Rotating Cards Options",
           "background": "light",
-          "anchorId": "rotating-cards-heading-1-card-light",
+          "anchorId": "rotating-cards-sections",
           "heading": "Rotating Cards Sections",
           "subtitle": "Rotating Cards Subtitle\n  - Background Color Options (Inherit, Light, Alt, Dark)\n  - Card Visibility Options (1-3 Cards)\n  - Card Height Pixel Field (default 420)\n  - Autoplay Speed Seconds (default 4)\n  - Toggles (Autoplay, Show Dots/Lines, Show Arrows, Peek Next Card)",
           "visibleCards": 1,
@@ -3633,7 +3633,7 @@ const SITE_CONFIG = {
           "type": "bullets",
           "label": "Bullets Options",
           "background": "light",
-          "anchorId": "bullets-heading-grid-light",
+          "anchorId": "bullets-sections",
           "heading": "Bullets Sections",
           "subtitle": "Bullets Subtitle\n  - Background Color Options (Inherit, Light, Alt, Dark)",
           "fullWidth": false,
@@ -3784,7 +3784,7 @@ const SITE_CONFIG = {
           "type": "steps",
           "label": "Process Steps Options",
           "background": "light",
-          "anchorId": "steps-heading-numbered-light",
+          "anchorId": "process-steps-sections",
           "heading": "Process Steps Sections",
           "subtitle": "Process Steps Subtitle\n  - Background Color Options (Inherit, Light, Alt, Dark)",
           "items": [
@@ -3975,7 +3975,7 @@ const SITE_CONFIG = {
           "type": "checklist",
           "label": "Checklist Options",
           "background": "light",
-          "anchorId": "checklist-heading-standard-light",
+          "anchorId": "checklist-sections",
           "heading": "Checklist Sections",
           "subtitle": "Checklist Subtitle\n  - Background Color Options (Inherit, Light, Alt, Dark)",
           "fullWidth": false,
@@ -4083,7 +4083,7 @@ const SITE_CONFIG = {
           "type": "timeline",
           "label": "Timeline Options",
           "background": "light",
-          "anchorId": "timeline-heading-auto-numbered-light",
+          "anchorId": "timeline-sections",
           "heading": "Timeline Sections",
           "subtitle": "Timeline Subtitle\n  - Background Color Options (Inherit, Light, Alt, Dark)",
           "items": [
@@ -4234,7 +4234,7 @@ const SITE_CONFIG = {
           "type": "resources",
           "label": "Resources Options",
           "background": "light",
-          "anchorId": "resources-heading-emoji-icons-light",
+          "anchorId": "resources-sections",
           "heading": "Resources Sections",
           "subtitle": "Resources Subtitle\n  - Background Color Options (Inherit, Light, Alt, Dark)",
           "items": [
@@ -4416,7 +4416,7 @@ const SITE_CONFIG = {
         },
         {
           "type": "stats",
-          "label": "",
+          "label": "Stat Label One",
           "background": "light",
           "anchorId": "stats",
           "items": [
@@ -4600,6 +4600,14 @@ const SITE_CONFIG = {
       "sections": [
         {
           "type": "text",
+          "label": "Stats Options",
+          "background": "light",
+          "anchorId": "stats-sections",
+          "heading": "Stats Sections",
+          "body": "  - Background Color Options (Inherit, Light, Alt, Dark)\n\nStats Card\n  - Number / Value Field\n  - Label Field \n  - Animation Toggle"
+        },
+        {
+          "type": "text",
           "label": "",
           "background": "light",
           "anchorId": "stats-static-light-intro",
@@ -4608,7 +4616,7 @@ const SITE_CONFIG = {
         },
         {
           "type": "stats",
-          "label": "",
+          "label": "Stat Label One",
           "background": "light",
           "anchorId": "stats-static-light",
           "items": [
@@ -4640,7 +4648,7 @@ const SITE_CONFIG = {
         },
         {
           "type": "stats",
-          "label": "",
+          "label": "Stat Label One",
           "background": "alt",
           "anchorId": "stats-animated-alt",
           "items": [
@@ -4677,7 +4685,7 @@ const SITE_CONFIG = {
         },
         {
           "type": "stats",
-          "label": "",
+          "label": "Animated Stat",
           "background": "dark",
           "anchorId": "stats-mixed-dark",
           "items": [
@@ -4712,9 +4720,33 @@ const SITE_CONFIG = {
       "sections": [
         {
           "type": "table",
+          "label": "Table Options",
+          "background": "light",
+          "anchorId": "table-sections",
+          "heading": "Table Sections",
+          "subtitle": "Table \n  - Background Color Options (Inherit, Light, Alt, Dark)\n  - Column Options (2-3 Columns)\n  - First Column as Row Header Toggle\n  - Stack as Cards on Mobile Toggle\n  - Column Header Fields\n  - Column Style Drop-downs (Normal, Bold, Large, Bold + Large)",
+          "cols": 3,
+          "col1Label": "Column 1",
+          "col1Style": "bold-large",
+          "col2Label": "Column 2",
+          "col2Style": "bold",
+          "col3Label": "Column 3",
+          "col3Style": "normal",
+          "firstColHeader": false,
+          "mobileStack": false,
+          "items": [
+            {
+              "cell1": "Row One",
+              "cell2": "Value One",
+              "cell3": "Value Two"
+            }
+          ]
+        },
+        {
+          "type": "table",
           "label": "Table Section Label",
           "background": "light",
-          "anchorId": "table-heading-2col-light",
+          "anchorId": "table-heading-2-columns-light",
           "heading": "Table Heading - 2 Columns - Light",
           "subtitle": "Table Subtitle (showing a 2-column table with bold first column)",
           "cols": 2,
@@ -4852,6 +4884,31 @@ const SITE_CONFIG = {
       "hiddenFromNav": false,
       "navOnly": false,
       "sections": [
+        {
+          "type": "fees",
+          "label": "Fee Schedule Options",
+          "background": "light",
+          "anchorId": "fee-schedule-sections",
+          "heading": "Fee Schedule Sections",
+          "subtitle": "Fee Schedule\n  - Background Color Options (Inherit, Light, Alt, Dark)\n  - 3 Columns\n  - Column Header Fields\n  - Stack as Cards on Mobile Toggle\n\nRow\n  - Service Field\n  - Value Field\n  - Notes Field\n  - Small Notes Field",
+          "col1Label": "Service",
+          "col2Label": "Value",
+          "col3Label": "Notes",
+          "disclaimer": "Disclaimer (Small Text Below Table)",
+          "mobileStack": true,
+          "items": [
+            {
+              "service": "Service One",
+              "amount": "Value $",
+              "detail": "Notes",
+              "note": "Note (Small Text)",
+              "linkLabel": "Row Link Label",
+              "linkType": "internal",
+              "linkUrl": "home",
+              "anchorId": ""
+            }
+          ]
+        },
         {
           "type": "fees",
           "label": "Fee Schedule Section Label",
@@ -5043,6 +5100,20 @@ const SITE_CONFIG = {
       "hiddenFromNav": false,
       "navOnly": false,
       "sections": [
+        {
+          "type": "jurisdiction",
+          "label": "Jurisdiction Options",
+          "background": "light",
+          "anchorId": "jurisdiction-notice-sections",
+          "icon": "⚖️",
+          "title": "Notice Title",
+          "heading": "Jurisdiction Notice Sections",
+          "body": "Jurisdiction Notice\n  - Icon (Emoji)\n  - Notice Title \n  - Notice Body Text\n  - Link Button Optional (Internal, External, File)",
+          "linkLabel": "Notice Link Label",
+          "linkType": "internal",
+          "linkUrl": "home",
+          "jur_anchorId": ""
+        },
         {
           "type": "jurisdiction",
           "label": "",
@@ -5349,6 +5420,23 @@ const SITE_CONFIG = {
       "sections": [
         {
           "type": "gallery",
+          "label": "Gallery Options",
+          "background": "light",
+          "anchorId": "gallery-sections",
+          "heading": "Gallery Sections",
+          "subtitle": "Gallery\n  - Background Color Options (Inherit, Light, Alt, Dark)\n  - Column Options (2-6 Columns)\n\nImage\n  - Image Path \n  - Alt Text \n  - Title (optional)\n  - Caption (optional)",
+          "galleryCols": 3,
+          "items": [
+            {
+              "imagePath": "images/image-01.jpg",
+              "alt": "Gallery Image One",
+              "title": "Image Title",
+              "caption": "Image Caption"
+            }
+          ]
+        },
+        {
+          "type": "gallery",
           "label": "Gallery Section Label",
           "background": "light",
           "anchorId": "gallery-heading-3col-light",
@@ -5465,6 +5553,14 @@ const SITE_CONFIG = {
       "sections": [
         {
           "type": "text",
+          "label": "Image Options",
+          "background": "light",
+          "anchorId": "image-sections",
+          "heading": "Image Sections",
+          "body": "Image\n  - Background Color Options (Inherit, Light, Alt, Dark)\n  - Image Path \n  - Image Width px (full width if blank)\n  - Aspect Ratio Drop-down \n      - Auto (Natural)\n      - 16:9 (Landscape)\n      - 4:3 (Standard)\n      - 1:1 (Square)\n      - 3:4 (Portrait)\n  - Object Position (center, top, bottom, Lf, Rt)\n  - Caption (optional)\n  - Rounded Corners Toggle\n  - Before/After Toggle\n      - After Image Path\n      - Slider Direction (Horizontal, or Vertical)\n      - Starting Position (%)\n      - Before/After Labels Toggle\n          - Editable Before/After Text Fields\n\nColumn Text (optional)\n  - Column Title\n  - Body Text \n  - Text Side Toggle (left/right)"
+        },
+        {
+          "type": "text",
           "label": "",
           "background": "light",
           "anchorId": "image-heading-full-width-light-intro",
@@ -5483,7 +5579,7 @@ const SITE_CONFIG = {
           "objectPosition": "center",
           "captionText": "Image Caption",
           "roundedCorners": false,
-          "beforeAfter": false,
+          "beforeAfter": true,
           "sliderDir": "horizontal",
           "sliderStart": 50,
           "showLabels": true,
@@ -5558,6 +5654,23 @@ const SITE_CONFIG = {
       "sections": [
         {
           "type": "video",
+          "label": "Video Options",
+          "background": "light",
+          "anchorId": "video-sections",
+          "heading": "Video Sections",
+          "body": "Video\n  - Background Color Options (Inherit, Light, Alt, Dark)\n  - Layout Drop-down \n      - Contained (centered)\n      - Full Width\n      - 2 Column\n  - Video Position (left/right)\n  - Video Width (560px, 860px, 1060px, Full Container)\n  - Youtube or Vimeo URL Field or\n  - Self-hosted Video MP4 link",
+          "videoLayout": "contained",
+          "videoPosition": "left",
+          "containedWidth": "medium",
+          "embedUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+          "mp4Url": "",
+          "cta_linkType": "none",
+          "cta_linkLabel": "",
+          "cta_linkUrl": "",
+          "cta_anchorId": ""
+        },
+        {
+          "type": "video",
           "label": "Video Section Label",
           "background": "light",
           "anchorId": "video-heading-contained-light",
@@ -5618,6 +5731,14 @@ const SITE_CONFIG = {
       "hiddenFromNav": false,
       "navOnly": false,
       "sections": [
+        {
+          "type": "text",
+          "label": "Logo Strip Options",
+          "background": "light",
+          "anchorId": "logo-strip-sections",
+          "heading": "Logo Strip Sections",
+          "body": "Logo Strip Body / Subtext (showing small logos with the caption placed above)"
+        },
         {
           "type": "text",
           "label": "",
@@ -7238,5 +7359,5 @@ const SITE_CONFIG = {
   },
   "fontDisplayCustom": "Titillium Web",
   "fontBodyCustom": "",
-  "_savedAt": 1783453854237
+  "_savedAt": 1783482205973
 };
