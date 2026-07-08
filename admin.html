@@ -4302,11 +4302,19 @@ function loadCtaField(linkType, linkUrl, anchorId) {
   if (ancSel) ancSel.innerHTML     = getAnchorOptions(linkType === 'internal' ? (linkUrl||'') : '', anchorId||'');
 }
 
-function onImgBeforeAfterToggle(cb) {
-  const card = cb.closest('.cp-section-card');
+function onImgDisplayModeChange(sel) {
+  const card = sel.closest('.cp-section-card');
   if (!card) return;
   const baFields = card.querySelector('.cps-img-ba-fields');
-  if (baFields) baFields.style.display = cb.checked ? '' : 'none';
+  if (baFields) baFields.style.display = sel.value === 'beforeAfter' ? '' : 'none';
+  autosave();
+}
+
+function onTeamUseAttorneysToggle(cb) {
+  const card = cb.closest('.cp-section-card');
+  if (!card) return;
+  const selectFields = card.querySelector('.cps-team-select-fields');
+  if (selectFields) selectFields.style.display = cb.checked ? 'none' : '';
   autosave();
 }
 
@@ -4732,7 +4740,8 @@ function addHomeSection() {
   if (type === 'logo-strip') { defaults.items = []; defaults.logoSize = 'medium'; defaults.captionPos = 'above'; }
   if (type === 'marquee') { defaults.items = []; defaults.mqMode = 'text'; defaults.mqSpeed = 'medium'; defaults.mqDir = 'left'; defaults.mqPause = true; defaults.mqText = ''; defaults.mqSeparator = '·'; defaults.mqFadeEdges = true; defaults.mqFadeWidth = 'normal'; defaults.mqTickerHold = 3; defaults.mqTickerSpeed = 'normal'; }
   if (type === 'video') { defaults.videoLayout = 'contained'; defaults.videoPosition = 'left'; defaults.embedUrl = ''; defaults.mp4Url = ''; }
-  if (type === 'image') { defaults.imagePath = ''; defaults.imageWidth = 0; defaults.aspectRatio = 'auto'; defaults.objectPosition = 'center'; defaults.roundedCorners = false; defaults.beforeAfter = false; defaults.captionText = ''; defaults.sliderDir = 'horizontal'; defaults.sliderStart = 50; defaults.showLabels = true; defaults.labelBefore = 'Before'; defaults.labelAfter = 'After'; defaults.bodyHeading = ''; defaults.bodyText = ''; defaults.textSide = 'right'; }
+  if (type === 'image') { defaults.imagePath = ''; defaults.imageWidth = 0; defaults.aspectRatio = 'auto'; defaults.objectPosition = 'center'; defaults.roundedCorners = false; defaults.imageDisplayMode = 'none'; defaults.captionText = ''; defaults.sliderDir = 'horizontal'; defaults.sliderStart = 50; defaults.showLabels = true; defaults.labelBefore = 'Before'; defaults.labelAfter = 'After'; defaults.bodyHeading = ''; defaults.bodyText = ''; defaults.textSide = 'right'; }
+  if (type === 'team') { defaults.useAttorneys = true; defaults.selectedAttorneys = []; defaults.showPhoto = true; defaults.showEducation = true; defaults.showCredentials = false; defaults.showBio1 = true; defaults.showBio2 = false; defaults.showSocialLinks = false; }
   if (type === 'gallery') { defaults.items = []; defaults.galleryCols = 3; }
   if (type === 'pricing') { defaults.items = []; }
   if (type === 'locations') { defaults.items = []; defaults.displayMode = 'cards'; defaults.layoutMode = 'top'; defaults.mapMode = 'linkout'; defaults.maxCols = 2; defaults.showHours = true; }
@@ -4802,7 +4811,8 @@ function addAboutSection() {
   if (type === 'logo-strip') { defaults.items = []; defaults.logoSize = 'medium'; defaults.captionPos = 'above'; }
   if (type === 'marquee') { defaults.items = []; defaults.mqMode = 'text'; defaults.mqSpeed = 'medium'; defaults.mqDir = 'left'; defaults.mqPause = true; defaults.mqText = ''; defaults.mqSeparator = '·'; defaults.mqFadeEdges = true; defaults.mqFadeWidth = 'normal'; defaults.mqTickerHold = 3; defaults.mqTickerSpeed = 'normal'; }
   if (type === 'video') { defaults.videoLayout = 'contained'; defaults.videoPosition = 'left'; defaults.embedUrl = ''; defaults.mp4Url = ''; }
-  if (type === 'image') { defaults.imagePath = ''; defaults.imageWidth = 0; defaults.aspectRatio = 'auto'; defaults.objectPosition = 'center'; defaults.roundedCorners = false; defaults.beforeAfter = false; defaults.captionText = ''; defaults.sliderDir = 'horizontal'; defaults.sliderStart = 50; defaults.showLabels = true; defaults.labelBefore = 'Before'; defaults.labelAfter = 'After'; defaults.bodyHeading = ''; defaults.bodyText = ''; defaults.textSide = 'right'; }
+  if (type === 'image') { defaults.imagePath = ''; defaults.imageWidth = 0; defaults.aspectRatio = 'auto'; defaults.objectPosition = 'center'; defaults.roundedCorners = false; defaults.imageDisplayMode = 'none'; defaults.captionText = ''; defaults.sliderDir = 'horizontal'; defaults.sliderStart = 50; defaults.showLabels = true; defaults.labelBefore = 'Before'; defaults.labelAfter = 'After'; defaults.bodyHeading = ''; defaults.bodyText = ''; defaults.textSide = 'right'; }
+  if (type === 'team') { defaults.useAttorneys = true; defaults.selectedAttorneys = []; defaults.showPhoto = true; defaults.showEducation = true; defaults.showCredentials = false; defaults.showBio1 = true; defaults.showBio2 = false; defaults.showSocialLinks = false; }
   if (type === 'gallery') { defaults.items = []; defaults.galleryCols = 3; }
   if (type === 'pricing') { defaults.items = []; }
   if (type === 'locations') { defaults.items = []; defaults.displayMode = 'cards'; defaults.layoutMode = 'top'; defaults.mapMode = 'linkout'; defaults.maxCols = 2; defaults.showHours = true; }
@@ -5124,7 +5134,7 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
     sec.objectPosition = get('objectPosition') || 'center';
     sec.captionText    = get('captionText') || '';
     sec.roundedCorners = secCard.querySelector('[data-field="roundedCorners"]')?.checked === true;
-    sec.beforeAfter    = secCard.querySelector('[data-field="beforeAfter"]')?.checked === true;
+    sec.imageDisplayMode = get('imageDisplayMode') || 'none';
     sec.sliderDir      = get('sliderDir') || 'horizontal';
     sec.sliderStart    = parseInt(get('sliderStart')) || 50;
     sec.showLabels     = secCard.querySelector('[data-field="showLabels"]')?.checked !== false;
@@ -5134,6 +5144,20 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
     sec.bodyText       = get('bodyText')    || '';
     sec.textSide       = get('textSide')    || 'right';
     sec.imageWidth     = parseInt(get('imageWidth')) || 500;
+  }
+
+  // Team Block
+  if (type === 'team') {
+    sec.maxCols = parseInt(get('maxCols')) || 3;
+    sec.colFullWidth = secCard.querySelector('[data-field="colFullWidth"]')?.checked || false;
+    sec.useAttorneys = secCard.querySelector('[data-field="useAttorneys"]')?.checked !== false;
+    sec.selectedAttorneys = Array.from(secCard.querySelectorAll('[data-field="selectedAttorneys"]:checked')).map(el => el.dataset.attorneyName);
+    sec.showPhoto       = secCard.querySelector('[data-field="showPhoto"]')?.checked !== false;
+    sec.showEducation   = secCard.querySelector('[data-field="showEducation"]')?.checked !== false;
+    sec.showCredentials = secCard.querySelector('[data-field="showCredentials"]')?.checked === true;
+    sec.showBio1        = secCard.querySelector('[data-field="showBio1"]')?.checked !== false;
+    sec.showBio2        = secCard.querySelector('[data-field="showBio2"]')?.checked === true;
+    sec.showSocialLinks = secCard.querySelector('[data-field="showSocialLinks"]')?.checked === true;
   }
 
   // Gallery
@@ -6840,7 +6864,17 @@ function buildCpSectionTypeFields(sec, pi, si) {
         </div>`;
     }
 
-    case 'team':
+    case 'team': {
+      const useAll = sec.useAttorneys !== false;
+      const selected = sec.selectedAttorneys || [];
+      const attorneyChecklist = (DATA.attorneys||[]).map((a, ai) => {
+        const nm = a.name || ('Team Member ' + (ai+1));
+        const checked = selected.includes(a.name);
+        return `<label style="display:flex;align-items:center;gap:8px;padding:5px 0;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0;">
+          <input type="checkbox" data-field="selectedAttorneys" data-attorney-name="${escHtml(a.name||'')}" ${checked?'checked':''}/>
+          ${escHtml(nm)}
+        </label>`;
+      }).join('');
       return `
         <div style="display:flex;align-items:flex-end;gap:12px;margin-bottom:10px;">
           <div class="field-group" style="margin:0;flex:1;"><label>Max Columns</label>
@@ -6860,10 +6894,59 @@ function buildCpSectionTypeFields(sec, pi, si) {
         </div>
         <div class="field-group"><label>Heading</label><input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
         <div class="switch-row">
-          <span class="switch-label">Use team members from About Us section</span>
-          <label class="switch"><input type="checkbox" ${p} data-field="useAttorneys" ${sec.useAttorneys !== false ? 'checked' : ''}/><span class="switch-slider"></span></label>
+          <span class="switch-label">Show all team members</span>
+          <label class="switch"><input type="checkbox" ${p} data-field="useAttorneys" ${useAll ? 'checked' : ''} onchange="onTeamUseAttorneysToggle(this)"/><span class="switch-slider"></span></label>
         </div>
-        <p class="field-hint">When on, automatically shows the team members configured in About Us.</p>`;
+        <p class="field-hint">Team members are managed in the About Us section. When off, choose which ones appear here.</p>
+        <div class="cps-team-select-fields" style="${useAll?'display:none;':''}border-top:1px solid rgba(0,0,0,0.08);padding-top:10px;margin-bottom:14px;">
+          <label>Select Team Members to Show</label>
+          ${attorneyChecklist || '<p class="field-hint">No team members found yet — add them in the About Us section first.</p>'}
+        </div>
+        <div class="divider" style="margin:14px 0;"></div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Card Fields</div>
+        <div class="form-row-2" style="margin-bottom:8px;">
+          <div class="field-group" style="margin:0;">
+            <div class="switch-row" style="margin:0;justify-content:flex-start;gap:10px;">
+              <label class="switch"><input type="checkbox" ${p} data-field="showPhoto" ${sec.showPhoto!==false?'checked':''}/><span class="switch-slider"></span></label>
+              <span class="switch-label">Photo</span>
+            </div>
+          </div>
+          <div class="field-group" style="margin:0;">
+            <div class="switch-row" style="margin:0;justify-content:flex-start;gap:10px;">
+              <label class="switch"><input type="checkbox" ${p} data-field="showEducation" ${sec.showEducation!==false?'checked':''}/><span class="switch-slider"></span></label>
+              <span class="switch-label">Degree / Education</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-row-2" style="margin-bottom:8px;">
+          <div class="field-group" style="margin:0;">
+            <div class="switch-row" style="margin:0;justify-content:flex-start;gap:10px;">
+              <label class="switch"><input type="checkbox" ${p} data-field="showCredentials" ${sec.showCredentials===true?'checked':''}/><span class="switch-slider"></span></label>
+              <span class="switch-label">Credentials</span>
+            </div>
+          </div>
+          <div class="field-group" style="margin:0;">
+            <div class="switch-row" style="margin:0;justify-content:flex-start;gap:10px;">
+              <label class="switch"><input type="checkbox" ${p} data-field="showBio1" ${sec.showBio1!==false?'checked':''}/><span class="switch-slider"></span></label>
+              <span class="switch-label">Bio Paragraph 1</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-row-2" style="margin-bottom:8px;">
+          <div class="field-group" style="margin:0;">
+            <div class="switch-row" style="margin:0;justify-content:flex-start;gap:10px;">
+              <label class="switch"><input type="checkbox" ${p} data-field="showBio2" ${sec.showBio2===true?'checked':''}/><span class="switch-slider"></span></label>
+              <span class="switch-label">Bio Paragraph 2</span>
+            </div>
+          </div>
+          <div class="field-group" style="margin:0;">
+            <div class="switch-row" style="margin:0;justify-content:flex-start;gap:10px;">
+              <label class="switch"><input type="checkbox" ${p} data-field="showSocialLinks" ${sec.showSocialLinks===true?'checked':''}/><span class="switch-slider"></span></label>
+              <span class="switch-label">Social Links (Show All)</span>
+            </div>
+          </div>
+        </div>`;
+    }
 
     case 'form': {
       const fields = (sec.fields || []);
@@ -7266,7 +7349,8 @@ function buildCpSectionTypeFields(sec, pi, si) {
       const objPos   = sec.objectPosition || 'center';
       const sliderDir   = sec.sliderDir    || 'horizontal';
       const sliderStart = sec.sliderStart  !== undefined ? sec.sliderStart : 50;
-      const baEnabled   = sec.beforeAfter  === true;
+      const imgMode  = sec.imageDisplayMode || (sec.beforeAfter === true ? 'beforeAfter' : 'none');
+      const baEnabled   = imgMode === 'beforeAfter';
       const showLabels  = sec.showLabels   !== false;
       const rounded  = sec.roundedCorners === true;
       const baDisplay    = baEnabled  ? '' : 'display:none;';
@@ -7300,12 +7384,18 @@ function buildCpSectionTypeFields(sec, pi, si) {
         </div>
         <div class="form-row-2" style="margin-bottom:12px;">
           <div class="field-group" style="margin:0;">
-            <div class="switch-row" style="margin:0;"><span class="switch-label">Rounded corners</span>
-              <label class="switch"><input type="checkbox" ${p} data-field="roundedCorners" ${rounded?'checked':''}/><span class="switch-slider"></span></label></div>
+            <div class="switch-row" style="margin:0;justify-content:flex-start;gap:10px;">
+              <label class="switch"><input type="checkbox" ${p} data-field="roundedCorners" ${rounded?'checked':''}/><span class="switch-slider"></span></label>
+              <span class="switch-label">Rounded corners</span>
+            </div>
           </div>
           <div class="field-group" style="margin:0;">
-            <div class="switch-row" style="margin:0;"><span class="switch-label">Before / After slider</span>
-              <label class="switch"><input type="checkbox" ${p} data-field="beforeAfter" ${baEnabled?'checked':''} onchange="onImgBeforeAfterToggle(this)"/><span class="switch-slider"></span></label></div>
+            <label>Image Interaction</label>
+            <select ${p} data-field="imageDisplayMode" onchange="onImgDisplayModeChange(this)">
+              <option value="none" ${imgMode==='none'?'selected':''}>None</option>
+              <option value="zoom" ${imgMode==='zoom'?'selected':''}>Zoom</option>
+              <option value="beforeAfter" ${imgMode==='beforeAfter'?'selected':''}>Before / After</option>
+            </select>
           </div>
         </div>
         <div class="cps-img-ba-fields" style="${baDisplay}border-top:1px solid rgba(0,0,0,0.08);padding-top:12px;margin-top:4px;">
@@ -7321,8 +7411,10 @@ function buildCpSectionTypeFields(sec, pi, si) {
               <input type="number" min="5" max="95" ${p} data-field="sliderStart" value="${sliderStart}" style="width:80px;"/></div>
           </div>
           <div class="field-group" style="margin-bottom:8px;">
-            <div class="switch-row" style="margin:0;"><span class="switch-label">Show Before / After labels</span>
-              <label class="switch"><input type="checkbox" ${p} data-field="showLabels" ${showLabels?'checked':''} onchange="onImgShowLabelsToggle(this)"/><span class="switch-slider"></span></label></div>
+            <div class="switch-row" style="margin:0;justify-content:flex-start;gap:10px;">
+              <label class="switch"><input type="checkbox" ${p} data-field="showLabels" ${showLabels?'checked':''} onchange="onImgShowLabelsToggle(this)"/><span class="switch-slider"></span></label>
+              <span class="switch-label">Show Before / After labels</span>
+            </div>
           </div>
           <div class="cps-img-label-fields form-row-2" style="${lblDisplay}margin-bottom:4px;">
             <div class="field-group" style="margin:0;"><label>Before Label</label>
@@ -8281,7 +8373,8 @@ function addCpSection(pi) {
   if (type === 'logo-strip') { defaults.items = []; defaults.logoSize = 'medium'; defaults.captionPos = 'above'; }
   if (type === 'marquee') { defaults.items = []; defaults.mqMode = 'text'; defaults.mqSpeed = 'medium'; defaults.mqDir = 'left'; defaults.mqPause = true; defaults.mqText = ''; defaults.mqSeparator = '·'; defaults.mqFadeEdges = true; defaults.mqFadeWidth = 'normal'; defaults.mqTickerHold = 3; defaults.mqTickerSpeed = 'normal'; }
   if (type === 'video') { defaults.videoLayout = 'contained'; defaults.videoPosition = 'left'; defaults.embedUrl = ''; defaults.mp4Url = ''; }
-  if (type === 'image') { defaults.imagePath = ''; defaults.imageWidth = 0; defaults.aspectRatio = 'auto'; defaults.objectPosition = 'center'; defaults.roundedCorners = false; defaults.beforeAfter = false; defaults.captionText = ''; defaults.sliderDir = 'horizontal'; defaults.sliderStart = 50; defaults.showLabels = true; defaults.labelBefore = 'Before'; defaults.labelAfter = 'After'; defaults.bodyHeading = ''; defaults.bodyText = ''; defaults.textSide = 'right'; }
+  if (type === 'image') { defaults.imagePath = ''; defaults.imageWidth = 0; defaults.aspectRatio = 'auto'; defaults.objectPosition = 'center'; defaults.roundedCorners = false; defaults.imageDisplayMode = 'none'; defaults.captionText = ''; defaults.sliderDir = 'horizontal'; defaults.sliderStart = 50; defaults.showLabels = true; defaults.labelBefore = 'Before'; defaults.labelAfter = 'After'; defaults.bodyHeading = ''; defaults.bodyText = ''; defaults.textSide = 'right'; }
+  if (type === 'team') { defaults.useAttorneys = true; defaults.selectedAttorneys = []; defaults.showPhoto = true; defaults.showEducation = true; defaults.showCredentials = false; defaults.showBio1 = true; defaults.showBio2 = false; defaults.showSocialLinks = false; }
   if (type === 'gallery') { defaults.items = []; defaults.galleryCols = 3; }
   if (type === 'pricing') { defaults.items = []; }
   if (type === 'locations') { defaults.items = []; defaults.displayMode = 'cards'; defaults.layoutMode = 'top'; defaults.mapMode = 'linkout'; defaults.maxCols = 2; defaults.showHours = true; }
@@ -9125,8 +9218,17 @@ function collectCpSections(card, pi, existingSections) {
         sec.linkLabel = get('linkLabel'); sec.linkType = get('linkType'); sec.linkUrl = get('linkUrl');
         sec.jur_anchorId = get('jur_anchorId'); break;
       case 'team':
-        sec.heading = get('heading'); sec.useAttorneys = getCheck('useAttorneys'); sec.maxCols = parseInt(get('maxCols')) || 3;
-        sec.colFullWidth = secCard.querySelector('[data-field="colFullWidth"]')?.checked || false; break;
+        sec.heading = get('heading'); sec.maxCols = parseInt(get('maxCols')) || 3;
+        sec.colFullWidth = secCard.querySelector('[data-field="colFullWidth"]')?.checked || false;
+        sec.useAttorneys = secCard.querySelector('[data-field="useAttorneys"]')?.checked !== false;
+        sec.selectedAttorneys = Array.from(secCard.querySelectorAll('[data-field="selectedAttorneys"]:checked')).map(el => el.dataset.attorneyName);
+        sec.showPhoto       = secCard.querySelector('[data-field="showPhoto"]')?.checked !== false;
+        sec.showEducation   = secCard.querySelector('[data-field="showEducation"]')?.checked !== false;
+        sec.showCredentials = secCard.querySelector('[data-field="showCredentials"]')?.checked === true;
+        sec.showBio1        = secCard.querySelector('[data-field="showBio1"]')?.checked !== false;
+        sec.showBio2        = secCard.querySelector('[data-field="showBio2"]')?.checked === true;
+        sec.showSocialLinks = secCard.querySelector('[data-field="showSocialLinks"]')?.checked === true;
+        break;
       case 'form':
         sec.heading = get('heading'); sec.intro = get('intro');
         sec.submitLabel = get('submitLabel'); sec.successMsg = get('successMsg');
@@ -9227,7 +9329,7 @@ function collectCpSections(card, pi, existingSections) {
         sec.objectPosition = get('objectPosition') || 'center';
         sec.captionText    = get('captionText') || '';
         sec.roundedCorners = secCard.querySelector('[data-field="roundedCorners"]')?.checked === true;
-        sec.beforeAfter    = secCard.querySelector('[data-field="beforeAfter"]')?.checked === true;
+        sec.imageDisplayMode = get('imageDisplayMode') || 'none';
         sec.sliderDir      = get('sliderDir') || 'horizontal';
         sec.sliderStart    = parseInt(get('sliderStart')) || 50;
         sec.showLabels     = secCard.querySelector('[data-field="showLabels"]')?.checked !== false;

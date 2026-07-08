@@ -2928,6 +2928,8 @@ footer {
 }
 .cps-team-title { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; display: flex; flex-direction: column; gap: 3px; }
 .cps-team-bio { font-size: 13.5px; line-height: 1.7; color: var(--text-muted); }
+.cps-team-bio p { margin: 0 0 0.5em; }
+.cps-team-bio p:last-child { margin-bottom: 0; }
 
 
 /* Team dark/alt section theming */
@@ -3529,6 +3531,8 @@ section.cps-img-section { padding-bottom: 8px; }
   width: 100%;
   display: block;
 }
+.cps-img-frame:hover .cps-gallery-overlay { background: rgba(9,20,38,0.4); }
+.cps-img-frame:hover .cps-gallery-expand { opacity: 1; transform: scale(1); }
 /* Before / After slider */
 .cps-img-ba-wrap {
   position: relative;
@@ -3702,14 +3706,14 @@ section.cps-img-section { padding-bottom: 8px; }
   position: absolute;
   inset: 0;
   background: rgba(9,20,38,0);
-  display: flex;
-  align-items: center;
-  justify-content: center;
   transition: background 0.3s;
 }
 .cps-gallery-item:hover .cps-gallery-overlay { background: rgba(9,20,38,0.4); }
 .cps-gallery-expand {
-  width: 44px; height: 44px;
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 34px; height: 34px;
   border-radius: 50%;
   background: rgba(255,255,255,0.15);
   backdrop-filter: blur(8px);
@@ -3722,6 +3726,16 @@ section.cps-img-section { padding-bottom: 8px; }
   transition: opacity 0.3s, transform 0.3s;
 }
 .cps-gallery-item:hover .cps-gallery-expand { opacity: 1; transform: scale(1); }
+@media (hover: none) and (pointer: coarse) {
+  .cps-gallery-expand {
+    opacity: 1;
+    width: 44px;
+    height: 44px;
+    top: 8px;
+    right: 8px;
+    transform: scale(1);
+  }
+}
 
 /* Responsive */
 @media (max-width: 1024px) {
@@ -5258,22 +5272,24 @@ function buildBlogCardHtml(p, i, delayClass, noFeatured) {
 }
 
 /* =============================================
+   SHARED — Social platform icon set
+   ============================================= */
+const SOCIAL_SVGS = {
+  facebook:  `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>`,
+  instagram: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>`,
+  linkedin:  `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>`,
+  x:         `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>`,
+  youtube:   `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon fill="white" points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg>`,
+  tiktok:    `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V9.15a8.16 8.16 0 0 0 4.77 1.52V7.21a4.85 4.85 0 0 1-1-.52z"/></svg>`,
+  custom:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`,
+};
+
+/* =============================================
    ABOUT
    ============================================= */
 function buildAbout() {
   const container = document.getElementById('about-members');
   if (!container) return;
-
-  // Social SVGs (same as footer)
-  const SOCIAL_SVGS = {
-    facebook:  `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>`,
-    instagram: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>`,
-    linkedin:  `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>`,
-    x:         `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>`,
-    youtube:   `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon fill="white" points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg>`,
-    tiktok:    `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V9.15a8.16 8.16 0 0 0 4.77 1.52V7.21a4.85 4.85 0 0 1-1-.52z"/></svg>`,
-    custom:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`,
-  };
 
   const attorneys = (CFG.attorneys && CFG.attorneys.length > 0)
     ? CFG.attorneys
@@ -5502,15 +5518,6 @@ function buildFooter() {
   document.getElementById('footer-bio').textContent = CFG.footerBio || (CFG.aboutBio1 ? CFG.aboutBio1.substring(0,120)+'…' : '');
 
   // Social icons
-  const SOCIAL_SVGS = {
-    facebook:  `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>`,
-    instagram: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>`,
-    linkedin:  `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>`,
-    x:         `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>`,
-    youtube:   `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon fill="white" points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg>`,
-    tiktok:    `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V9.15a8.16 8.16 0 0 0 4.77 1.52V7.21a4.85 4.85 0 0 1-1-.52z"/></svg>`,
-    custom:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`,
-  };
   const socialEl = document.getElementById('footer-social-icons');
   if (socialEl) {
     const links = (CFG.socialLinks || []).filter(s => s.url);
@@ -7614,20 +7621,45 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
     }
 
     case 'team': {
-      // Use configured attorneys or custom items
+      const fallbackPool = [{ name: CFG.attorneyName||'', education: CFG.attorneyDegree?[CFG.attorneyDegree]:[], photo: CFG.attorneyPhoto||'',
+                               credentials: CFG.attorneyCredentials||[], bio1: CFG.aboutBio1||'', bio2: CFG.aboutBio2||'', socialLinks: [] }];
+      const allMembers = (CFG.attorneys && CFG.attorneys.length > 0) ? CFG.attorneys : fallbackPool;
       const members = sec.useAttorneys !== false
-        ? (CFG.attorneys || [{ name: CFG.attorneyName, degree: CFG.attorneyDegree, photo: CFG.attorneyPhoto, bio: CFG.aboutBio1 }])
-        : (sec.items || []);
+        ? allMembers
+        : allMembers.filter(m => (sec.selectedAttorneys || []).includes(m.name));
+
+      const showPhoto        = sec.showPhoto        !== false;
+      const showEducation    = sec.showEducation    !== false;
+      const showCredentials  = sec.showCredentials  === true;
+      const showBio1         = sec.showBio1         !== false;
+      const showBio2         = sec.showBio2         === true;
+      const showSocialLinks  = sec.showSocialLinks  === true;
+
       const cards = members.map(m => {
-        const photoHTML = m.photo
+        const photoHTML = !showPhoto ? '' : (m.photo
           ? `<img class="cps-team-photo" src="${escAttr(m.photo)}" alt="${escAttr(m.name||'')}" loading="lazy"/>`
-          : `<div class="cps-team-photo-placeholder">👤</div>`;
+          : `<div class="cps-team-photo-placeholder">👤</div>`);
+        const eduList = Array.isArray(m.education) && m.education.length ? m.education : (m.degree ? [m.degree] : []);
+        const eduHTML = showEducation && eduList.length
+          ? `<div class="cps-team-title">${eduList.map(e => `<div>${e}</div>`).join('')}</div>` : '';
+        const credsHTML = showCredentials && (m.credentials||[]).length
+          ? `<div class="about-credentials" style="margin:10px 0;">${(m.credentials||[]).map(c => `<div class="credential-pill">${c}</div>`).join('')}</div>` : '';
+        const bio1HTML = showBio1 && m.bio1 ? `<div class="cps-team-bio">${formatBody(m.bio1)}</div>` : '';
+        const bio2HTML = showBio2 && m.bio2 ? `<div class="cps-team-bio" style="margin-top:10px;">${formatBody(m.bio2)}</div>` : '';
+        const socialsList = (m.socialLinks||[]).filter(s => s.url);
+        const socialsHTML = showSocialLinks && socialsList.length
+          ? `<div class="about-member-socials" style="margin-top:14px;">${socialsList.map(s =>
+              `<a class="about-social-icon" onclick="openSmartLink('external','${escAttr(s.url)}')" title="${escAttr(s.platform)}">${SOCIAL_SVGS[s.platform]||SOCIAL_SVGS.custom}</a>`
+            ).join('')}</div>` : '';
         return `<div class="cps-team-card reveal">
           ${photoHTML}
           <div class="cps-team-info">
             <div class="cps-team-name">${m.name||''}</div>
-            ${m.degree || (m.education && m.education.length) ? `<div class="cps-team-title">${(m.education && m.education.length ? m.education : [m.degree]).map(e => `<div>${e}</div>`).join('')}</div>` : ''}
-            ${m.bio ? `<p class="cps-team-bio">${m.bio.substring(0,140)}…</p>` : ''}
+            ${eduHTML}
+            ${credsHTML}
+            ${bio1HTML}
+            ${bio2HTML}
+            ${socialsHTML}
           </div>
         </div>`;
       }).join('');
@@ -8114,7 +8146,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
         const src = item.imagePath || '';
         return '<div class="cps-gallery-item reveal" onclick="openLightbox(JSON.parse(this.dataset.lb),' + i + ')" data-lb="' + lbJson + '">' +
           (src ? '<img src="' + src + '" alt="' + escAttr(item.alt || item.title || '') + '" loading="lazy"/>' : '') +
-          '<div class="cps-gallery-overlay"><div class="cps-gallery-expand">⤢</div></div>' +
+          '<div class="cps-gallery-overlay"><div class="cps-gallery-expand"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:52%;height:52%;"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></div></div>' +
         '</div>';
       }).join('');
       wrapper.innerHTML = '<div class="container">' +
@@ -8166,7 +8198,9 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
       const ar       = sec.aspectRatio || 'auto';
       const objPos   = sec.objectPosition || 'center';
       const caption  = sec.captionText || '';
-      const baEnabled  = sec.beforeAfter === true && !!imgPath && !!img2Path;
+      const imgMode    = sec.imageDisplayMode || (sec.beforeAfter === true ? 'beforeAfter' : 'none');
+      const baEnabled  = imgMode === 'beforeAfter' && !!imgPath && !!img2Path;
+      const zoomEnabled = imgMode === 'zoom' && !baEnabled && !!imgPath;
       const sliderDir  = sec.sliderDir || 'horizontal';
       const sliderStart = Math.min(100, Math.max(0, parseInt(sec.sliderStart) || 50));
       const showLabels  = sec.showLabels !== false;
@@ -8229,8 +8263,15 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
         + '</div>';
       } else {
         const imgStyle = 'object-position:' + objPos + ';' + (hasAR ? 'width:100%;height:100%;object-fit:cover;' : 'width:100%;height:auto;');
-        innerHtml = '<div class="cps-img-frame"' + (frameStyles ? ' style="' + frameStyles + '"' : '') + '>'
+        const zoomAttrs = zoomEnabled
+          ? ' onclick="openLightbox(JSON.parse(this.dataset.lb),0)" data-lb="' + escAttr(JSON.stringify([{ src: imgPath, alt: caption || '', title: '', caption: caption || '' }])) + '" style="cursor:zoom-in;' + (frameStyles || '') + '"'
+          : (frameStyles ? ' style="' + frameStyles + '"' : '');
+        const zoomIconHtml = zoomEnabled
+          ? '<div class="cps-gallery-overlay"><div class="cps-gallery-expand"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:52%;height:52%;"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></div></div>'
+          : '';
+        innerHtml = '<div class="cps-img-frame"' + zoomAttrs + '>'
           + '<img src="' + escAttr(imgPath) + '" alt="" loading="lazy" style="' + imgStyle + '"/>'
+          + zoomIconHtml
         + '</div>';
       }
 
