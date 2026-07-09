@@ -1656,7 +1656,7 @@ html, body { height: 100%; font-family: 'DM Sans', system-ui, sans-serif; backgr
           </div>
           <div class="font-preview-box" id="fontPreviewBox">
             <div class="font-preview-display" id="fontPreviewDisplay">The Quick Brown Fox Jumps Over the Lazy Dog.</div>
-            <div class="font-preview-body" id="fontPreviewBody">We guide families through every step of the adoption process — clearly, compassionately, and with deep legal expertise.</div>
+            <div class="font-preview-body" id="fontPreviewBody">We guide our clients through every step of the process — clearly, thoughtfully, and with genuine expertise.</div>
           </div>
         </div>
       </div>
@@ -3171,7 +3171,7 @@ function buildAttorneyAccordions() {
         </div>
         <div class="field-group">
           <label>Photo Path / URL</label>
-          <input type="text" data-a="${i}" data-field="photo" value="${escHtml(a.photo||'')}" placeholder="images/attorney.jpg" oninput="updatePhotoPreview(this)"/>
+          <input type="text" data-a="${i}" data-field="photo" value="${escHtml(a.photo||'')}" placeholder="images/photo.jpg" oninput="updatePhotoPreview(this)"/>
           <div class="field-hint">Relative path (e.g. images/photo.jpg) or full URL.</div>
           <div class="photo-preview-wrap" style="margin-top:10px;display:${a.photo ? 'block' : 'none'}">
             <img src="${escHtml(a.photo||'')}" alt="Photo preview" style="max-height:160px;max-width:100%;border-radius:4px;border:1px solid var(--border);object-fit:cover;" onerror="this.parentElement.style.display='none';"/>
@@ -3179,7 +3179,7 @@ function buildAttorneyAccordions() {
         </div>
         <div class="field-group">
           <label>Credentials <span style="font-weight:400;text-transform:none;letter-spacing:0;">(one per line)</span></label>
-          <textarea data-a="${i}" data-field="credentials-text" rows="4" placeholder="AL State Bar\nJ.D., Birmingham Law">${escHtml((a.credentials||[]).join('\n'))}</textarea>
+          <textarea data-a="${i}" data-field="credentials-text" rows="4" placeholder="Professional License\nCertification, University Name">${escHtml((a.credentials||[]).join('\n'))}</textarea>
           <div class="field-hint">Each line becomes a credential pill on the About page.</div>
         </div>
         <div class="divider"></div>
@@ -3514,7 +3514,7 @@ function buildLocationsList() {
       <div class="panel-body">
         <div class="field-group">
           <label>Location Name</label>
-          <input type="text" data-loc="${li}" data-field="name" value="${escHtml(loc.name||'')}" placeholder="e.g. Birmingham Office" oninput="updateLocationLabel(this,${li})"/>
+          <input type="text" data-loc="${li}" data-field="name" value="${escHtml(loc.name||'')}" placeholder="e.g. Downtown Office" oninput="updateLocationLabel(this,${li})"/>
         </div>
         <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin:10px 0 6px;">Phone &amp; Email</div>
         <div class="form-row-2">
@@ -4630,6 +4630,7 @@ function collectBlogPosts() {
 const CP_SECTION_TYPES = [
   // 🗒️ Content & Text
   { value:'text',           label:'🗒️ Text Block' },
+  { value:'hero-section',   label:'🗒️ Hero Section' },
   { value:'two-col',        label:'🗒️ Two Column (Text + Image)' },
   { value:'richtext',       label:'🗒️ Rich Text Block' },
   // 🃏 Cards & Grids
@@ -4742,6 +4743,7 @@ function applySectionTypeDefaults(defaults, type) {
   if (type === 'pricing') { defaults.items = []; }
   if (type === 'locations') { defaults.items = []; defaults.displayMode = 'cards'; defaults.layoutMode = 'top'; defaults.mapMode = 'linkout'; defaults.maxCols = 2; defaults.showHours = true; }
   if (type === 'table') { defaults.cols = 2; defaults.col1Label = 'Column 1'; defaults.col2Label = 'Column 2'; defaults.col3Label = ''; defaults.col1Style = 'normal'; defaults.col2Style = 'normal'; defaults.col3Style = 'normal'; defaults.firstColHeader = false; defaults.mobileStack = false; defaults.items = []; }
+  if (type === 'hero-section') { defaults.heightVariant = 'full'; defaults.vAlign = 'center'; defaults.hAlign = 'center'; defaults.bg = { type:'image', bgColor:'#0f2340', imagePosition:'center center', overlayColor:'#0f2340', overlayOpacity:0.5, slides:[], autoplay:true, showDots:true, slideDuration:8 }; defaults.linkType = 'none'; defaults.linkUrl = ''; defaults.linkLabel = ''; }
   if (type === 'rotating-cards') { defaults.items = []; defaults.visibleCards = 1; defaults.cardHeight = 420; defaults.showDots = true; defaults.showArrows = true; defaults.showPeek = true; defaults.autoplay = false; defaults.autoplaySpeed = 4; }
 }
 
@@ -4981,6 +4983,42 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
     sec.cta_secondary_anchorId = get('cta_secondary_anchorId') || '';
   }
 
+  // Hero Section
+  if (type === 'hero-section') {
+    sec.heightVariant = get('heightVariant') || 'full';
+    sec.vAlign = get('vAlign') || 'center';
+    sec.hAlign = get('hAlign') || 'center';
+    const bgTypeSel = secCard.querySelector(`[data-cp="${pi}"][data-sec="${si}"][data-field="bgType"]`);
+    const bgType = bgTypeSel ? bgTypeSel.value : 'image';
+    // Single-image path is scoped away from slideshow rows (both use data-field="imagePath")
+    const singleImgEl = secCard.querySelector(`[data-cp="${pi}"][data-sec="${si}"][data-field="imagePath"]:not([data-heroslide])`);
+    const slideEls = Array.from(secCard.querySelectorAll(`[data-cp="${pi}"][data-sec="${si}"][data-heroslide]`));
+    const slideIdxs = [...new Set(slideEls.map(el => el.dataset.heroslide))].sort((a,b) => a - b);
+    const slides = slideIdxs.map(idx2 => {
+      const imgEl = secCard.querySelector(`[data-cp="${pi}"][data-sec="${si}"][data-heroslide="${idx2}"][data-field="imagePath"]`);
+      return { imagePath: imgEl ? cleanFieldValue(imgEl.value) : '', position: heroCollectPosition(secCard, pi, si, 'position', idx2) };
+    });
+    let heroOverlayOpacity = parseFloat(get('overlayOpacity'));
+    if (isNaN(heroOverlayOpacity)) heroOverlayOpacity = 0.5;
+    sec.bg = {
+      type: bgType,
+      bgColor: get('bgColor') || '#0f2340',
+      imagePath: singleImgEl ? cleanFieldValue(singleImgEl.value) : '',
+      imagePosition: heroCollectPosition(secCard, pi, si, 'imagePosition'),
+      slides,
+      slideDuration: parseInt(get('slideDuration')) || 8,
+      autoplay: secCard.querySelector(`[data-cp="${pi}"][data-sec="${si}"][data-field="autoplay"]`)?.checked !== false,
+      showDots: secCard.querySelector(`[data-cp="${pi}"][data-sec="${si}"][data-field="showDots"]`)?.checked !== false,
+      videoMp4: get('videoMp4'), videoWebm: get('videoWebm'), videoPoster: get('videoPoster'),
+      overlayColor: get('overlayColor') || '#0f2340',
+      overlayOpacity: heroOverlayOpacity,
+    };
+    sec.linkType = get('linkType') || 'none';
+    sec.linkLabel = get('linkLabel') || '';
+    sec.linkUrl = collectCpSmartLinkUrl(secCard, pi, si, '', sec.linkType);
+    sec.link_anchorId = collectCpAnchorId(secCard, pi, si, '');
+  }
+
   // Testimonials
   if (type === 'testimonials') {
     sec.showReviews = secCard.querySelector('[data-field="showReviews"]')?.checked !== false;
@@ -5105,6 +5143,46 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
         cta_linkType:  cardEl.querySelector('[data-field="cta_linkType"]')?.value || 'none',
         cta_linkUrl:   g('cta_linkUrl'),
         cta_anchorId:  g('cta_anchorId'),
+        features: Array.from(featureEls).map(fel => ({
+          label:   cleanFieldValue(fel.querySelector('[data-field="flabel"]')?.value) || '',
+          status:  fel.querySelector('[data-field="fstatus"]')?.value       || '',
+          isGroup: fel.querySelector('[data-field="isGroup"]')?.checked     || false,
+        })),
+      };
+    });
+  }
+
+  // Flip Cards
+  if (type === 'flip-cards') {
+    sec.maxCols = parseInt(get('maxCols')) || 3;
+    sec.colFullWidth = secCard.querySelector('[data-field="colFullWidth"]')?.checked || false;
+    sec.items = Array.from(secCard.querySelectorAll('.cp-sub-item[data-sub-idx]')).map((cardEl, ci) => {
+      const cg  = f => cleanFieldValue(cardEl.querySelector('[data-field="' + f + '"]')?.value) || '';
+      const cgVisible = f => {
+        const matches = Array.from(cardEl.querySelectorAll('[data-field="' + f + '"]'));
+        if (!matches.length) return '';
+        const visible = matches.find(el => {
+          let node = el;
+          while (node && node !== cardEl) {
+            if (getComputedStyle(node).display === 'none') return false;
+            node = node.parentElement;
+          }
+          return true;
+        });
+        return cleanFieldValue((visible || matches[0]).value);
+      };
+      const cgb = f => cardEl.querySelector('[data-field="' + f + '"]')?.checked || false;
+      const featureEls = secCard.querySelectorAll('[data-feature-list="' + ci + '"] [data-feature-idx]');
+      return {
+        name: cg('name'), tagline: cg('tagline'), price: cg('price'), period: cg('period'),
+        icon: cg('icon'), imagePath: cg('imagePath'), imageSize: cg('imageSize') || 'md',
+        ribbon: cg('ribbon'), note: cg('note'), details: cg('details'),
+        cardStyle:     cardEl.querySelector('[data-field="cardStyle"]')?.value || 'light',
+        featured:      cgb('featured'),
+        cta_linkLabel: cg('cta_linkLabel'),
+        cta_linkType:  cardEl.querySelector('[data-field="cta_linkType"]')?.value || 'none',
+        cta_linkUrl:   cgVisible('cta_linkUrl'),
+        cta_anchorId:  cg('cta_anchorId'),
         features: Array.from(featureEls).map(fel => ({
           label:   cleanFieldValue(fel.querySelector('[data-field="flabel"]')?.value) || '',
           status:  fel.querySelector('[data-field="fstatus"]')?.value       || '',
@@ -5519,6 +5597,7 @@ function buildCustomSectionHtml(sec, pi, si) {
   const isLogoStrip = sec.type === 'logo-strip';
   const isImageSection = sec.type === 'image';
   const isStats = sec.type === 'stats';
+  const isHero  = sec.type === 'hero-section';
   const bgOpts = CP_BG_OPTIONS
     .filter(bg => isAppendage ? bg.value !== 'inherit' : true)
     .map(bg =>
@@ -5528,7 +5607,7 @@ function buildCustomSectionHtml(sec, pi, si) {
 
   const commonFields = (isAppendage || isRichtext || isLogoStrip || isImageSection) ? '' : `
     <div class="form-row-2" style="margin-bottom:12px;">
-      ${isStats ? '' : `
+      ${isStats || isHero ? '' : `
       <div class="field-group">
         <label>Section Label (small gold text)</label>
         <input type="text" data-cp="${pi}" data-sec="${si}" data-field="label" value="${escHtml(sec.label||'')}" placeholder="Practice Area"/>
@@ -5607,6 +5686,49 @@ function cpSubItemHeader(label, pi, si, arr, ii) {
       <button class="btn-remove" onclick="removeCpSubItem(${typeof pi==='string'?("'"+pi+"'"):pi},${si},'${arr}',${ii});event.stopPropagation();">×</button>
     </div>
   </div>`;
+}
+
+// Parses a stored image position into {x,y} percentages (0-100 each).
+// Handles both the new "35% 20%" percentage format and legacy keyword
+// values ("center center", "top center", etc.) so existing hero sections
+// don't jump when reopened after this change.
+function heroParsePosition(pos) {
+  if (!pos) return { x: 50, y: 50 };
+  const pctMatch = String(pos).match(/^(-?\d+(?:\.\d+)?)%\s+(-?\d+(?:\.\d+)?)%$/);
+  if (pctMatch) return { x: Math.round(parseFloat(pctMatch[1])), y: Math.round(parseFloat(pctMatch[2])) };
+  const legacyMap = {
+    'center center': { x: 50, y: 50 }, 'top center': { x: 50, y: 0 }, 'bottom center': { x: 50, y: 100 },
+    'center left': { x: 0, y: 50 }, 'center right': { x: 100, y: 50 },
+  };
+  return legacyMap[pos] || { x: 50, y: 50 };
+}
+
+// Builds the two-slider (X%/Y%) focus-position field block.
+// fieldPrefix becomes "${fieldPrefix}X" / "${fieldPrefix}Y" as data-field names
+// (e.g. "imagePosition" -> imagePositionX/imagePositionY for the single image,
+// "position" -> positionX/positionY for slideshow slide rows).
+// heroslideIdx is passed for slide rows only, to scope the data-heroslide attribute.
+function heroFocusFieldsHtml(pi, si, fieldPrefix, currentValue, heroslideIdx) {
+  const xy = heroParsePosition(currentValue);
+  const hasSlideIdx = heroslideIdx !== undefined && heroslideIdx !== null;
+  const slideAttr = hasSlideIdx ? ` data-heroslide="${heroslideIdx}"` : '';
+  const uid = `hero-pos-${pi}-${si}${hasSlideIdx ? '-' + heroslideIdx : ''}-${fieldPrefix}`;
+  return `
+    <div class="field-group" style="margin:0;">
+      <label>Focus Position</label>
+      <div class="range-row" style="margin-bottom:4px;">
+        <span style="font-size:11px;color:var(--muted);width:12px;flex-shrink:0;">X</span>
+        <input type="range" min="0" max="100" step="1" data-cp="${pi}" data-sec="${si}"${slideAttr} data-field="${fieldPrefix}X" value="${xy.x}"
+          oninput="document.getElementById('${uid}-xval').textContent=this.value+'%'"/>
+        <span class="range-val" id="${uid}-xval">${xy.x}%</span>
+      </div>
+      <div class="range-row">
+        <span style="font-size:11px;color:var(--muted);width:12px;flex-shrink:0;">Y</span>
+        <input type="range" min="0" max="100" step="1" data-cp="${pi}" data-sec="${si}"${slideAttr} data-field="${fieldPrefix}Y" value="${xy.y}"
+          oninput="document.getElementById('${uid}-yval').textContent=this.value+'%'"/>
+        <span class="range-val" id="${uid}-yval">${xy.y}%</span>
+      </div>
+    </div>`;
 }
 
 function buildCpSectionTypeFields(sec, pi, si) {
@@ -5825,7 +5947,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
       }).join('');
       return `
         <div class="field-group"><label>Heading</label><input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
-        <div class="field-group"><label>Subtitle</label><textarea rows="1" style="width:100%;box-sizing:border-box;resize:vertical;min-height:32px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
+        <div class="field-group"><label>Subtitle</label><textarea rows="2" style="width:100%;box-sizing:border-box;resize:vertical;min-height:56px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
         <div class="cp-sub-items" data-cp-drag="${pi}-${si}-items">${rows}</div>
         <button class="btn-add" onclick="addCpSubItem(${typeof pi==='string'?("'"+pi+"'"):pi},${si},'items',{icon:'✓',title:'',desc:'',linkType:'none',linkUrl:''})">+ Add Item</button>`;
     }
@@ -5923,7 +6045,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
           </div>
         </div>
         <div class="field-group"><label>Heading</label><input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
-        <div class="field-group"><label>Subtitle</label><textarea rows="1" style="width:100%;box-sizing:border-box;resize:vertical;min-height:32px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
+        <div class="field-group"><label>Subtitle</label><textarea rows="2" style="width:100%;box-sizing:border-box;resize:vertical;min-height:56px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
         <div class="cp-sub-items" data-cp-drag="${pi}-${si}-items">${rows}</div>
         <button class="btn-add" onclick="addCpSubItem(${piArg},${si},'items',{icon:'&#9878;&#65039;',title:'',desc:'',detail:'',btnLabel:'',btnLinkType:'none',btnLinkUrl:''})">+ Add Service</button>`;
     }
@@ -6001,7 +6123,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
       }).join('');
       return `
         <div class="field-group"><label>Heading</label><input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
-        <div class="field-group"><label>Subtitle</label><textarea rows="1" style="width:100%;box-sizing:border-box;resize:vertical;min-height:32px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
+        <div class="field-group"><label>Subtitle</label><textarea rows="2" style="width:100%;box-sizing:border-box;resize:vertical;min-height:56px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
         <div class="cp-sub-items" data-cp-drag="${pi}-${si}-items">${rows}</div>
         <button class="btn-add" onclick="addCpSubItem(${typeof pi==='string'?("'"+pi+"'"):pi},${si},'items',{title:'',body:'',linkLabel:'',linkType:'none',linkUrl:''})">+ Add Step</button>`;
     }
@@ -6068,7 +6190,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
       }).join('');
       return `
         <div class="field-group"><label>Heading</label><input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
-        <div class="field-group"><label>Subtitle</label><textarea rows="1" style="width:100%;box-sizing:border-box;resize:vertical;min-height:32px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
+        <div class="field-group"><label>Subtitle</label><textarea rows="2" style="width:100%;box-sizing:border-box;resize:vertical;min-height:56px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
         <div class="switch-row" style="margin-bottom:16px;">
           <span class="switch-label">Full Width (single column)</span>
           <label class="switch"><input type="checkbox" ${p} data-field="fullWidth" ${sec.fullWidth ? 'checked' : ''}/><span class="switch-slider"></span></label>
@@ -6116,7 +6238,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
       return `
         <div class="form-row-2" style="margin-bottom:12px;">
           <div class="field-group"><label>Heading</label><input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
-          <div class="field-group"><label>Subtitle</label><textarea rows="1" style="width:100%;box-sizing:border-box;resize:vertical;min-height:32px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
+          <div class="field-group"><label>Subtitle</label><textarea rows="2" style="width:100%;box-sizing:border-box;resize:vertical;min-height:56px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
         </div>
         <div class="switch-row" style="margin-bottom:12px;">
           <span class="switch-label">Show relative dates (e.g. "3 weeks ago")</span>
@@ -6240,9 +6362,125 @@ function buildCpSectionTypeFields(sec, pi, si) {
       }).join('');
       return `
         <div class="field-group"><label>Heading</label><input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
-        <div class="field-group"><label>Subtitle</label><textarea rows="1" style="width:100%;box-sizing:border-box;resize:vertical;min-height:32px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
+        <div class="field-group"><label>Subtitle</label><textarea rows="2" style="width:100%;box-sizing:border-box;resize:vertical;min-height:56px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
         <div class="cp-sub-items" data-cp-drag="${pi}-${si}-items">${rows}</div>
         <button class="btn-add" onclick="addCpSubItem(${typeof pi==='string'?("'"+pi+"'"):pi},${si},'items',{emoji:'📋',tag:'',imagePath:'',title:'',excerpt:'',date:'',readTime:'',featured:false,linkType:'none',linkUrl:'',ctaLabel:''})">+ Add Post</button>`;
+    }
+
+    case 'hero-section': {
+      const bg = sec.bg || {};
+      const bgType = bg.type === 'color' ? 'image' : (bg.type || 'image');
+      const heightVariant = sec.heightVariant === 'banner' ? 'banner' : 'full';
+      const vAlign = ['top','center','bottom'].includes(sec.vAlign) ? sec.vAlign : 'center';
+      const hAlign = ['left','center','right'].includes(sec.hAlign) ? sec.hAlign : 'center';
+      const piStr = typeof pi === 'string' ? ("'" + pi + "'") : pi;
+      const dispImage     = bgType === 'image'     ? '' : 'display:none;';
+      const dispSlideshow = bgType === 'slideshow' ? '' : 'display:none;';
+      const dispVideo     = bgType === 'video'     ? '' : 'display:none;';
+
+      const slides = bg.slides || [];
+      const slideRows = slides.map((s, si2) => `
+        <div class="cp-sub-item" data-sub-idx="${si2}">
+          <div class="cp-sub-item-header">
+            <span class="cp-sub-item-label">Slide #${si2+1}</span>
+            <div style="display:flex;align-items:center;gap:4px;">
+              <button class="cp-move-btn" onclick="moveHeroSlide(${piStr},${si},${si2},-1)" title="Move up">↑</button>
+              <button class="cp-move-btn" onclick="moveHeroSlide(${piStr},${si},${si2},1)" title="Move down">↓</button>
+              <button class="btn-remove" onclick="removeHeroSlide(${piStr},${si},${si2})">×</button>
+            </div>
+          </div>
+          <div class="cp-sub-item-body" style="padding-top:8px;">
+            <div class="form-row-2">
+              <div class="field-group" style="margin:0;"><label>Image Path</label>
+                <input type="text" data-cp="${pi}" data-sec="${si}" data-heroslide="${si2}" data-field="imagePath" value="${escHtml(s.imagePath||'')}" placeholder="images/photo.jpg"/></div>
+              ${heroFocusFieldsHtml(pi, si, 'position', s.position||'center center', si2)}
+            </div>
+          </div>
+        </div>`).join('');
+
+      return `
+        <div class="field-group"><label>Heading</label><input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
+        <div class="field-group"><label>Subtitle</label><textarea rows="2" style="width:100%;box-sizing:border-box;resize:vertical;min-height:56px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
+        <div class="form-row-2" style="margin-bottom:16px;">
+          <div class="field-group" style="margin:0;"><label>Vertical Position</label>
+            <select ${p} data-field="vAlign">
+              <option value="top"${vAlign==='top'?' selected':''}>Top</option>
+              <option value="center"${vAlign==='center'?' selected':''}>Center</option>
+              <option value="bottom"${vAlign==='bottom'?' selected':''}>Bottom</option>
+            </select>
+          </div>
+          <div class="field-group" style="margin:0;"><label>Horizontal Position</label>
+            <select ${p} data-field="hAlign">
+              <option value="left"${hAlign==='left'?' selected':''}>Left</option>
+              <option value="center"${hAlign==='center'?' selected':''}>Center</option>
+              <option value="right"${hAlign==='right'?' selected':''}>Right</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-group"><label>Height</label>
+          <select ${p} data-field="heightVariant">
+            <option value="full"${heightVariant==='full'?' selected':''}>Full Viewport (100vh)</option>
+            <option value="banner"${heightVariant==='banner'?' selected':''}>Page Banner (shorter)</option>
+          </select>
+        </div>
+        <div class="divider" style="margin:14px 0;"></div>
+        <div class="field-group"><label>Background Type</label>
+          <select data-cp="${pi}" data-sec="${si}" data-field="bgType" onchange="onHeroBgTypeChange(${piStr},${si},this)">
+            <option value="image"${bgType==='image'?' selected':''}>Single Image</option>
+            <option value="slideshow"${bgType==='slideshow'?' selected':''}>Slideshow</option>
+            <option value="video"${bgType==='video'?' selected':''}>Video</option>
+          </select>
+        </div>
+
+        <div class="cps-hero-bg-panel-image" style="${dispImage}">
+          <div class="form-row-2">
+            <div class="field-group" style="margin:0;"><label>Image Path</label>
+              <input type="text" data-cp="${pi}" data-sec="${si}" data-field="imagePath" value="${escHtml(bg.imagePath||'')}" placeholder="images/hero.jpg"/></div>
+            ${heroFocusFieldsHtml(pi, si, 'imagePosition', bg.imagePosition||'center center')}
+          </div>
+        </div>
+
+        <div class="cps-hero-bg-panel-slideshow" style="${dispSlideshow}">
+          <div class="cp-sub-items">${slideRows}</div>
+          <button class="btn-add" onclick="addHeroSlide(${piStr},${si})">+ Add Slide</button>
+          <div class="form-row-2" style="margin-top:12px;">
+            <div class="field-group" style="margin:0;"><label>Slide Duration (seconds)</label>
+              <input type="number" min="2" max="30" data-cp="${pi}" data-sec="${si}" data-field="slideDuration" value="${bg.slideDuration||8}"/></div>
+          </div>
+          <div class="form-row-2" style="margin-top:6px;">
+            <div class="switch-row" style="margin:0;justify-content:flex-start;gap:10px;">
+              <label class="switch"><input type="checkbox" data-cp="${pi}" data-sec="${si}" data-field="autoplay" ${bg.autoplay!==false?'checked':''}/><span class="switch-slider"></span></label>
+              <span class="switch-label">Autoplay</span>
+            </div>
+            <div class="switch-row" style="margin:0;justify-content:flex-start;gap:10px;">
+              <label class="switch"><input type="checkbox" data-cp="${pi}" data-sec="${si}" data-field="showDots" ${bg.showDots!==false?'checked':''}/><span class="switch-slider"></span></label>
+              <span class="switch-label">Show dots</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cps-hero-bg-panel-video" style="${dispVideo}">
+          <div class="field-group"><label>Video MP4 Path</label>
+            <input type="text" data-cp="${pi}" data-sec="${si}" data-field="videoMp4" value="${escHtml(bg.videoMp4||'')}" placeholder="videos/hero.mp4"/></div>
+          <div class="field-group"><label>Video WebM Path (optional)</label>
+            <input type="text" data-cp="${pi}" data-sec="${si}" data-field="videoWebm" value="${escHtml(bg.videoWebm||'')}" placeholder="videos/hero.webm"/></div>
+          <div class="field-group"><label>Poster / Fallback Image</label>
+            <input type="text" data-cp="${pi}" data-sec="${si}" data-field="videoPoster" value="${escHtml(bg.videoPoster||'')}" placeholder="images/hero-poster.jpg"/>
+            <div class="field-hint">Shown while the video loads, and on browsers/devices that can't autoplay it.</div></div>
+        </div>
+
+        <div class="cps-hero-overlay-panel" style="margin-top:8px;">
+          <div class="form-row-2">
+            <div class="field-group" style="margin:0;"><label>Overlay Color</label>
+              <input type="color" data-cp="${pi}" data-sec="${si}" data-field="overlayColor" value="${bg.overlayColor||'#0f2340'}"/></div>
+            <div class="field-group" style="margin:0;"><label>Overlay Opacity</label>
+              <input type="range" min="0" max="1" step="0.05" data-cp="${pi}" data-sec="${si}" data-field="overlayOpacity" value="${bg.overlayOpacity!==undefined?bg.overlayOpacity:0.5}"/></div>
+          </div>
+        </div>
+
+        <div class="divider" style="margin:14px 0;"></div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Link (optional)</div>
+        ${cpSmartLinkFields(sec, pi, si, 'Learn More →')}`;
     }
 
     case 'cta': {
@@ -6388,7 +6626,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
       }).join('');
       return `
         <div class="field-group"><label>Heading</label><input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
-        <div class="field-group"><label>Subtitle</label><textarea rows="1" style="width:100%;box-sizing:border-box;resize:vertical;min-height:32px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
+        <div class="field-group"><label>Subtitle</label><textarea rows="2" style="width:100%;box-sizing:border-box;resize:vertical;min-height:56px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
         <div class="cp-sub-items" data-cp-drag="${pi}-${si}-categories">${catRows}</div>
         <button class="btn-add" onclick="addCpSubItem(${typeof pi==='string'?("'"+pi+"'"):pi},${si},'categories',{title:'',items:[]})">+ Add Category</button>`;
     }
@@ -6459,7 +6697,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
       }).join('');
       return `
         <div class="field-group"><label>Heading</label><input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
-        <div class="field-group"><label>Subtitle</label><textarea rows="1" style="width:100%;box-sizing:border-box;resize:vertical;min-height:32px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
+        <div class="field-group"><label>Subtitle</label><textarea rows="2" style="width:100%;box-sizing:border-box;resize:vertical;min-height:56px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
         <div class="cp-sub-items" data-cp-drag="${pi}-${si}-items">${rows}</div>
         <button class="btn-add" onclick="addCpSubItem(${piArg},${si},'items',{date:'',dot:'',title:'',body:'',linkLabel:'',linkType:'none',linkUrl:''})">+ Add Event</button>`;
     }
@@ -6536,7 +6774,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
       return `
         <div class="form-row-2" style="margin-bottom:6px;">
           <div class="field-group" style="margin:0;"><label>Heading</label><input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
-          <div class="field-group" style="margin:0;"><label>Subtitle</label><textarea rows="1" style="width:100%;box-sizing:border-box;resize:vertical;min-height:32px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
+          <div class="field-group" style="margin:0;"><label>Subtitle</label><textarea rows="2" style="width:100%;box-sizing:border-box;resize:vertical;min-height:56px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
         </div>
         <div class="form-row-3" style="margin-bottom:16px;">
           <div class="field-group" style="margin:0;"><label>Column 1 Label</label><input type="text" ${p} data-field="col1Label" data-fee-col="1" oninput="updateFeeLabels('${pi}',${si})" value="${v('col1Label')}" placeholder="Service"/></div>
@@ -6554,7 +6792,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
         <div class="cp-sub-items" data-cp-drag="${pi}-${si}-items">${rows}</div>
         <button class="btn-add" onclick="addCpSubItem(${typeof pi==='string'?("'"+pi+"'"):pi},${si},'items',{service:'',amount:'',detail:'',note:'',linkLabel:'',linkType:'none',linkUrl:''})">+ Add Row</button>
         <div class="field-group" style="margin-top:12px;"><label>Disclaimer (small text below table)</label>
-          <textarea rows="1" style="width:100%;box-sizing:border-box;resize:vertical;min-height:32px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="disclaimer" placeholder="Fees are estimates and may vary...">${v('disclaimer')}</textarea></div>`;
+          <textarea rows="2" style="width:100%;box-sizing:border-box;resize:vertical;min-height:56px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="disclaimer" placeholder="Fees are estimates and may vary...">${v('disclaimer')}</textarea></div>`;
     }
 
     case 'table': {
@@ -6617,7 +6855,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
         <div class="field-group"><label>Heading (optional)</label>
           <input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
         <div class="field-group"><label>Subtitle (optional)</label>
-          <textarea rows="1" style="width:100%;box-sizing:border-box;resize:vertical;min-height:32px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
+          <textarea rows="2" style="width:100%;box-sizing:border-box;resize:vertical;min-height:56px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
         <div class="form-row-2" style="margin-bottom:10px;">
           <div class="field-group" style="margin:0;"><label>Columns</label>
             <select ${p} data-field="cols" onchange="collectData();rebuildAfterMutation(${piArg});">
@@ -6763,7 +7001,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
         <div class="field-group"><label>Heading (optional)</label>
           <input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
         <div class="field-group"><label>Subtitle (optional)</label>
-          <textarea rows="1" style="width:100%;box-sizing:border-box;resize:vertical;min-height:32px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
+          <textarea rows="2" style="width:100%;box-sizing:border-box;resize:vertical;min-height:56px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
         <div class="form-row-2" style="margin-bottom:10px;">
           <div class="field-group" style="margin:0;"><label>Cards Visible (desktop)</label>
             <select ${p} data-field="visibleCards">
@@ -7464,7 +7702,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
       </div>`).join('');
       return `
         <div class="field-group"><label>Heading (optional)</label><input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
-        <div class="field-group"><label>Subtitle (optional)</label><textarea rows="1" style="width:100%;box-sizing:border-box;resize:vertical;min-height:32px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
+        <div class="field-group"><label>Subtitle (optional)</label><textarea rows="2" style="width:100%;box-sizing:border-box;resize:vertical;min-height:56px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
         <div class="field-group"><label>Columns</label>
           <select ${p} data-field="galleryCols">
             <option value="2" ${cols==2?'selected':''}>2 Columns</option>
@@ -7517,7 +7755,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
       }).join('');
       return `
         <div class="field-group"><label>Heading</label><input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
-        <div class="field-group"><label>Subtitle (optional)</label><textarea rows="1" style="width:100%;box-sizing:border-box;resize:vertical;min-height:32px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
+        <div class="field-group"><label>Subtitle (optional)</label><textarea rows="2" style="width:100%;box-sizing:border-box;resize:vertical;min-height:56px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
         <div class="cp-sub-items" data-cp-drag="${pi}-${si}-items">${rows}</div>
         <button class="btn-add" onclick="addCpSubItem(${typeof pi==='string'?("'"+pi+"'"):pi},${si},'items',{title:'',body:'',imagePath:'',imagePos:'none'})">+ Add Item</button>`;
     }
@@ -7543,7 +7781,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
       </div>`).join('');
       return `
         <div class="field-group" style="margin-bottom:8px;"><label>Caption (optional)</label>
-          <textarea rows="1" style="width:100%;box-sizing:border-box;resize:vertical;min-height:32px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle" placeholder="As seen in · Our partners">${v('subtitle')}</textarea></div>
+          <textarea rows="2" style="width:100%;box-sizing:border-box;resize:vertical;min-height:56px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle" placeholder="As seen in · Our partners">${v('subtitle')}</textarea></div>
         <div class="form-row-2" style="margin-bottom:8px;">
           <div class="field-group" style="margin:0;"><label>Caption Position</label>
             <select ${p} data-field="captionPos">
@@ -7666,7 +7904,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
       }).join('');
       return `
         <div class="field-group"><label>Heading (optional)</label><input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
-        <div class="field-group"><label>Subtitle (optional)</label><textarea rows="1" style="width:100%;box-sizing:border-box;resize:vertical;min-height:32px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
+        <div class="field-group"><label>Subtitle (optional)</label><textarea rows="2" style="width:100%;box-sizing:border-box;resize:vertical;min-height:56px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
         <div class="form-row-2" style="margin-bottom:12px;">
           <div class="field-group" style="margin:0;"><label>Mode</label>
             <select ${p} data-field="mqMode" onchange="onMqModeChange(${typeof pi==='string'?("'"+pi+"'"):pi},${si},this)">
@@ -8983,6 +9221,50 @@ function moveCpSubItem(pi, si, arr, idx, dir) {
   autosave();
 }
 
+// Hero Section's slideshow images live nested at sec.bg.slides (not a top-level
+// section array), so they need their own small helpers rather than the generic
+// addCpSubItem/removeCpSubItem/moveCpSubItem (which only index secs[si][arr]).
+function addHeroSlide(pi, si) {
+  collectData();
+  const secs = cpSections(pi);
+  if (!secs?.[si]) return;
+  if (!secs[si].bg) secs[si].bg = {};
+  if (!secs[si].bg.slides) secs[si].bg.slides = [];
+  secs[si].bg.slides.push({ imagePath: '', position: 'center center' });
+  rebuildAfterMutation(pi);
+}
+function removeHeroSlide(pi, si, idx) {
+  collectData();
+  const secs = cpSections(pi);
+  if (!secs?.[si]?.bg?.slides) return;
+  secs[si].bg.slides.splice(idx, 1);
+  rebuildAfterMutation(pi);
+  autosave();
+}
+function moveHeroSlide(pi, si, idx, dir) {
+  collectData();
+  const secs = cpSections(pi);
+  const a = secs?.[si]?.bg?.slides;
+  if (!a) return;
+  const newIdx = idx + dir;
+  if (newIdx < 0 || newIdx >= a.length) return;
+  [a[idx], a[newIdx]] = [a[newIdx], a[idx]];
+  rebuildAfterMutation(pi);
+  autosave();
+}
+
+// Toggles which background-type sub-panel is visible in the Hero Section editor
+function onHeroBgTypeChange(pi, si, sel) {
+  const card = sel.closest('.cp-section-card');
+  if (!card) return;
+  const val = sel.value;
+  ['image','slideshow','video'].forEach(t => {
+    const panel = card.querySelector(`.cps-hero-bg-panel-${t}`);
+    if (panel) panel.style.display = (t === val) ? '' : 'none';
+  });
+  autosave();
+}
+
 function initCpSubItemDragDrop(container, pi, si, arr) {
   if (!container) return;
   let dragIdx = null;
@@ -9160,6 +9442,42 @@ function collectCpSections(card, pi, existingSections) {
         sec.cta_primary_anchorId    = get('cta_primary_anchorId');
         sec.cta_secondary_anchorId  = get('cta_secondary_anchorId');
         break;
+      case 'hero-section': {
+        sec.heading = get('heading'); sec.subtitle = get('subtitle');
+        sec.heightVariant = get('heightVariant') || 'full';
+        sec.vAlign = get('vAlign') || 'center';
+        sec.hAlign = get('hAlign') || 'center';
+        const bgTypeSel = secCard.querySelector(`[data-cp="${pi}"][data-sec="${renderedSi}"][data-field="bgType"]`);
+        const bgType = bgTypeSel ? bgTypeSel.value : 'image';
+        // Single-image path is scoped away from slideshow rows (both use data-field="imagePath")
+        const singleImgEl = secCard.querySelector(`[data-cp="${pi}"][data-sec="${renderedSi}"][data-field="imagePath"]:not([data-heroslide])`);
+        const slideEls = Array.from(secCard.querySelectorAll(`[data-cp="${pi}"][data-sec="${renderedSi}"][data-heroslide]`));
+        const slideIdxs = [...new Set(slideEls.map(el => el.dataset.heroslide))].sort((a,b) => a - b);
+        const slides = slideIdxs.map(idx2 => {
+          const imgEl = secCard.querySelector(`[data-cp="${pi}"][data-sec="${renderedSi}"][data-heroslide="${idx2}"][data-field="imagePath"]`);
+          return { imagePath: imgEl ? cleanFieldValue(imgEl.value) : '', position: heroCollectPosition(secCard, pi, renderedSi, 'position', idx2) };
+        });
+        let overlayOpacity = parseFloat(get('overlayOpacity'));
+        if (isNaN(overlayOpacity)) overlayOpacity = 0.5;
+        sec.bg = {
+          type: bgType,
+          bgColor: get('bgColor') || '#0f2340',
+          imagePath: singleImgEl ? cleanFieldValue(singleImgEl.value) : '',
+          imagePosition: heroCollectPosition(secCard, pi, renderedSi, 'imagePosition'),
+          slides,
+          slideDuration: parseInt(get('slideDuration')) || 8,
+          autoplay: secCard.querySelector(`[data-cp="${pi}"][data-sec="${renderedSi}"][data-field="autoplay"]`)?.checked !== false,
+          showDots: secCard.querySelector(`[data-cp="${pi}"][data-sec="${renderedSi}"][data-field="showDots"]`)?.checked !== false,
+          videoMp4: get('videoMp4'), videoWebm: get('videoWebm'), videoPoster: get('videoPoster'),
+          overlayColor: get('overlayColor') || '#0f2340',
+          overlayOpacity,
+        };
+        sec.linkType = get('linkType') || 'none';
+        sec.linkLabel = get('linkLabel') || '';
+        sec.linkUrl = collectCpSmartLinkUrl(secCard, pi, renderedSi, '', sec.linkType);
+        sec.link_anchorId = collectCpAnchorId(secCard, pi, renderedSi, '');
+        break;
+      }
       case 'checklist':
         sec.heading = get('heading'); sec.subtitle = get('subtitle');
         sec.fullWidth = secCard.querySelector('[data-field="fullWidth"]')?.checked || false;
@@ -9488,6 +9806,19 @@ function collectCpAnchorId(secCard, pi, si, pref) {
   const key = `${pi}-${si}-${pref||'x'}`;
   const sel = document.getElementById(`cp-link-anchor-sel-${key}`);
   return sel ? sel.value : '';
+}
+
+// Reads the X/Y focus-position sliders (built by heroFocusFieldsHtml) and combines
+// them into a single "X% Y%" background-position string. heroslideIdx scopes to a
+// specific slideshow slide row; omit it for the single-image field.
+function heroCollectPosition(secCard, pi, si, fieldPrefix, heroslideIdx) {
+  const hasSlideIdx = heroslideIdx !== undefined && heroslideIdx !== null;
+  const slideSel = hasSlideIdx ? `[data-heroslide="${heroslideIdx}"]` : ':not([data-heroslide])';
+  const xEl = secCard.querySelector(`[data-cp="${pi}"][data-sec="${si}"]${slideSel}[data-field="${fieldPrefix}X"]`);
+  const yEl = secCard.querySelector(`[data-cp="${pi}"][data-sec="${si}"]${slideSel}[data-field="${fieldPrefix}Y"]`);
+  const x = xEl ? parseInt(xEl.value) : NaN;
+  const y = yEl ? parseInt(yEl.value) : NaN;
+  return `${isNaN(x) ? 50 : x}% ${isNaN(y) ? 50 : y}%`;
 }
 
 
