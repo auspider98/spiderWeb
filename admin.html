@@ -4725,11 +4725,7 @@ function buildHomeSectionsList() {
   });
 }
 
-function addHomeSection() {
-  const sel = document.getElementById('home-type-select');
-  if (!sel) return;
-  const type = sel.value;
-  const defaults = { type, label: '', background: 'light' };
+function applySectionTypeDefaults(defaults, type) {
   if (['stats','bullets','services','steps','faq','timeline','fees','table','rotating-cards'].includes(type)) defaults.items = [];
   if (type === 'checklist') defaults.categories = [];
   if (type === 'form') { defaults.fields = []; defaults.submitLabel = 'Send Message'; defaults.successMsg = "Thank you! We'll be in touch soon."; }
@@ -4747,6 +4743,14 @@ function addHomeSection() {
   if (type === 'locations') { defaults.items = []; defaults.displayMode = 'cards'; defaults.layoutMode = 'top'; defaults.mapMode = 'linkout'; defaults.maxCols = 2; defaults.showHours = true; }
   if (type === 'table') { defaults.cols = 2; defaults.col1Label = 'Column 1'; defaults.col2Label = 'Column 2'; defaults.col3Label = ''; defaults.col1Style = 'normal'; defaults.col2Style = 'normal'; defaults.col3Style = 'normal'; defaults.firstColHeader = false; defaults.mobileStack = false; defaults.items = []; }
   if (type === 'rotating-cards') { defaults.items = []; defaults.visibleCards = 1; defaults.cardHeight = 420; defaults.showDots = true; defaults.showArrows = true; defaults.showPeek = true; defaults.autoplay = false; defaults.autoplaySpeed = 4; }
+}
+
+function addHomeSection() {
+  const sel = document.getElementById('home-type-select');
+  if (!sel) return;
+  const type = sel.value;
+  const defaults = { type, label: '', background: 'light' };
+  applySectionTypeDefaults(defaults, type);
   if (!Array.isArray(DATA.homeSections)) DATA.homeSections = [];
   DATA.homeSections.push(defaults);
   buildHomeSectionsList();
@@ -4801,23 +4805,7 @@ function addAboutSection() {
   if (!sel) return;
   const type = sel.value;
   const defaults = { type, label: '', background: 'light' };
-  if (['stats','bullets','services','steps','faq','timeline','fees','table','rotating-cards'].includes(type)) defaults.items = [];
-  if (type === 'checklist') defaults.categories = [];
-  if (type === 'form') { defaults.fields = []; defaults.submitLabel = 'Send Message'; defaults.successMsg = "Thank you! We'll be in touch soon."; }
-  if (type === 'link') { defaults.linkType = 'none'; defaults.linkUrl = ''; defaults.linkLabel = ''; }
-  if (type === 'button') { defaults.primary_linkType = 'none'; defaults.primary_linkUrl = ''; defaults.primary_linkLabel = ''; defaults.secondary_linkType = 'none'; defaults.secondary_linkUrl = ''; defaults.secondary_linkLabel = ''; }
-  if (type === 'richtext') { defaults.background = 'inherit'; defaults.richContent = ''; defaults.imagePath = ''; defaults.imagePos = 'none'; defaults.imageSize = 'md'; defaults.imageCaption = ''; defaults.fullWidth = false; }
-  if (type === 'accordion') defaults.items = [];
-  if (type === 'logo-strip') { defaults.items = []; defaults.logoSize = 'medium'; defaults.captionPos = 'above'; }
-  if (type === 'marquee') { defaults.items = []; defaults.mqMode = 'text'; defaults.mqSpeed = 'medium'; defaults.mqDir = 'left'; defaults.mqPause = true; defaults.mqText = ''; defaults.mqSeparator = '·'; defaults.mqFadeEdges = true; defaults.mqFadeWidth = 'normal'; defaults.mqTickerHold = 3; defaults.mqTickerSpeed = 'normal'; }
-  if (type === 'video') { defaults.videoLayout = 'contained'; defaults.videoPosition = 'left'; defaults.embedUrl = ''; defaults.mp4Url = ''; }
-  if (type === 'image') { defaults.imagePath = ''; defaults.imageWidth = 0; defaults.aspectRatio = 'auto'; defaults.objectPosition = 'center'; defaults.roundedCorners = false; defaults.imageDisplayMode = 'none'; defaults.captionText = ''; defaults.sliderDir = 'horizontal'; defaults.sliderStart = 50; defaults.showLabels = true; defaults.labelBefore = 'Before'; defaults.labelAfter = 'After'; defaults.bodyHeading = ''; defaults.bodyText = ''; defaults.textSide = 'right'; }
-  if (type === 'team') { defaults.useAttorneys = true; defaults.selectedAttorneys = []; defaults.showPhoto = true; defaults.showEducation = true; defaults.showCredentials = false; defaults.showBio1 = true; defaults.showBio2 = false; defaults.showSocialLinks = false; }
-  if (type === 'gallery') { defaults.items = []; defaults.galleryCols = 3; }
-  if (type === 'pricing') { defaults.items = []; }
-  if (type === 'locations') { defaults.items = []; defaults.displayMode = 'cards'; defaults.layoutMode = 'top'; defaults.mapMode = 'linkout'; defaults.maxCols = 2; defaults.showHours = true; }
-  if (type === 'table') { defaults.cols = 2; defaults.col1Label = 'Column 1'; defaults.col2Label = 'Column 2'; defaults.col3Label = ''; defaults.col1Style = 'normal'; defaults.col2Style = 'normal'; defaults.col3Style = 'normal'; defaults.firstColHeader = false; defaults.mobileStack = false; defaults.items = []; }
-  if (type === 'rotating-cards') { defaults.items = []; defaults.visibleCards = 1; defaults.cardHeight = 420; defaults.showDots = true; defaults.showArrows = true; defaults.showPeek = true; defaults.autoplay = false; defaults.autoplaySpeed = 4; }
+  applySectionTypeDefaults(defaults, type);
   if (!Array.isArray(DATA.aboutSections)) DATA.aboutSections = [];
   DATA.aboutSections.push(defaults);
   buildAboutSectionsList();
@@ -4996,6 +4984,7 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
   // Testimonials
   if (type === 'testimonials') {
     sec.showReviews = secCard.querySelector('[data-field="showReviews"]')?.checked !== false;
+    sec.useRelativeDates = secCard.querySelector('[data-field="useRelativeDates"]')?.checked !== false;
     sec.count = parseInt(get('count')) || 3;
     const cbEl = secCard.querySelector('[data-field="showReadAll"]');
     sec.showReadAll = cbEl ? cbEl.checked : true;
@@ -6090,6 +6079,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
 
     case 'testimonials': {
       const showReviews = sec.showReviews !== false;
+      const useRelativeDates = sec.useRelativeDates !== false;
       const showBtnChecked = sec.showReadAll !== false ? 'checked' : '';
       const countVal = v('count', '3');
       const isPrimary = sec.primarySource === true;
@@ -6128,6 +6118,11 @@ function buildCpSectionTypeFields(sec, pi, si) {
           <div class="field-group"><label>Heading</label><input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
           <div class="field-group"><label>Subtitle</label><textarea rows="1" style="width:100%;box-sizing:border-box;resize:vertical;min-height:32px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
         </div>
+        <div class="switch-row" style="margin-bottom:12px;">
+          <span class="switch-label">Show relative dates (e.g. "3 weeks ago")</span>
+          <label class="switch"><input type="checkbox" ${p} data-field="useRelativeDates" ${useRelativeDates?'checked':''}/><span class="switch-slider"></span></label>
+        </div>
+        <p class="field-hint" style="margin-top:-8px;margin-bottom:12px;">On: shows how long ago the review was submitted. Off: shows the actual date. Applies to every card in this section.</p>
         <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;padding:10px 14px;background:var(--navy);border-radius:6px;">
           <div style="display:flex;align-items:center;gap:10px;">
             <label class="switch" style="flex-shrink:0;">
@@ -8363,23 +8358,7 @@ function addCpSection(pi) {
   const type = sel.value;
   const defaults = { type, label:'', background:'light' };
   // Seed empty items for array-based types
-  if (['stats','bullets','services','steps','faq','timeline','fees','table','rotating-cards'].includes(type)) defaults.items = [];
-  if (type === 'checklist') defaults.categories = [];
-  if (type === 'form') { defaults.fields = []; defaults.submitLabel = 'Send Message'; defaults.successMsg = "Thank you! We'll be in touch soon."; }
-  if (type === 'link') { defaults.linkType = 'none'; defaults.linkUrl = ''; defaults.linkLabel = ''; }
-  if (type === 'button') { defaults.primary_linkType = 'none'; defaults.primary_linkUrl = ''; defaults.primary_linkLabel = ''; defaults.secondary_linkType = 'none'; defaults.secondary_linkUrl = ''; defaults.secondary_linkLabel = ''; }
-  if (type === 'richtext') { defaults.background = 'inherit'; defaults.richContent = ''; defaults.imagePath = ''; defaults.imagePos = 'none'; defaults.imageSize = 'md'; defaults.imageCaption = ''; defaults.fullWidth = false; }
-  if (type === 'accordion') defaults.items = [];
-  if (type === 'logo-strip') { defaults.items = []; defaults.logoSize = 'medium'; defaults.captionPos = 'above'; }
-  if (type === 'marquee') { defaults.items = []; defaults.mqMode = 'text'; defaults.mqSpeed = 'medium'; defaults.mqDir = 'left'; defaults.mqPause = true; defaults.mqText = ''; defaults.mqSeparator = '·'; defaults.mqFadeEdges = true; defaults.mqFadeWidth = 'normal'; defaults.mqTickerHold = 3; defaults.mqTickerSpeed = 'normal'; }
-  if (type === 'video') { defaults.videoLayout = 'contained'; defaults.videoPosition = 'left'; defaults.embedUrl = ''; defaults.mp4Url = ''; }
-  if (type === 'image') { defaults.imagePath = ''; defaults.imageWidth = 0; defaults.aspectRatio = 'auto'; defaults.objectPosition = 'center'; defaults.roundedCorners = false; defaults.imageDisplayMode = 'none'; defaults.captionText = ''; defaults.sliderDir = 'horizontal'; defaults.sliderStart = 50; defaults.showLabels = true; defaults.labelBefore = 'Before'; defaults.labelAfter = 'After'; defaults.bodyHeading = ''; defaults.bodyText = ''; defaults.textSide = 'right'; }
-  if (type === 'team') { defaults.useAttorneys = true; defaults.selectedAttorneys = []; defaults.showPhoto = true; defaults.showEducation = true; defaults.showCredentials = false; defaults.showBio1 = true; defaults.showBio2 = false; defaults.showSocialLinks = false; }
-  if (type === 'gallery') { defaults.items = []; defaults.galleryCols = 3; }
-  if (type === 'pricing') { defaults.items = []; }
-  if (type === 'locations') { defaults.items = []; defaults.displayMode = 'cards'; defaults.layoutMode = 'top'; defaults.mapMode = 'linkout'; defaults.maxCols = 2; defaults.showHours = true; }
-  if (type === 'table') { defaults.cols = 2; defaults.col1Label = 'Column 1'; defaults.col2Label = 'Column 2'; defaults.col3Label = ''; defaults.col1Style = 'normal'; defaults.col2Style = 'normal'; defaults.col3Style = 'normal'; defaults.firstColHeader = false; defaults.mobileStack = false; defaults.items = []; }
-  if (type === 'rotating-cards') { defaults.items = []; defaults.visibleCards = 1; defaults.cardHeight = 420; defaults.showDots = true; defaults.showArrows = true; defaults.showPeek = true; defaults.autoplay = false; defaults.autoplaySpeed = 4; }
+  applySectionTypeDefaults(defaults, type);
   if (!DATA.customPages[pi]) return;
   DATA.customPages[pi].sections = DATA.customPages[pi].sections || [];
   DATA.customPages[pi].sections.push(defaults);
@@ -9160,6 +9139,7 @@ function collectCpSections(card, pi, existingSections) {
       case 'testimonials':
         sec.heading = get('heading'); sec.subtitle = get('subtitle');
         sec.showReviews = secCard.querySelector('[data-field="showReviews"]')?.checked !== false;
+        sec.useRelativeDates = secCard.querySelector('[data-field="useRelativeDates"]')?.checked !== false;
         sec.count = parseInt(get('count')) || 3;
         sec.showReadAll = secCard.querySelector('[data-field="showReadAll"]')?.checked !== false;
         sec.readAllLabel = get('readAllLabel') || 'Read All Reviews';

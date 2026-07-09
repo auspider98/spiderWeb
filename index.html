@@ -1087,39 +1087,38 @@ h2.section-title {
    ============================================= */
 /* Services section — background via class */
 .services-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
   margin-top: 56px;
-  background: #ddd8cc;
+  border: 1px solid #e8e3d8;
 }
-/* Default: 3 columns */
-.services-grid .service-card {
-  flex: 1 1 calc(33.333% - 2px);
-  min-width: 0;
-}
-.services-grid[data-cols="1"] .service-card { flex: 1 1 100%; }
-.services-grid[data-cols="2"] .service-card { flex: 1 1 calc(50% - 2px); }
-.services-grid[data-cols="3"] .service-card { flex: 1 1 calc(33.333% - 2px); }
-.services-grid[data-cols="4"] .service-card { flex: 1 1 calc(25% - 2px); }
+.services-grid[data-cols="1"] { grid-template-columns: 1fr; }
+.services-grid[data-cols="2"] { grid-template-columns: repeat(2, 1fr); }
+.services-grid[data-cols="3"] { grid-template-columns: repeat(3, 1fr); }
+.services-grid[data-cols="4"] { grid-template-columns: repeat(4, 1fr); }
 .service-card {
-  background: var(--warm-white);
+  border-right: 1px solid #e8e3d8;
+  border-bottom: 1px solid #e8e3d8;
   padding: clamp(28px, 4vw, 44px);
   cursor: pointer;
   transition: background 0.3s, transform 0.3s;
   position: relative;
   overflow: hidden;
 }
-.cps-section-light .service-card { background: var(--cream); }
-.service-card::before {
+.services-grid[data-cols="1"] .service-card { border-right: none; }
+.services-grid[data-cols="2"] .service-card:nth-child(2n) { border-right: none; }
+.services-grid[data-cols="3"] .service-card:nth-child(3n) { border-right: none; }
+.services-grid[data-cols="4"] .service-card:nth-child(4n) { border-right: none; }
+.service-card::after {
   content: '';
-  position: absolute; top: 0; left: 0;
-  width: 2px; height: 0;
+  position: absolute; bottom: 0; left: 0;
+  height: 2px; width: 0;
   background: var(--gold);
-  transition: height 0.35s var(--ease-out);
+  transition: width 0.4s var(--ease-out);
 }
-.service-card:hover { background: var(--navy); transform: translateY(-2px); }
-.service-card:hover::before { height: 100%; }
+.service-card:hover { background: var(--gold-pale); transform: translateY(-2px); }
+.service-card:hover::after { width: 100%; }
 .service-icon {
   font-size: 28px;
   margin-bottom: 18px;
@@ -1141,7 +1140,6 @@ h2.section-title {
   margin-bottom: 10px;
   transition: color 0.3s;
 }
-.service-card:hover .service-title { color: #fff; }
 .service-desc {
   font-size: 13.5px;
   line-height: 1.7;
@@ -1150,7 +1148,6 @@ h2.section-title {
 }
 .service-desc p { margin: 0 0 0.75em; }
 .service-desc p:last-child { margin-bottom: 0; }
-.service-card:hover .service-desc { color: rgba(255,255,255,0.65); }
 .service-more {
   display: inline-flex; align-items: center; gap: 6px;
   margin-top: 16px;
@@ -1163,8 +1160,11 @@ h2.section-title {
 }
 .service-card:hover .service-more { gap: 10px; }
 .service-card:hover .service-more { color: var(--gold); }
-.cps-section-dark .services-grid { background: rgba(255,255,255,0.12); }
-.cps-section-dark .service-card { background: transparent; }
+.cps-section-alt .service-card:hover { background: rgba(var(--navy-rgb),0.06); }
+.cps-section-alt .services-grid { border-color: #ddd8cc; }
+.cps-section-alt .service-card { border-color: #ddd8cc; }
+.cps-section-dark .services-grid { border-color: rgba(255,255,255,0.12); }
+.cps-section-dark .service-card { background: transparent; border-color: rgba(255,255,255,0.12); }
 .cps-section-dark .service-card:hover { background: rgba(255,255,255,0.05); }
 .cps-section-dark .service-title { color: #fff; }
 .cps-section-dark .service-desc { color: rgba(255,255,255,0.65); }
@@ -1209,6 +1209,11 @@ h2.section-title {
 }
 .modal-body { font-size: 15px; line-height: 1.8; color: var(--text-body); }
 .modal-cta { margin-top: 28px; }
+.modal-box--alt { background: var(--cream); }
+.modal-box--dark { background: var(--navy); }
+.modal-box--dark .modal-title { color: #fff; }
+.modal-box--dark .modal-body { color: rgba(255,255,255,0.7); }
+.modal-box--dark .modal-close { color: rgba(255,255,255,0.5); }
 
 /* =============================================
    PAGE BANNERS (inner pages)
@@ -1516,6 +1521,8 @@ h2.section-title {
   font-style: italic;
   margin-bottom: 24px;
 }
+.testimonial-text p { margin: 0 0 0.5em; }
+.testimonial-text p:last-child { margin-bottom: 0; }
 .testimonial-author {
   display: flex; align-items: center; gap: 14px;
   padding-top: 20px;
@@ -2023,8 +2030,12 @@ footer {
    RESPONSIVE
    ============================================= */
 @media (max-width: 1024px) {
-  .services-grid[data-cols="3"] .service-card,
-  .services-grid[data-cols="4"] .service-card { flex: 1 1 calc(50% - 2px); }
+  .services-grid[data-cols="3"],
+  .services-grid[data-cols="4"] { grid-template-columns: repeat(2, 1fr); }
+  .services-grid[data-cols="3"] .service-card:nth-child(3n),
+  .services-grid[data-cols="4"] .service-card:nth-child(4n) { border-right-width: 1px; border-right-style: solid; }
+  .services-grid[data-cols="3"] .service-card:nth-child(2n),
+  .services-grid[data-cols="4"] .service-card:nth-child(2n) { border-right: none; }
   .about-top-grid { grid-template-columns: 1fr 1.5fr; gap: 40px; }
   .contact-grid { grid-template-columns: 1fr; gap: 48px; }
   .contact-info.contact-location { text-align: center; }
@@ -2068,10 +2079,13 @@ footer {
   .cps-fc-grid[data-cols="4"] .cps-fc-card:nth-child(2n) { border-right: none; }
   .cps-fc-header { flex-direction: column; }
   .cps-fc-badge { display: none; }
-  .services-grid .service-card,
-  .services-grid[data-cols="2"] .service-card,
-  .services-grid[data-cols="3"] .service-card,
-  .services-grid[data-cols="4"] .service-card { flex: 1 1 100%; }
+  .services-grid[data-cols="2"],
+  .services-grid[data-cols="3"],
+  .services-grid[data-cols="4"] { grid-template-columns: 1fr; }
+  .services-grid[data-cols="3"] .service-card:nth-child(2n),
+  .services-grid[data-cols="3"] .service-card:nth-child(3n),
+  .services-grid[data-cols="4"] .service-card:nth-child(2n),
+  .services-grid[data-cols="4"] .service-card:nth-child(4n) { border-right: none; }
   .testimonials-track { grid-template-columns: 1fr; }
   .blog-grid { grid-template-columns: 1fr; }
   .form-row { grid-template-columns: 1fr; }
@@ -5201,9 +5215,17 @@ function relativeDate(dateStr) {
   return diffYears + ' year' + (diffYears > 1 ? 's' : '') + ' ago';
 }
 
-function testimonialCard(t) {
+function testimonialCard(t, useRelativeDates) {
   const stars   = '★'.repeat(parseInt(t.stars)||5);
-  const dateStr = relativeDate(t.date || '');
+  let dateStr = '';
+  if (t.date) {
+    if (useRelativeDates !== false) {
+      dateStr = relativeDate(t.date);
+    } else {
+      const d = new Date(t.date);
+      dateStr = isNaN(d) ? '' : d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+  }
   return `
     <div class="testimonial-card reveal">
       <div class="testimonial-quote">"</div>
@@ -5211,7 +5233,7 @@ function testimonialCard(t) {
         <div class="testimonial-stars">${stars}</div>
         ${dateStr ? `<div class="testimonial-date">${dateStr}</div>` : ''}
       </div>
-      <p class="testimonial-text">${t.text}</p>
+      <div class="testimonial-text">${formatBody(t.text || '')}</div>
       <div class="testimonial-author">
         <div class="testimonial-initials">${t.initials||''}</div>
         <div>
@@ -7119,7 +7141,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
       const source = showReviews
         ? (CFG.testimonials || []).slice(0, parseInt(sec.count) || 3)
         : (sec.items || []);
-      const items = source.map(testimonialCard).join('');
+      const items = source.map(t => testimonialCard(t, sec.useRelativeDates)).join('');
       const showBtn = showReviews && sec.showReadAll !== false;
       const btnLabel = sec.readAllLabel || 'Read All Reviews';
       let testiSourceSlug = 'home';
@@ -8814,10 +8836,18 @@ function openCpsModalFromCard(el) {
   const btnLinkType = el.dataset.svcBtnType    || 'internal';
   const btnLinkUrl  = el.dataset.svcBtnUrl     || 'contact';
   const btnAnchorId = el.dataset.svcBtnAnchor  || '';
-  openCpsModal(title, icon, body, btnLabel, btnLinkType, btnLinkUrl, btnAnchorId);
+  const sectionEl = el.closest('.section');
+  const mode = sectionEl && sectionEl.classList.contains('cps-section-dark') ? 'dark'
+             : sectionEl && sectionEl.classList.contains('cps-section-alt')  ? 'alt'
+             : 'light';
+  openCpsModal(title, icon, body, btnLabel, btnLinkType, btnLinkUrl, btnAnchorId, mode);
 }
 
-function openCpsModal(title, icon, body, btnLabel, btnLinkType, btnLinkUrl, btnAnchorId) {
+function openCpsModal(title, icon, body, btnLabel, btnLinkType, btnLinkUrl, btnAnchorId, mode) {
+  const box = document.querySelector('#serviceModal .modal-box');
+  if (box) box.classList.remove('modal-box--alt', 'modal-box--dark');
+  if (box && mode === 'dark') box.classList.add('modal-box--dark');
+  if (box && mode === 'alt') box.classList.add('modal-box--alt');
   document.getElementById('modal-icon').textContent = icon;
   document.getElementById('modal-title').textContent = title;
   document.getElementById('modal-body').textContent = body;
