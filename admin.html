@@ -4743,7 +4743,7 @@ function applySectionTypeDefaults(defaults, type) {
   if (type === 'pricing') { defaults.items = []; }
   if (type === 'locations') { defaults.items = []; defaults.displayMode = 'cards'; defaults.layoutMode = 'top'; defaults.mapMode = 'linkout'; defaults.maxCols = 2; defaults.showHours = true; }
   if (type === 'table') { defaults.cols = 2; defaults.col1Label = 'Column 1'; defaults.col2Label = 'Column 2'; defaults.col3Label = ''; defaults.col1Style = 'normal'; defaults.col2Style = 'normal'; defaults.col3Style = 'normal'; defaults.firstColHeader = false; defaults.mobileStack = false; defaults.items = []; }
-  if (type === 'hero-section') { defaults.heightVariant = 'full'; defaults.vAlign = 'center'; defaults.hAlign = 'center'; defaults.bg = { type:'image', bgColor:'#0f2340', imagePosition:'center center', overlayColor:'#0f2340', overlayOpacity:0.5, slides:[], autoplay:true, showDots:true, slideDuration:8 }; defaults.linkType = 'none'; defaults.linkUrl = ''; defaults.linkLabel = ''; }
+  if (type === 'hero-section') { defaults.heightVariant = 'full'; defaults.customHeight = 400; defaults.vAlign = 'center'; defaults.hAlign = 'center'; defaults.bg = { type:'image', bgColor:'#0f2340', imagePosition:'center center', overlayColor:'#0f2340', overlayOpacity:0.5, slides:[], autoplay:true, showDots:true, slideDuration:8 }; defaults.linkType = 'none'; defaults.linkUrl = ''; defaults.linkLabel = ''; }
   if (type === 'rotating-cards') { defaults.items = []; defaults.visibleCards = 1; defaults.cardHeight = 420; defaults.showDots = true; defaults.showArrows = true; defaults.showPeek = true; defaults.autoplay = false; defaults.autoplaySpeed = 4; }
 }
 
@@ -4986,6 +4986,7 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
   // Hero Section
   if (type === 'hero-section') {
     sec.heightVariant = get('heightVariant') || 'full';
+    sec.customHeight = Math.max(100, parseInt(get('customHeight')) || 400);
     sec.vAlign = get('vAlign') || 'center';
     sec.hAlign = get('hAlign') || 'center';
     const bgTypeSel = secCard.querySelector(`[data-cp="${pi}"][data-sec="${si}"][data-field="bgType"]`);
@@ -6370,7 +6371,8 @@ function buildCpSectionTypeFields(sec, pi, si) {
     case 'hero-section': {
       const bg = sec.bg || {};
       const bgType = bg.type === 'color' ? 'image' : (bg.type || 'image');
-      const heightVariant = sec.heightVariant === 'banner' ? 'banner' : 'full';
+      const heightVariant = ['full','banner','custom'].includes(sec.heightVariant) ? sec.heightVariant : 'full';
+      const customHeight = Math.max(100, parseInt(sec.customHeight) || 400);
       const vAlign = ['top','center','bottom'].includes(sec.vAlign) ? sec.vAlign : 'center';
       const hAlign = ['left','center','right'].includes(sec.hAlign) ? sec.hAlign : 'center';
       const piStr = typeof pi === 'string' ? ("'" + pi + "'") : pi;
@@ -6418,10 +6420,17 @@ function buildCpSectionTypeFields(sec, pi, si) {
           </div>
         </div>
         <div class="field-group"><label>Height</label>
-          <select ${p} data-field="heightVariant">
+          <select data-cp="${pi}" data-sec="${si}" data-field="heightVariant" onchange="onHeroHeightVariantChange(this)">
             <option value="full"${heightVariant==='full'?' selected':''}>Full Viewport (100vh)</option>
             <option value="banner"${heightVariant==='banner'?' selected':''}>Page Banner (shorter)</option>
+            <option value="custom"${heightVariant==='custom'?' selected':''}>Custom Height (px)</option>
           </select>
+        </div>
+        <div class="cps-hero-custom-height-field" style="${heightVariant==='custom'?'':'display:none;'}margin-bottom:16px;">
+          <div class="field-group" style="margin:0;"><label>Custom Height (px)</label>
+            <input type="number" min="100" data-cp="${pi}" data-sec="${si}" data-field="customHeight" value="${customHeight}" placeholder="e.g. 400"/>
+            <div class="field-hint">250px+ is comfortable for a heading, subtitle, and link. Below that (down to 100px minimum), spacing squeezes automatically, but consider trimming content too.</div>
+          </div>
         </div>
         <div class="divider" style="margin:14px 0;"></div>
         <div class="field-group"><label>Background Type</label>
@@ -6472,7 +6481,12 @@ function buildCpSectionTypeFields(sec, pi, si) {
         <div class="cps-hero-overlay-panel" style="margin-top:8px;">
           <div class="form-row-2">
             <div class="field-group" style="margin:0;"><label>Overlay Color</label>
-              <input type="color" data-cp="${pi}" data-sec="${si}" data-field="overlayColor" value="${bg.overlayColor||'#0f2340'}"/></div>
+              <div style="display:flex;gap:8px;align-items:center;">
+                <input type="color" data-cp="${pi}" data-sec="${si}" data-field="overlayColor" id="hero-ovc-${pi}-${si}" value="${bg.overlayColor||'#0f2340'}" oninput="syncColorHex('hero-ovc-${pi}-${si}','hero-ovc-${pi}-${si}Hex')"/>
+                <button type="button" class="color-swatch-btn" id="hero-ovc-${pi}-${si}-swatch" style="background:${bg.overlayColor||'#0f2340'};" onclick="colorSwatchClick('hero-ovc-${pi}-${si}Hex','Overlay Color','hero-ovc-${pi}-${si}')" title="Overlay Color"></button>
+                <input type="text" id="hero-ovc-${pi}-${si}Hex" value="${bg.overlayColor||'#0f2340'}" oninput="syncColorPicker('hero-ovc-${pi}-${si}Hex','hero-ovc-${pi}-${si}');autosave();"/>
+              </div>
+            </div>
             <div class="field-group" style="margin:0;"><label>Overlay Opacity</label>
               <input type="range" min="0" max="1" step="0.05" data-cp="${pi}" data-sec="${si}" data-field="overlayOpacity" value="${bg.overlayOpacity!==undefined?bg.overlayOpacity:0.5}"/></div>
           </div>
@@ -9265,6 +9279,14 @@ function onHeroBgTypeChange(pi, si, sel) {
   autosave();
 }
 
+function onHeroHeightVariantChange(sel) {
+  const card = sel.closest('.cp-section-card');
+  if (!card) return;
+  const field = card.querySelector('.cps-hero-custom-height-field');
+  if (field) field.style.display = (sel.value === 'custom') ? '' : 'none';
+  autosave();
+}
+
 function initCpSubItemDragDrop(container, pi, si, arr) {
   if (!container) return;
   let dragIdx = null;
@@ -9445,6 +9467,7 @@ function collectCpSections(card, pi, existingSections) {
       case 'hero-section': {
         sec.heading = get('heading'); sec.subtitle = get('subtitle');
         sec.heightVariant = get('heightVariant') || 'full';
+        sec.customHeight = Math.max(100, parseInt(get('customHeight')) || 400);
         sec.vAlign = get('vAlign') || 'center';
         sec.hAlign = get('hAlign') || 'center';
         const bgTypeSel = secCard.querySelector(`[data-cp="${pi}"][data-sec="${renderedSi}"][data-field="bgType"]`);

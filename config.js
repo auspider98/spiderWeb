@@ -488,6 +488,7 @@ const SITE_CONFIG = {
           "heading": "Hero Heading",
           "subtitle": "Hero Subtitle\n  - Hero Height Drop-down (Full Viewport, Banner)\n  - Vertical Position Drop-down (Top, Center, Bottom)\n  - Horizontal Position Drop-down (Left, Center, Right)\n  - Background Type Drop-down (Solid Color, Image, Slideshow, Video)",
           "heightVariant": "full",
+          "customHeight": 400,
           "vAlign": "bottom",
           "hAlign": "left",
           "bg": {
@@ -527,6 +528,7 @@ const SITE_CONFIG = {
           "heading": "Full Viewport - Single Image",
           "subtitle": "Bottom/Center - 50% Overlay - Autoplay - No Dots",
           "heightVariant": "full",
+          "customHeight": 400,
           "vAlign": "bottom",
           "hAlign": "center",
           "bg": {
@@ -566,6 +568,7 @@ const SITE_CONFIG = {
           "heading": "Full Viewport - Slideshow",
           "subtitle": "Bottom/Center - 50% Overlay - Autoplay - No Dots",
           "heightVariant": "full",
+          "customHeight": 400,
           "vAlign": "bottom",
           "hAlign": "center",
           "bg": {
@@ -605,6 +608,7 @@ const SITE_CONFIG = {
           "heading": "Full Viewport - Slideshow",
           "subtitle": "Top/Right - 0% Overlay - Autoplay - Dots",
           "heightVariant": "full",
+          "customHeight": 400,
           "vAlign": "top",
           "hAlign": "right",
           "bg": {
@@ -644,6 +648,7 @@ const SITE_CONFIG = {
           "heading": "Banner - Slideshow",
           "subtitle": "Bottom/Center - 50% Overlay - Autoplay - No Dots",
           "heightVariant": "banner",
+          "customHeight": 400,
           "vAlign": "bottom",
           "hAlign": "center",
           "bg": {
@@ -679,17 +684,18 @@ const SITE_CONFIG = {
           "type": "hero-section",
           "label": "Hero Section Label",
           "background": "alt",
-          "anchorId": "banner-solid-color",
-          "heading": "Banner - Single Image",
-          "subtitle": "Bottom/Center - 50% Overlay - Autoplay - No Dots",
-          "heightVariant": "banner",
+          "anchorId": "hero-custom-250-image-bottom-left",
+          "heading": "Custom - 250px - Image",
+          "subtitle": "Bottom/Left - 50% Overlay - No Dots",
+          "heightVariant": "custom",
+          "customHeight": 250,
           "vAlign": "bottom",
-          "hAlign": "center",
+          "hAlign": "left",
           "bg": {
             "type": "image",
             "bgColor": "#0f2340",
             "imagePath": "hero/hero-01.jpg",
-            "imagePosition": "50% 35%",
+            "imagePosition": "50% 85%",
             "slides": [
               {
                 "imagePath": "hero/hero-02.jpg",
@@ -709,7 +715,47 @@ const SITE_CONFIG = {
             "overlayColor": "#000000",
             "overlayOpacity": 0.4
           },
-          "linkType": "internal",
+          "linkType": "none",
+          "linkLabel": "Learn More",
+          "linkUrl": "home",
+          "link_anchorId": ""
+        },
+        {
+          "type": "hero-section",
+          "label": "Hero Section Label",
+          "background": "dark",
+          "anchorId": "hero-custom-100-image-bottom-center",
+          "heading": "Custom - 100px - Image",
+          "subtitle": "Bottom/Center - 50% Overlay - No Dots",
+          "heightVariant": "custom",
+          "customHeight": 100,
+          "vAlign": "bottom",
+          "hAlign": "left",
+          "bg": {
+            "type": "image",
+            "bgColor": "#0f2340",
+            "imagePath": "hero/hero-01.jpg",
+            "imagePosition": "94% 85%",
+            "slides": [
+              {
+                "imagePath": "hero/hero-02.jpg",
+                "position": "50% 0%"
+              },
+              {
+                "imagePath": "hero/hero-03.jpg",
+                "position": "50% 0%"
+              }
+            ],
+            "slideDuration": 8,
+            "autoplay": true,
+            "showDots": false,
+            "videoMp4": "",
+            "videoWebm": "",
+            "videoPoster": "",
+            "overlayColor": "#000000",
+            "overlayOpacity": 0.4
+          },
+          "linkType": "none",
           "linkLabel": "Learn More",
           "linkUrl": "home",
           "link_anchorId": ""
@@ -7818,14 +7864,24 @@ const SITE_CONFIG = {
   ],
   "aboutSections": [],
   "homeSections": [],
-  "mapsApiKey": "",
+  "whyChooseUs": {
+    "heading": "",
+    "subtext": "",
+    "badgeNum": "",
+    "badgeLabel": "",
+    "bullets": []
+  },
+  "aboutBio3": "She is a member of the Alabama Bar Association, the American Academy of Adoption Attorneys (AAAA), and has been recognized as a Super Lawyer in Alabama Family Law for eight consecutive years. She is admitted to practice in all Alabama courts and regularly handles cases in Jefferson, Shelby, St. Clair, and Cullman counties.",
+  "aboutBio4": "When she's not advocating for families in court, Amy volunteers with the Alabama Foster Care Association and speaks at community workshops on adoption awareness.",
   "footerBio": "Footer Bio - A short description of the business for the footer...",
+  "_savedAt": 1783651606947,
+  "contactSubmitLabel": "Submit Button Label",
+  "contactSuccessMsg": "Success Message",
+  "mapsApiKey": "",
   "animateStats": false,
   "ctaAnchorId": "",
   "heroPrimaryAnchorId": "",
   "heroSecondaryAnchorId": "",
-  "contactSubmitLabel": "Submit Button Label",
-  "contactSuccessMsg": "Success Message",
   "search": {
     "placeholder": "Search...",
     "noResultsMessage": "No results for '{query}'",
@@ -7896,13 +7952,5 @@ const SITE_CONFIG = {
     "cp-38": "public"
   },
   "fontDisplayCustom": "Titillium Web",
-  "fontBodyCustom": "",
-  "_savedAt": 1783633032773,
-  "whyChooseUs": {
-    "heading": "",
-    "subtext": "",
-    "badgeNum": "",
-    "badgeLabel": "",
-    "bullets": []
-  }
+  "fontBodyCustom": ""
 };

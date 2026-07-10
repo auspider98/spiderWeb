@@ -7374,12 +7374,35 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
     // ── HERO SECTION ─────────────────────────────────────────────
     case 'hero-section': {
       const heroId = `cps-hero-${idx}-${Math.random().toString(36).slice(2,7)}`;
-      const heightVariant = sec.heightVariant === 'banner' ? 'banner' : 'full';
+      const heightVariant = ['full','banner','custom'].includes(sec.heightVariant) ? sec.heightVariant : 'full';
       const bg = sec.bg || {};
       const bgType = bg.type || 'color';
       const isMedia = bgType !== 'color';
 
-      wrapper.classList.add('cps-hero-section-wrapper', 'cps-hero-section--' + heightVariant);
+      wrapper.classList.add('cps-hero-section-wrapper');
+      let headingGapStyle = '';
+      let bodyGapStyle = '';
+      let innerPaddingStyle = '';
+      if (heightVariant === 'custom') {
+        const customHeight = Math.max(100, parseInt(sec.customHeight) || 400);
+        wrapper.style.height = customHeight + 'px';
+        // t=0 at the 100px floor (tightest), t=1 at 550px+ (normal spacing).
+        // Interpolating toward explicit floor values (rather than multiplying the
+        // normal values down) gives a real, tunable minimum instead of just scaling
+        // proportionally — important for line-height, which can't approach zero.
+        const t = Math.max(0, Math.min(1, (customHeight - 100) / (550 - 100)));
+        const lerp = (min, max) => min + (max - min) * t;
+        headingGapStyle = ` style="margin-bottom:${Math.round(lerp(2, 20))}px;"`;
+        bodyGapStyle = ` style="margin-bottom:${Math.round(lerp(3, 32))}px;line-height:${lerp(1.1, 1.7).toFixed(2)};"`;
+        // Bottom padding only needs real clearance if dots or a link are actually
+        // rendered below the text — otherwise it's just trailing whitespace.
+        const willHaveDots = bgType === 'slideshow' && bg.slides && bg.slides.length > 1 && bg.showDots !== false;
+        const willHaveLink = (sec.linkType || 'none') !== 'none' && sec.linkUrl && sec.linkLabel;
+        const bottomFloor = (willHaveDots || willHaveLink) ? 16 : 4;
+        innerPaddingStyle = ` style="padding-bottom:${Math.round(lerp(bottomFloor, 60))}px;"`;
+      } else {
+        wrapper.classList.add('cps-hero-section--' + heightVariant);
+      }
       if (isMedia) wrapper.classList.add('cps-hero-section--media');
 
       const vAlign = ['top','center','bottom'].includes(sec.vAlign) ? sec.vAlign : 'center';
@@ -7430,9 +7453,9 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
           <div class="cps-hero-section-shadow"></div>
         </div>
         <div class="container">
-          <div class="${innerClass}">
-            ${sec.heading ? `<${headTag} class="${headClass} cps-heading reveal">${sec.heading}</${headTag}>` : ''}
-            ${sec.subtitle ? `<div class="cps-body reveal reveal-delay-1">${formatBody(sec.subtitle)}</div>` : ''}
+          <div class="${innerClass}"${innerPaddingStyle}>
+            ${sec.heading ? `<${headTag} class="${headClass} cps-heading reveal"${headingGapStyle}>${sec.heading}</${headTag}>` : ''}
+            ${sec.subtitle ? `<div class="cps-body reveal reveal-delay-1"${bodyGapStyle}>${formatBody(sec.subtitle)}</div>` : ''}
             ${linkHtml}
           </div>
         </div>
