@@ -4743,7 +4743,7 @@ function applySectionTypeDefaults(defaults, type) {
   if (type === 'pricing') { defaults.items = []; }
   if (type === 'locations') { defaults.items = []; defaults.displayMode = 'cards'; defaults.layoutMode = 'top'; defaults.mapMode = 'linkout'; defaults.maxCols = 2; defaults.showHours = true; }
   if (type === 'table') { defaults.cols = 2; defaults.col1Label = 'Column 1'; defaults.col2Label = 'Column 2'; defaults.col3Label = ''; defaults.col1Style = 'normal'; defaults.col2Style = 'normal'; defaults.col3Style = 'normal'; defaults.firstColHeader = false; defaults.mobileStack = false; defaults.items = []; }
-  if (type === 'hero-section') { defaults.heightVariant = 'full'; defaults.customHeight = 400; defaults.vAlign = 'center'; defaults.hAlign = 'center'; defaults.bg = { type:'image', bgColor:'#0f2340', imagePosition:'center center', overlayColor:'#0f2340', overlayOpacity:0.5, slides:[], autoplay:true, showDots:true, slideDuration:8 }; defaults.linkType = 'none'; defaults.linkUrl = ''; defaults.linkLabel = ''; }
+  if (type === 'hero-section') { defaults.heightVariant = 'full'; defaults.customHeight = 400; defaults.vAlign = 'center'; defaults.hAlign = 'center'; defaults.textColor = 'white'; defaults.bg = { type:'image', bgColor:'#0f2340', imagePosition:'center center', overlayColor:'#0f2340', overlayOpacity:0.5, shadowEnabled:true, slides:[], autoplay:true, showDots:true, slideDuration:8 }; defaults.linkType = 'none'; defaults.linkUrl = ''; defaults.linkLabel = ''; defaults.linkStyle = 'text'; }
   if (type === 'rotating-cards') { defaults.items = []; defaults.visibleCards = 1; defaults.cardHeight = 420; defaults.showDots = true; defaults.showArrows = true; defaults.showPeek = true; defaults.autoplay = false; defaults.autoplaySpeed = 4; }
 }
 
@@ -4989,6 +4989,7 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
     sec.customHeight = Math.max(100, parseInt(get('customHeight')) || 400);
     sec.vAlign = get('vAlign') || 'center';
     sec.hAlign = get('hAlign') || 'center';
+    sec.textColor = ['white','black','chrome','lightbg','theme'].includes(get('textColor')) ? get('textColor') : 'white';
     const bgTypeSel = secCard.querySelector(`[data-cp="${pi}"][data-sec="${si}"][data-field="bgType"]`);
     const bgType = bgTypeSel ? bgTypeSel.value : 'image';
     // Single-image path is scoped away from slideshow rows (both use data-field="imagePath")
@@ -5013,11 +5014,13 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
       videoMp4: get('videoMp4'), videoWebm: get('videoWebm'), videoPoster: get('videoPoster'),
       overlayColor: get('overlayColor') || '#0f2340',
       overlayOpacity: heroOverlayOpacity,
+      shadowEnabled: secCard.querySelector(`[data-cp="${pi}"][data-sec="${si}"][data-field="shadowEnabled"]`)?.checked !== false,
     };
     sec.linkType = get('linkType') || 'none';
     sec.linkLabel = get('linkLabel') || '';
     sec.linkUrl = collectCpSmartLinkUrl(secCard, pi, si, '', sec.linkType);
     sec.link_anchorId = collectCpAnchorId(secCard, pi, si, '');
+    sec.linkStyle = get('linkStyle') === 'whole-image' ? 'whole-image' : 'text';
   }
 
   // Testimonials
@@ -6375,6 +6378,8 @@ function buildCpSectionTypeFields(sec, pi, si) {
       const customHeight = Math.max(100, parseInt(sec.customHeight) || 400);
       const vAlign = ['top','center','bottom'].includes(sec.vAlign) ? sec.vAlign : 'center';
       const hAlign = ['left','center','right'].includes(sec.hAlign) ? sec.hAlign : 'center';
+      const linkStyle = sec.linkStyle === 'whole-image' ? 'whole-image' : 'text';
+      const textColor = ['white','black','chrome','lightbg','theme'].includes(sec.textColor) ? sec.textColor : 'white';
       const piStr = typeof pi === 'string' ? ("'" + pi + "'") : pi;
       const dispImage     = bgType === 'image'     ? '' : 'display:none;';
       const dispSlideshow = bgType === 'slideshow' ? '' : 'display:none;';
@@ -6394,7 +6399,11 @@ function buildCpSectionTypeFields(sec, pi, si) {
           <div class="cp-sub-item-body" style="padding-top:8px;">
             <div class="form-row-2">
               <div class="field-group" style="margin:0;"><label>Image Path</label>
-                <input type="text" data-cp="${pi}" data-sec="${si}" data-heroslide="${si2}" data-field="imagePath" value="${escHtml(s.imagePath||'')}" placeholder="images/photo.jpg"/></div>
+                <input type="text" data-cp="${pi}" data-sec="${si}" data-heroslide="${si2}" data-field="imagePath" value="${escHtml(s.imagePath||'')}" placeholder="images/photo.jpg" oninput="updatePhotoPreview(this)"/>
+                <div class="photo-preview-wrap" style="margin-top:10px;display:${s.imagePath ? 'block' : 'none'};">
+                  <img src="${escHtml(s.imagePath||'')}" alt="Slide preview" style="max-height:140px;max-width:100%;border-radius:4px;border:1px solid var(--border);object-fit:cover;" onerror="this.parentElement.style.display='none';"/>
+                </div>
+              </div>
               ${heroFocusFieldsHtml(pi, si, 'position', s.position||'center center', si2)}
             </div>
           </div>
@@ -6403,6 +6412,16 @@ function buildCpSectionTypeFields(sec, pi, si) {
       return `
         <div class="field-group"><label>Heading</label><input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
         <div class="field-group"><label>Subtitle</label><textarea rows="2" style="width:100%;box-sizing:border-box;resize:vertical;min-height:56px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
+        <div class="field-group"><label>Text Color</label>
+          <select ${p} data-field="textColor">
+            <option value="white"${textColor==='white'?' selected':''}>White</option>
+            <option value="black"${textColor==='black'?' selected':''}>Black</option>
+            <option value="chrome"${textColor==='chrome'?' selected':''}>Chrome Background Color</option>
+            <option value="lightbg"${textColor==='lightbg'?' selected':''}>Light Background Color</option>
+            <option value="theme"${textColor==='theme'?' selected':''}>Match Section Background</option>
+          </select>
+          <div class="field-hint">Chrome Background Color and Light Background Color use the matching fields in Colors &amp; Fonts. "Match Section Background" follows this section's own Background setting below (using Heading Text / Body Text), flipping to white automatically on Dark — same as every other section.</div>
+        </div>
         <div class="form-row-2" style="margin-bottom:16px;">
           <div class="field-group" style="margin:0;"><label>Vertical Position</label>
             <select ${p} data-field="vAlign">
@@ -6444,7 +6463,11 @@ function buildCpSectionTypeFields(sec, pi, si) {
         <div class="cps-hero-bg-panel-image" style="${dispImage}">
           <div class="form-row-2">
             <div class="field-group" style="margin:0;"><label>Image Path</label>
-              <input type="text" data-cp="${pi}" data-sec="${si}" data-field="imagePath" value="${escHtml(bg.imagePath||'')}" placeholder="images/hero.jpg"/></div>
+              <input type="text" data-cp="${pi}" data-sec="${si}" data-field="imagePath" value="${escHtml(bg.imagePath||'')}" placeholder="images/hero.jpg" oninput="updatePhotoPreview(this)"/>
+              <div class="photo-preview-wrap" style="margin-top:10px;display:${bg.imagePath ? 'block' : 'none'};">
+                <img src="${escHtml(bg.imagePath||'')}" alt="Hero image preview" style="max-height:140px;max-width:100%;border-radius:4px;border:1px solid var(--border);object-fit:cover;" onerror="this.parentElement.style.display='none';"/>
+              </div>
+            </div>
             ${heroFocusFieldsHtml(pi, si, 'imagePosition', bg.imagePosition||'center center')}
           </div>
         </div>
@@ -6479,7 +6502,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
         </div>
 
         <div class="cps-hero-overlay-panel" style="margin-top:8px;">
-          <div class="form-row-2">
+          <div class="form-row-2" style="grid-template-columns:1fr 1fr auto;">
             <div class="field-group" style="margin:0;"><label>Overlay Color</label>
               <div style="display:flex;gap:8px;align-items:center;">
                 <input type="color" data-cp="${pi}" data-sec="${si}" data-field="overlayColor" id="hero-ovc-${pi}-${si}" value="${bg.overlayColor||'#0f2340'}" oninput="syncColorHex('hero-ovc-${pi}-${si}','hero-ovc-${pi}-${si}Hex')"/>
@@ -6489,12 +6512,27 @@ function buildCpSectionTypeFields(sec, pi, si) {
             </div>
             <div class="field-group" style="margin:0;"><label>Overlay Opacity</label>
               <input type="range" min="0" max="1" step="0.05" data-cp="${pi}" data-sec="${si}" data-field="overlayOpacity" value="${bg.overlayOpacity!==undefined?bg.overlayOpacity:0.5}"/></div>
+            <div class="field-group" style="margin:0;"><label>Bottom Shadow</label>
+              <div class="switch-row" style="margin:0;justify-content:flex-start;gap:10px;">
+                <label class="switch"><input type="checkbox" data-cp="${pi}" data-sec="${si}" data-field="shadowEnabled" ${bg.shadowEnabled!==false?'checked':''}/><span class="switch-slider"></span></label>
+              </div>
+            </div>
           </div>
+          <div class="field-hint">Bottom Shadow uses the same Overlay Color above, tinting the depth effect along the bottom edge to match.</div>
         </div>
 
         <div class="divider" style="margin:14px 0;"></div>
         <div style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Link (optional)</div>
-        ${cpSmartLinkFields(sec, pi, si, 'Learn More →')}`;
+        <div class="field-group"><label>Link Style</label>
+          <select data-cp="${pi}" data-sec="${si}" data-field="linkStyle">
+            <option value="text"${linkStyle==='text'?' selected':''}>Text Link</option>
+            <option value="whole-image"${linkStyle==='whole-image'?' selected':''}>Whole Image Clickable</option>
+          </select>
+        </div>
+        ${cpSmartLinkFields(sec, pi, si, 'Learn More →')}
+        <div class="field-hint">${linkStyle==='whole-image'
+          ? 'The entire hero becomes clickable — no visible button or text appears. The label above is still used as the accessible name for screen readers.'
+          : 'Renders as a small text link below the subtitle, styled like the standalone Link section.'}</div>`;
     }
 
     case 'cta': {
@@ -9470,6 +9508,7 @@ function collectCpSections(card, pi, existingSections) {
         sec.customHeight = Math.max(100, parseInt(get('customHeight')) || 400);
         sec.vAlign = get('vAlign') || 'center';
         sec.hAlign = get('hAlign') || 'center';
+        sec.textColor = ['white','black','chrome','lightbg','theme'].includes(get('textColor')) ? get('textColor') : 'white';
         const bgTypeSel = secCard.querySelector(`[data-cp="${pi}"][data-sec="${renderedSi}"][data-field="bgType"]`);
         const bgType = bgTypeSel ? bgTypeSel.value : 'image';
         // Single-image path is scoped away from slideshow rows (both use data-field="imagePath")
@@ -9494,11 +9533,13 @@ function collectCpSections(card, pi, existingSections) {
           videoMp4: get('videoMp4'), videoWebm: get('videoWebm'), videoPoster: get('videoPoster'),
           overlayColor: get('overlayColor') || '#0f2340',
           overlayOpacity,
+          shadowEnabled: secCard.querySelector(`[data-cp="${pi}"][data-sec="${renderedSi}"][data-field="shadowEnabled"]`)?.checked !== false,
         };
         sec.linkType = get('linkType') || 'none';
         sec.linkLabel = get('linkLabel') || '';
         sec.linkUrl = collectCpSmartLinkUrl(secCard, pi, renderedSi, '', sec.linkType);
         sec.link_anchorId = collectCpAnchorId(secCard, pi, renderedSi, '');
+        sec.linkStyle = get('linkStyle') === 'whole-image' ? 'whole-image' : 'text';
         break;
       }
       case 'checklist':

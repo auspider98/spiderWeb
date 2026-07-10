@@ -3578,8 +3578,7 @@ section.cps-hero-section-wrapper {
 .cps-hero-section-overlay { position: absolute; inset: 0; z-index: 1; }
 .cps-hero-section-shadow {
   position: absolute; left: 0; right: 0; bottom: 0;
-  height: clamp(130px, 20vh, 240px);
-  background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.22) 45%, rgba(0,0,0,0) 100%);
+  height: clamp(90px, 14vh, 160px);
   z-index: 1;
   pointer-events: none;
 }
@@ -3610,28 +3609,44 @@ section.cps-hero-section-wrapper {
 }
 .cps-hero-section-inner .cps-body p { margin: 0 0 0.75em; }
 .cps-hero-section-inner .cps-body p:last-child { margin-bottom: 0; }
+
+/* Heading/body text color is now driven by the Text Color option (White / Black /
+   Match Section Background), applied as an inline style per-instance in the render
+   code below — see textColorMode. The text link keeps its own fixed gold accent
+   treatment regardless of that setting, since it wasn't part of this control. */
+.cps-hero-section-wrapper.cps-hero-section--media .cps-hero-link:hover { color: var(--gold-light); }
+
+/* Visible text-link style */
 .cps-hero-section-actions { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
 .cps-hero-halign-left   .cps-hero-section-actions { justify-content: flex-start; }
 .cps-hero-halign-center .cps-hero-section-actions { justify-content: center; }
 .cps-hero-halign-right  .cps-hero-section-actions { justify-content: flex-end; }
 
-/* When there's background media, force light text regardless of the section's own light/alt/dark setting — */
-/* an overlay is always present in this case, so legibility depends on white text, not the theme class. */
-.cps-hero-section-wrapper.cps-hero-section--media .cps-hero-section-inner .cps-heading { color: #fff !important; }
-.cps-hero-section-wrapper.cps-hero-section--media .cps-hero-section-inner .cps-body { color: rgba(255,255,255,0.75); }
-.cps-hero-section-wrapper.cps-hero-section--media .cps-hero-link { color: #fff; border-color: var(--gold); }
-.cps-hero-section-wrapper.cps-hero-section--media .cps-hero-link:hover { color: var(--gold-light); }
+/* Whole-hero click target, used when a Link is set instead of visible button/text */
+.cps-hero-section-wrapper.cps-hero-section--clickable { cursor: pointer; }
+.cps-hero-section-wrapper.cps-hero-section--clickable:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: -3px;
+}
 
 /* Slideshow dots */
 .cps-hero-section-dots {
-  position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%);
-  z-index: 3; display: flex; gap: 8px;
+  position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
+  z-index: 3; display: flex; gap: 2px;
 }
 .cps-hero-section-dot {
-  width: 24px; height: 2px; background: rgba(255,255,255,0.3);
-  cursor: pointer; transition: background 0.3s, width 0.3s;
+  width: 32px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
 }
-.cps-hero-section-dot.active { background: var(--gold); width: 40px; }
+.cps-hero-section-dot::after {
+  content: '';
+  display: block;
+  width: 24px; height: 2px; border-radius: 1px;
+  background: rgba(255,255,255,0.3);
+  transition: background 0.3s, width 0.3s;
+}
+.cps-hero-section-dot.active::after { background: var(--gold); width: 40px; }
 
 @media (max-width: 640px) {
   .cps-hero-section--full { min-height: 520px; }
@@ -5192,8 +5207,9 @@ function initHeroSectionSlideshow(wrapper, heroId, bg) {
   }
   setInterval(() => goTo((cur + 1) % slides.length), dur);
   if (dotsContainer) {
+    dotsContainer.addEventListener('click', (e) => e.stopPropagation());
     dotsContainer.querySelectorAll('.cps-hero-section-dot').forEach((d, i) => {
-      d.addEventListener('click', () => goTo(i));
+      d.addEventListener('click', (e) => { e.stopPropagation(); goTo(i); });
     });
   }
 }
@@ -7379,9 +7395,41 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
       const bgType = bg.type || 'color';
       const isMedia = bgType !== 'color';
 
+      // Single link — either a visible text link, or the whole hero as the click target.
+      // Computed early since the custom-height padding below needs to know if a
+      // visible text link will actually be taking up space.
+      const linkStyle = sec.linkStyle === 'whole-image' ? 'whole-image' : 'text';
+      const linkLabel = sec.linkLabel || '';
+      const linkType  = sec.linkType  || 'none';
+      const linkUrl   = sec.linkUrl   || '';
+      const hasLink   = linkType !== 'none' && linkUrl && linkLabel;
+      const hasTextLink = hasLink && linkStyle === 'text';
+      const hasWholeImageLink = hasLink && linkStyle === 'whole-image';
+
       wrapper.classList.add('cps-hero-section-wrapper');
-      let headingGapStyle = '';
-      let bodyGapStyle = '';
+
+      // Text color — White / Black / Chrome Background / Light Background / Match
+      // Section Background. White and Black are fixed values; the other three
+      // reference live admin-editable CSS variables directly (not snapshotted hex),
+      // so they stay correct if those colors are changed later in Colors & Fonts.
+      // color-mix() gives the subtitle its usual "muted" treatment for any of these
+      // without needing to know each color's actual RGB values.
+      const textColorMode = ['white','black','chrome','lightbg','theme'].includes(sec.textColor) ? sec.textColor : 'white';
+      let headingColor, bodyColor;
+      if (textColorMode === 'black') {
+        headingColor = '#111'; bodyColor = 'rgba(17,17,17,0.75)';
+      } else if (textColorMode === 'chrome') {
+        headingColor = 'var(--chrome)'; bodyColor = 'color-mix(in srgb, var(--chrome) 75%, transparent)';
+      } else if (textColorMode === 'lightbg') {
+        headingColor = 'var(--warm-white)'; bodyColor = 'color-mix(in srgb, var(--warm-white) 75%, transparent)';
+      } else if (textColorMode === 'theme') {
+        headingColor = isDark ? '#fff' : 'var(--text-head)';
+        bodyColor    = isDark ? 'rgba(255,255,255,0.75)' : 'var(--text-body)';
+      } else {
+        headingColor = '#fff'; bodyColor = 'rgba(255,255,255,0.75)';
+      }
+      let headingGapStyle = ` style="color:${headingColor} !important;"`;
+      let bodyGapStyle = ` style="color:${bodyColor} !important;"`;
       let innerPaddingStyle = '';
       if (heightVariant === 'custom') {
         const customHeight = Math.max(100, parseInt(sec.customHeight) || 400);
@@ -7392,13 +7440,12 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
         // proportionally — important for line-height, which can't approach zero.
         const t = Math.max(0, Math.min(1, (customHeight - 100) / (550 - 100)));
         const lerp = (min, max) => min + (max - min) * t;
-        headingGapStyle = ` style="margin-bottom:${Math.round(lerp(2, 20))}px;"`;
-        bodyGapStyle = ` style="margin-bottom:${Math.round(lerp(3, 32))}px;line-height:${lerp(1.1, 1.7).toFixed(2)};"`;
-        // Bottom padding only needs real clearance if dots or a link are actually
-        // rendered below the text — otherwise it's just trailing whitespace.
+        headingGapStyle = ` style="color:${headingColor} !important;margin-bottom:${Math.round(lerp(2, 20))}px;"`;
+        bodyGapStyle = ` style="color:${bodyColor} !important;margin-bottom:${Math.round(lerp(3, 32))}px;line-height:${lerp(1.1, 1.7).toFixed(2)};"`;
+        // Bottom padding only needs real clearance if dots or a visible text link
+        // are actually rendered below the text — otherwise it's just trailing whitespace.
         const willHaveDots = bgType === 'slideshow' && bg.slides && bg.slides.length > 1 && bg.showDots !== false;
-        const willHaveLink = (sec.linkType || 'none') !== 'none' && sec.linkUrl && sec.linkLabel;
-        const bottomFloor = (willHaveDots || willHaveLink) ? 16 : 4;
+        const bottomFloor = (willHaveDots || hasTextLink) ? 16 : 4;
         innerPaddingStyle = ` style="padding-bottom:${Math.round(lerp(bottomFloor, 60))}px;"`;
       } else {
         wrapper.classList.add('cps-hero-section--' + heightVariant);
@@ -7411,12 +7458,18 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
 
       // Overlay gradient — same technique as the homepage hero
       let overlayHtml = '';
+      let shadowHtml = '';
       if (isMedia) {
         const oc = bg.overlayColor || CFG.colors.navy;
-        const op = bg.overlayOpacity !== undefined ? bg.overlayOpacity : 0.5;
         const rr = parseInt(oc.slice(1,3),16) || 9, gg = parseInt(oc.slice(3,5),16) || 20, bb = parseInt(oc.slice(5,7),16) || 38;
+        const op = bg.overlayOpacity !== undefined ? bg.overlayOpacity : 0.5;
         const overlayStyle = `background:linear-gradient(to top, rgba(${rr},${gg},${bb},${Math.min(op+0.3,1)}) 0%, rgba(${rr},${gg},${bb},${op}) 50%, rgba(${rr},${gg},${bb},${Math.max(op-0.2,0)}) 100%);`;
         overlayHtml = `<div class="cps-hero-section-overlay" style="${overlayStyle}"></div>`;
+
+        if (bg.shadowEnabled !== false) {
+          const shadowStyle = `background:linear-gradient(to top, rgba(${rr},${gg},${bb},0.38), rgba(${rr},${gg},${bb},0));`;
+          shadowHtml = `<div class="cps-hero-section-shadow" style="${shadowStyle}"></div>`;
+        }
       }
 
       // Background media
@@ -7437,20 +7490,24 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
       }
       // Video is appended after the innerHTML is set (needs a live DOM node to attach the <video> to)
 
-      // Single text link — same smart-link pattern as the standalone Link section
-      const linkLabel = sec.linkLabel || '';
-      const linkType  = sec.linkType  || 'none';
-      const linkUrl   = sec.linkUrl   || '';
-      const hasLink   = linkType !== 'none' && linkUrl && linkLabel;
-      const linkHtml  = hasLink
-        ? `<div class="cps-hero-section-actions reveal reveal-delay-2"><span class="cps-link-anchor cps-hero-link">${escAttr(linkLabel)}</span></div>`
+      const linkHtml = hasTextLink
+        ? `<div class="cps-hero-section-actions reveal reveal-delay-2"><span class="cps-link-anchor cps-hero-link" style="color:${headingColor};">${escAttr(linkLabel)}</span></div>`
         : '';
+
+      // No visible button/text in whole-image mode — accessibility has to come
+      // from role/tabindex/aria-label instead of visible link text.
+      if (hasWholeImageLink) {
+        wrapper.classList.add('cps-hero-section--clickable');
+        wrapper.setAttribute('role', 'link');
+        wrapper.setAttribute('tabindex', '0');
+        wrapper.setAttribute('aria-label', linkLabel);
+      }
 
       wrapper.innerHTML = `
         <div class="cps-hero-section-clip">
           <div class="cps-hero-section-bg" id="${heroId}-bg" style="${bgColorStyle}">${bgHtml}</div>
           ${overlayHtml}
-          <div class="cps-hero-section-shadow"></div>
+          ${shadowHtml}
         </div>
         <div class="container">
           <div class="${innerClass}"${innerPaddingStyle}>
@@ -7468,13 +7525,26 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
       } else if (bgType === 'slideshow' && bg.slides && bg.slides.length > 1 && bg.autoplay !== false) {
         initHeroSectionSlideshow(wrapper, heroId, bg);
       }
-      const heroLinkEl = wrapper.querySelector('.cps-hero-link');
-      if (heroLinkEl && hasLink) heroLinkEl.addEventListener('click', () => {
-        if (linkType === 'internal') showPage(linkUrl, sec.link_anchorId || '');
-        else openSmartLink(linkType, linkUrl);
-      });
+      if (hasTextLink) {
+        const heroLinkEl = wrapper.querySelector('.cps-hero-link');
+        if (heroLinkEl) heroLinkEl.addEventListener('click', () => {
+          if (linkType === 'internal') showPage(linkUrl, sec.link_anchorId || '');
+          else openSmartLink(linkType, linkUrl);
+        });
+      }
+      if (hasWholeImageLink) {
+        const goToHeroLink = () => {
+          if (linkType === 'internal') showPage(linkUrl, sec.link_anchorId || '');
+          else openSmartLink(linkType, linkUrl);
+        };
+        wrapper.addEventListener('click', goToHeroLink);
+        wrapper.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); goToHeroLink(); }
+        });
+      }
       break;
     }
+
 
     case 'checklist': {
       const cats = (sec.categories || []).map(cat => {
