@@ -46,7 +46,7 @@
    RESET & BASE
    ============================================= */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; font-size: 16px; }
+html { scroll-behavior: smooth; font-size: 16px; overflow-x: hidden; }
 body {
   font-family: var(--font-body);
   color: var(--text-body);
@@ -3629,6 +3629,12 @@ section.cps-hero-section-wrapper {
   outline-offset: -3px;
 }
 
+/* Entrance Animation — Media from Left/Right, Text from the opposite side.
+   Same .reveal fade/timing/trigger, just overriding the transform direction. */
+.cps-hero-anim-from-left, .cps-hero-anim-from-right { will-change: transform; }
+.cps-hero-section-wrapper .cps-hero-anim-from-left:not(.visible)  { transform: translateX(var(--hero-slide-x, -100px)); }
+.cps-hero-section-wrapper .cps-hero-anim-from-right:not(.visible) { transform: translateX(var(--hero-slide-x, 100px)); }
+
 /* Slideshow dots */
 .cps-hero-section-dots {
   position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
@@ -4536,6 +4542,154 @@ section.cps-hero-section-wrapper {
 .cps-flip-note p { margin: 0 0 0.5em; }
 .cps-flip-note p:last-child { margin-bottom: 0; }
 
+/* =============================================
+   POPUP (custom section type)
+   ============================================= */
+.cps-popup-overlay {
+  position: fixed; inset: 0;
+  z-index: 2500;
+  display: flex;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.cps-popup-overlay.open { opacity: 1; pointer-events: all; }
+.cps-popup-overlay--modal {
+  align-items: center; justify-content: center;
+  background: rgba(6,15,29,0.6);
+  padding: 20px;
+}
+.cps-popup-overlay--toast {
+  align-items: flex-end; justify-content: flex-end;
+  padding: 20px;
+  pointer-events: none;
+}
+.cps-popup-overlay--toast .cps-popup-box { pointer-events: all; }
+
+.cps-popup-box {
+  position: relative;
+  background: var(--warm-white);
+  max-width: 820px; width: 100%;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  transform: scale(0.94);
+  transition: transform 0.3s ease;
+  overflow: hidden;
+  border-radius: 10px;
+}
+.cps-popup-box.cps-section-alt  { background: var(--cream); }
+.cps-popup-box.cps-section-dark { background: var(--navy); }
+.cps-popup-overlay.open .cps-popup-box { transform: scale(1); }
+.cps-popup-box.cps-popup-no-round { border-radius: 0; }
+
+.cps-popup-box.cps-section-dark .cps-popup-close { background: rgba(255,255,255,0.12); color: #fff; }
+.cps-popup-box.cps-section-dark .cps-popup-close:hover { background: rgba(255,255,255,0.2); }
+
+/* Secondary button auto-adapts to the popup's background — same technique
+   already used by CTA Banner: .btn-outline defaults to a light/white style
+   suited for dark backgrounds, and these overrides flip it to navy only when
+   the popup is Light or Alt. Dark needs no override since that's the default. */
+.cps-popup-box.cps-section-light .btn-outline,
+.cps-popup-box.cps-section-alt .btn-outline {
+  background: transparent;
+  color: var(--navy);
+  border-color: var(--navy);
+}
+.cps-popup-box.cps-section-light .btn-outline:hover,
+.cps-popup-box.cps-section-alt .btn-outline:hover {
+  background: rgba(15,35,64,0.06);
+  border-color: var(--navy);
+}
+
+.cps-popup-overlay--toast .cps-popup-box {
+  max-width: 360px;
+  display: flex; align-items: center; gap: 14px;
+  padding: 16px;
+}
+
+.cps-popup-close {
+  position: absolute; top: 10px; right: 10px;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0,0,0,0.08);
+  color: var(--text-head);
+  font-size: 20px; line-height: 1;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 2;
+  transition: background 0.2s;
+}
+.cps-popup-close:hover { background: rgba(0,0,0,0.16); }
+
+.cps-popup-modal-body { padding: 36px 32px; }
+.cps-popup-modal-body--over-image {
+  position: relative; z-index: 1; color: #fff;
+  min-height: 340px;
+  display: flex; flex-direction: column; justify-content: flex-end;
+}
+
+.cps-popup-heading {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 3vw, 30px);
+  font-weight: 500;
+  color: var(--text-head);
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+.cps-popup-modal-body--over-image .cps-popup-heading { color: #fff; }
+
+.cps-popup-body {
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--text-body);
+  margin-bottom: 20px;
+}
+.cps-popup-modal-body--over-image .cps-popup-body { color: rgba(255,255,255,0.85); }
+.cps-popup-body p { margin: 0 0 0.75em; }
+.cps-popup-body p:last-child { margin-bottom: 0; }
+
+.cps-popup-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+.cps-popup-align-left .cps-popup-text { text-align: left; }
+.cps-popup-align-center .cps-popup-text { text-align: center; }
+.cps-popup-align-right .cps-popup-text { text-align: right; }
+.cps-popup-align-center .cps-popup-actions { justify-content: center; }
+.cps-popup-align-right .cps-popup-actions { justify-content: flex-end; }
+
+/* Top banner image */
+.cps-popup-img-top-el { height: 200px; background-size: cover; background-position: center; }
+
+/* Full background image */
+.cps-popup-img-full { position: relative; background-size: cover; background-position: center; }
+.cps-popup-img-full-overlay { position: absolute; inset: 0; }
+
+/* Left/right split */
+.cps-popup-split { display: flex; min-height: 320px; }
+.cps-popup-split--reverse { flex-direction: row-reverse; }
+.cps-popup-split-img { flex: 1 1 40%; background-size: cover; background-position: center; }
+.cps-popup-split .cps-popup-modal-body { flex: 1 1 60%; display: flex; flex-direction: column; justify-content: center; }
+
+/* Toast thumbnail */
+.cps-popup-thumb {
+  width: 64px; height: 64px; flex-shrink: 0;
+  border-radius: 8px;
+  background-size: cover; background-position: center;
+}
+.cps-popup-box.cps-popup-no-round .cps-popup-thumb { border-radius: 0; }
+.cps-popup-overlay--toast .cps-popup-text { flex: 1; }
+.cps-popup-overlay--toast .cps-popup-heading { font-size: 16px; margin-bottom: 4px; }
+.cps-popup-overlay--toast .cps-popup-body { font-size: 13px; margin-bottom: 10px; }
+.cps-popup-overlay--toast .cps-popup-actions { gap: 8px; }
+.cps-popup-overlay--toast .btn-primary,
+.cps-popup-overlay--toast .btn-outline { padding: 8px 16px; font-size: 13px; }
+
+@media (max-width: 640px) {
+  .cps-popup-split, .cps-popup-split--reverse { flex-direction: column; }
+  .cps-popup-split-img { min-height: 160px; }
+  .cps-popup-overlay--toast { justify-content: center; padding: 12px; }
+  .cps-popup-overlay--toast .cps-popup-box { max-width: 100%; }
+}
+
 </style>
 </head>
 <body>
@@ -5159,6 +5313,29 @@ function initHeroVideo(hb, container) {
 /* =============================================
    HERO SECTION (custom section type) — helpers
    ============================================= */
+// IntersectionObserver checks an element's *rendered* (post-transform) position,
+// not its normal layout position. For the slide-in entrance animations, a large
+// --hero-slide-x offset can push the transformed element's on-screen position
+// fully outside the viewport with zero overlap — narrower elements (the text
+// link) and mobile's narrower viewports hit this sooner than wide elements
+// (heading) or desktop. That means the element's own IntersectionObserver entry
+// can simply never fire, leaving it stuck invisible forever. Watching the
+// wrapper instead (which is never transformed, only its children are) sidesteps
+// this entirely — once the wrapper is confirmed on-screen, its children are
+// revealed directly rather than relying on their own unreliable observers.
+function initHeroSectionReveal(wrapper) {
+  if (!wrapper) return;
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        wrapper.querySelectorAll('.reveal:not(.visible)').forEach(el => el.classList.add('visible'));
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  obs.observe(wrapper);
+}
+
 // Single-clip looping background video — simpler than the homepage hero's
 // multi-clip crossfade system, since this is meant to be used repeatedly
 // across pages rather than as a one-time cinematic homepage moment.
@@ -5546,7 +5723,7 @@ function buildAbout() {
     if (aboutCustomWrap) {
       aboutCustomWrap.innerHTML = '';
       aboutSections.forEach((sec, idx) => {
-        const el = renderCustomSection(sec, idx, false, aboutSections);
+        const el = renderCustomSection(sec, idx, false, aboutSections, 'about');
         if (el) aboutCustomWrap.appendChild(el);
       });
     }
@@ -6977,7 +7154,7 @@ function buildHomeSections() {
   container.innerHTML = '';
   const sections = CFG.homeSections || [];
   sections.forEach((sec, idx) => {
-    const secEl = renderCustomSection(sec, idx, false, sections);
+    const secEl = renderCustomSection(sec, idx, false, sections, 'home');
     if (secEl) container.appendChild(secEl);
   });
 }
@@ -6995,7 +7172,7 @@ function buildCustomPages() {
     // Sections — first section gets header padding to clear fixed nav
     const sections = page.sections || [];
     sections.forEach((sec, idx) => {
-      const secEl = renderCustomSection(sec, idx, idx === 0, sections);
+      const secEl = renderCustomSection(sec, idx, idx === 0, sections, page.slug);
       if (secEl) pageEl.appendChild(secEl);
     });
 
@@ -7043,8 +7220,166 @@ function buildVideoEmbed(url, mp4) {
   return '<iframe src="' + escAttr(url) + '" allowfullscreen></iframe>';
 }
 
-function renderCustomSection(sec, idx, isFirst, allSections) {
+/* =============================================
+   POPUP (custom section type)
+   ============================================= */
+// Popups render as a floating overlay appended to <body>, not inline content —
+// see the early intercept in renderCustomSection() below. Trigger is scroll-to-
+// section: once the configured target section's own anchor element scrolls into
+// view, the popup opens. Shown at most once per browser session (sessionStorage),
+// keyed by page + section index so popups on different pages never collide.
+function initPopupSection(sec, idx, allSections, pageSlug) {
+  if (!sec.triggerAnchorId) return; // no trigger configured — never show
+
+  const sessionKey = `cps-popup-shown-${pageSlug}-${idx}`;
+  if (sessionStorage.getItem(sessionKey)) return; // already shown this session
+
+  const popupStyle = sec.popupStyle === 'toast' ? 'toast' : 'modal';
+  const imageLayout = ['top','full','left','right'].includes(sec.imageLayout) ? sec.imageLayout : 'none';
+  const hasImage = imageLayout !== 'none' && sec.imagePath;
+  const textAlign = ['left','center','right'].includes(sec.textAlign) ? sec.textAlign
+    : ((imageLayout === 'left' || imageLayout === 'right') ? 'left' : 'center');
+  const rounded = sec.roundedCorners !== false;
+
+  // Background mode (Light/Alt/Dark) — same section-level concept every other
+  // custom section already has, driving both the box's own fill color and the
+  // scoped CSS overrides for the secondary button (see .cps-popup-box.cps-section-*
+  // rules). Popup renders outside the generic renderCustomSection wrapper setup,
+  // so isDark/bgClass are computed independently here rather than inherited.
+  const isDark = sec.background === 'dark';
+  const bgClass = bgToClass(sec.background || 'light');
+
+  // Text color — White / Black / Chrome Background / Light Background / Match
+  // Section Background, identical system to Hero Section's Text Color option.
+  const textColorMode = ['white','black','chrome','lightbg','theme'].includes(sec.textColor) ? sec.textColor : 'theme';
+  let headingColor, bodyColor;
+  if (textColorMode === 'black') {
+    headingColor = '#111'; bodyColor = 'rgba(17,17,17,0.75)';
+  } else if (textColorMode === 'chrome') {
+    headingColor = 'var(--chrome)'; bodyColor = 'color-mix(in srgb, var(--chrome) 75%, transparent)';
+  } else if (textColorMode === 'lightbg') {
+    headingColor = 'var(--warm-white)'; bodyColor = 'color-mix(in srgb, var(--warm-white) 75%, transparent)';
+  } else if (textColorMode === 'white') {
+    headingColor = '#fff'; bodyColor = 'rgba(255,255,255,0.75)';
+  } else {
+    headingColor = isDark ? '#fff' : 'var(--text-head)';
+    bodyColor    = isDark ? 'rgba(255,255,255,0.75)' : 'var(--text-body)';
+  }
+
+  // CTA buttons — same smart-link pattern used throughout the rest of the admin
+  const primLabel = sec.cta_primary_linkLabel || '';
+  const primType  = sec.cta_primary_linkType  || 'none';
+  const primUrl   = sec.cta_primary_linkUrl   || '';
+  const secLabel  = sec.cta_secondary_linkLabel || '';
+  const secType   = sec.cta_secondary_linkType  || 'none';
+  const secUrl    = sec.cta_secondary_linkUrl   || '';
+  const goTo = (type, url, anchorId) => {
+    if (type === 'internal') showPage(url, anchorId || '');
+    else openSmartLink(type, url);
+  };
+  const primBtn = (primType !== 'none' && primLabel) ? `<button class="btn-primary cps-popup-btn-prim">${escAttr(primLabel)}</button>` : '';
+  const secBtn  = (secType  !== 'none' && secLabel)  ? `<button class="btn-outline cps-popup-btn-sec">${escAttr(secLabel)}</button>` : '';
+
+  const headingHtml = sec.heading ? `<h3 class="cps-popup-heading" style="color:${headingColor};">${sec.heading}</h3>` : '';
+  const bodyHtml = sec.body ? `<div class="cps-popup-body" style="color:${bodyColor};">${formatBody(sec.body)}</div>` : '';
+  const actionsHtml = (primBtn || secBtn) ? `<div class="cps-popup-actions">${primBtn}${secBtn}</div>` : '';
+  const textBlock = `<div class="cps-popup-text">${headingHtml}${bodyHtml}${actionsHtml}</div>`;
+
+  let bodyMarkup;
+  if (popupStyle === 'toast') {
+    const thumbHtml = hasImage ? `<div class="cps-popup-thumb" style="background-image:url('${escAttr(sec.imagePath)}');background-position:${sec.imagePosition || 'center center'};"></div>` : '';
+    bodyMarkup = `${thumbHtml}${textBlock}`;
+  } else if (imageLayout === 'full' && hasImage) {
+    const oc = sec.overlayColor || CFG.colors.navy;
+    const op = sec.overlayOpacity !== undefined ? sec.overlayOpacity : 0.55;
+    const rr = parseInt(oc.slice(1,3),16) || 9, gg = parseInt(oc.slice(3,5),16) || 20, bb = parseInt(oc.slice(5,7),16) || 38;
+    const overlayStyle = `background:linear-gradient(to top, rgba(${rr},${gg},${bb},${Math.min(op+0.25,1)}) 0%, rgba(${rr},${gg},${bb},${op}) 100%);`;
+    const imgPos = sec.imagePosition || 'center center';
+    bodyMarkup = `<div class="cps-popup-img-full" style="background-image:url('${escAttr(sec.imagePath)}');background-position:${imgPos};">
+      <div class="cps-popup-img-full-overlay" style="${overlayStyle}"></div>
+      <div class="cps-popup-modal-body cps-popup-modal-body--over-image">${textBlock}</div>
+    </div>`;
+  } else if (imageLayout === 'top' && hasImage) {
+    const imgPos = sec.imagePosition || 'center center';
+    bodyMarkup = `<div class="cps-popup-img-top-el" style="background-image:url('${escAttr(sec.imagePath)}');background-position:${imgPos};"></div>
+      <div class="cps-popup-modal-body">${textBlock}</div>`;
+  } else if ((imageLayout === 'left' || imageLayout === 'right') && hasImage) {
+    const imgPos = sec.imagePosition || 'center center';
+    const imgEl = `<div class="cps-popup-split-img" style="background-image:url('${escAttr(sec.imagePath)}');background-position:${imgPos};"></div>`;
+    const textEl = `<div class="cps-popup-modal-body">${textBlock}</div>`;
+    bodyMarkup = `<div class="cps-popup-split${imageLayout === 'right' ? ' cps-popup-split--reverse' : ''}">${imgEl}${textEl}</div>`;
+  } else {
+    bodyMarkup = `<div class="cps-popup-modal-body">${textBlock}</div>`;
+  }
+
+  const overlay = document.createElement('div');
+  overlay.className = `cps-popup-overlay cps-popup-overlay--${popupStyle}`;
+  overlay.innerHTML = `
+    <div class="cps-popup-box ${bgClass} cps-popup-align-${textAlign}${rounded ? '' : ' cps-popup-no-round'}">
+      <button type="button" class="cps-popup-close" aria-label="Close">&times;</button>
+      ${bodyMarkup}
+    </div>`;
+  document.body.appendChild(overlay);
+
+  function closePopup() {
+    overlay.classList.remove('open');
+    setTimeout(() => overlay.remove(), 300);
+  }
+  overlay.querySelector('.cps-popup-close').addEventListener('click', closePopup);
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) closePopup(); });
+  document.addEventListener('keydown', function popupEscHandler(e) {
+    if (e.key === 'Escape' && overlay.classList.contains('open')) {
+      closePopup();
+      document.removeEventListener('keydown', popupEscHandler);
+    }
+  });
+
+  const primBtnEl = overlay.querySelector('.cps-popup-btn-prim');
+  if (primBtnEl) primBtnEl.addEventListener('click', () => { closePopup(); goTo(primType, primUrl, sec.cta_primary_anchorId); });
+  const secBtnEl = overlay.querySelector('.cps-popup-btn-sec');
+  if (secBtnEl) secBtnEl.addEventListener('click', () => { closePopup(); goTo(secType, secUrl, sec.cta_secondary_anchorId); });
+
+  let triggerDelay = parseFloat(sec.triggerDelay);
+  if (isNaN(triggerDelay)) triggerDelay = 0.6;
+  triggerDelay = Math.max(0, triggerDelay);
+  const triggerDelayMs = Math.round(triggerDelay * 1000);
+  const openNow = () => {
+    overlay.classList.add('open');
+    sessionStorage.setItem(sessionKey, '1');
+  };
+
+  if (sec.triggerAnchorId === '__immediate__') {
+    setTimeout(openNow, triggerDelayMs);
+  } else {
+    // Deferred so every section on this page (including the trigger target,
+    // which may render after this popup section in the array) is in the DOM
+    // before we go looking for it.
+    setTimeout(() => {
+      const target = document.getElementById(sec.triggerAnchorId);
+      if (!target) return;
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            setTimeout(openNow, triggerDelayMs);
+            obs.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      obs.observe(target);
+    }, 0);
+  }
+}
+
+function renderCustomSection(sec, idx, isFirst, allSections, pageSlug) {
   if (!sec || !sec.type) return null;
+
+  // Popups don't render inline — they're built as a floating overlay and
+  // triggered by scroll position, so none of the generic inline-section setup
+  // below (wrapper, background class, label, heading scale, etc.) applies.
+  if (sec.type === 'popup') {
+    initPopupSection(sec, idx, allSections, pageSlug);
+    return null;
+  }
 
   // Resolve background — 'inherit' looks back to nearest non-inheriting section
   const isAppendageType = sec.type === 'link' || sec.type === 'button';
@@ -7406,6 +7741,25 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
       const hasTextLink = hasLink && linkStyle === 'text';
       const hasWholeImageLink = hasLink && linkStyle === 'whole-image';
 
+      // Entrance Animation — default keeps the existing fade-up .reveal behavior;
+      // the other two options override just the transform direction so media and
+      // text slide in from opposite sides. Distance is admin-controlled per
+      // instance via a CSS custom property (--hero-slide-x), rather than baked
+      // into the stylesheet, since it needs to vary per Hero Section.
+      const entranceAnim = ['default','media-left','media-right'].includes(sec.entranceAnimation) ? sec.entranceAnimation : 'default';
+      const entranceDist = Math.max(10, parseInt(sec.entranceDistance) || 100);
+      let mediaAnimClass = '';
+      let textAnimClass = '';
+      let mediaAnimVar = '';
+      let textAnimVar = '';
+      if (entranceAnim === 'media-left') {
+        mediaAnimClass = ' cps-hero-anim-from-left';  mediaAnimVar = `--hero-slide-x:-${entranceDist}px;`;
+        textAnimClass  = ' cps-hero-anim-from-right'; textAnimVar  = `--hero-slide-x:${entranceDist}px;`;
+      } else if (entranceAnim === 'media-right') {
+        mediaAnimClass = ' cps-hero-anim-from-right'; mediaAnimVar = `--hero-slide-x:${entranceDist}px;`;
+        textAnimClass  = ' cps-hero-anim-from-left';  textAnimVar  = `--hero-slide-x:-${entranceDist}px;`;
+      }
+
       wrapper.classList.add('cps-hero-section-wrapper');
 
       // Text color — White / Black / Chrome Background / Light Background / Match
@@ -7428,8 +7782,8 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
       } else {
         headingColor = '#fff'; bodyColor = 'rgba(255,255,255,0.75)';
       }
-      let headingGapStyle = ` style="color:${headingColor} !important;"`;
-      let bodyGapStyle = ` style="color:${bodyColor} !important;"`;
+      let headingGapStyle = ` style="color:${headingColor} !important;${textAnimVar}"`;
+      let bodyGapStyle = ` style="color:${bodyColor} !important;${textAnimVar}"`;
       let innerPaddingStyle = '';
       if (heightVariant === 'custom') {
         const customHeight = Math.max(100, parseInt(sec.customHeight) || 400);
@@ -7440,8 +7794,8 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
         // proportionally — important for line-height, which can't approach zero.
         const t = Math.max(0, Math.min(1, (customHeight - 100) / (550 - 100)));
         const lerp = (min, max) => min + (max - min) * t;
-        headingGapStyle = ` style="color:${headingColor} !important;margin-bottom:${Math.round(lerp(2, 20))}px;"`;
-        bodyGapStyle = ` style="color:${bodyColor} !important;margin-bottom:${Math.round(lerp(3, 32))}px;line-height:${lerp(1.1, 1.7).toFixed(2)};"`;
+        headingGapStyle = ` style="color:${headingColor} !important;${textAnimVar}margin-bottom:${Math.round(lerp(2, 20))}px;"`;
+        bodyGapStyle = ` style="color:${bodyColor} !important;${textAnimVar}margin-bottom:${Math.round(lerp(3, 32))}px;line-height:${lerp(1.1, 1.7).toFixed(2)};"`;
         // Bottom padding only needs real clearance if dots or a visible text link
         // are actually rendered below the text — otherwise it's just trailing whitespace.
         const willHaveDots = bgType === 'slideshow' && bg.slides && bg.slides.length > 1 && bg.showDots !== false;
@@ -7491,7 +7845,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
       // Video is appended after the innerHTML is set (needs a live DOM node to attach the <video> to)
 
       const linkHtml = hasTextLink
-        ? `<div class="cps-hero-section-actions reveal reveal-delay-2"><span class="cps-link-anchor cps-hero-link" style="color:${headingColor};">${escAttr(linkLabel)}</span></div>`
+        ? `<div class="cps-hero-section-actions reveal reveal-delay-2${textAnimClass}" style="${textAnimVar}"><span class="cps-link-anchor cps-hero-link" style="color:${headingColor};">${escAttr(linkLabel)}</span></div>`
         : '';
 
       // No visible button/text in whole-image mode — accessibility has to come
@@ -7504,15 +7858,15 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
       }
 
       wrapper.innerHTML = `
-        <div class="cps-hero-section-clip">
+        <div class="cps-hero-section-clip reveal${mediaAnimClass}" style="${mediaAnimVar}">
           <div class="cps-hero-section-bg" id="${heroId}-bg" style="${bgColorStyle}">${bgHtml}</div>
           ${overlayHtml}
           ${shadowHtml}
         </div>
         <div class="container">
           <div class="${innerClass}"${innerPaddingStyle}>
-            ${sec.heading ? `<${headTag} class="${headClass} cps-heading reveal"${headingGapStyle}>${sec.heading}</${headTag}>` : ''}
-            ${sec.subtitle ? `<div class="cps-body reveal reveal-delay-1"${bodyGapStyle}>${formatBody(sec.subtitle)}</div>` : ''}
+            ${sec.heading ? `<${headTag} class="${headClass} cps-heading reveal${textAnimClass}"${headingGapStyle}>${sec.heading}</${headTag}>` : ''}
+            ${sec.subtitle ? `<div class="cps-body reveal reveal-delay-1${textAnimClass}"${bodyGapStyle}>${formatBody(sec.subtitle)}</div>` : ''}
             ${linkHtml}
           </div>
         </div>
@@ -7524,6 +7878,9 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
         initHeroSectionVideo(wrapper.querySelector(`#${heroId}-bg`), bg);
       } else if (bgType === 'slideshow' && bg.slides && bg.slides.length > 1 && bg.autoplay !== false) {
         initHeroSectionSlideshow(wrapper, heroId, bg);
+      }
+      if (entranceAnim !== 'default') {
+        initHeroSectionReveal(wrapper);
       }
       if (hasTextLink) {
         const heroLinkEl = wrapper.querySelector('.cps-hero-link');

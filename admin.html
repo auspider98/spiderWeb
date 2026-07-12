@@ -3817,6 +3817,16 @@ function getInternalPageOptions(currentVal) {
   ).join('');
 }
 
+// Section builders identify pages by pi ('home', 'about', or a numeric index
+// into DATA.customPages) — this resolves that into the actual page slug used
+// by getAnchorOptions, needed for Popup's trigger-section picker.
+function piToPageSlug(pi) {
+  if (pi === 'h') return 'home';
+  if (pi === 'a') return 'about';
+  const cp = (DATA.customPages || [])[pi];
+  return cp ? cp.slug : '';
+}
+
 function getAnchorOptions(pageSlug, currentAnchor) {
   let sections = [];
   if (pageSlug === 'home') sections = DATA.homeSections || [];
@@ -4667,6 +4677,8 @@ const CP_SECTION_TYPES = [
   { value:'cta',            label:'📐 CTA Banner' },
   { value:'button',         label:'📐 Button' },
   { value:'link',           label:'📐 Link' },
+  // 🔔 Overlays
+  { value:'popup',          label:'🔔 Popup' },
 ];
 
 const CP_BG_OPTIONS = [
@@ -4743,7 +4755,8 @@ function applySectionTypeDefaults(defaults, type) {
   if (type === 'pricing') { defaults.items = []; }
   if (type === 'locations') { defaults.items = []; defaults.displayMode = 'cards'; defaults.layoutMode = 'top'; defaults.mapMode = 'linkout'; defaults.maxCols = 2; defaults.showHours = true; }
   if (type === 'table') { defaults.cols = 2; defaults.col1Label = 'Column 1'; defaults.col2Label = 'Column 2'; defaults.col3Label = ''; defaults.col1Style = 'normal'; defaults.col2Style = 'normal'; defaults.col3Style = 'normal'; defaults.firstColHeader = false; defaults.mobileStack = false; defaults.items = []; }
-  if (type === 'hero-section') { defaults.heightVariant = 'full'; defaults.customHeight = 400; defaults.vAlign = 'center'; defaults.hAlign = 'center'; defaults.textColor = 'white'; defaults.bg = { type:'image', bgColor:'#0f2340', imagePosition:'center center', overlayColor:'#0f2340', overlayOpacity:0.5, shadowEnabled:true, slides:[], autoplay:true, showDots:true, slideDuration:8 }; defaults.linkType = 'none'; defaults.linkUrl = ''; defaults.linkLabel = ''; defaults.linkStyle = 'text'; }
+  if (type === 'hero-section') { defaults.heightVariant = 'full'; defaults.customHeight = 400; defaults.vAlign = 'center'; defaults.hAlign = 'center'; defaults.textColor = 'white'; defaults.entranceAnimation = 'default'; defaults.entranceDistance = 100; defaults.bg = { type:'image', bgColor:'#0f2340', imagePosition:'center center', overlayColor:'#0f2340', overlayOpacity:0.5, shadowEnabled:true, slides:[], autoplay:true, showDots:true, slideDuration:8 }; defaults.linkType = 'none'; defaults.linkUrl = ''; defaults.linkLabel = ''; defaults.linkStyle = 'text'; }
+  if (type === 'popup') { defaults.popupStyle = 'modal'; defaults.imageLayout = 'none'; defaults.imagePath = ''; defaults.imagePosition = 'center center'; defaults.overlayColor = '#0f2340'; defaults.overlayOpacity = 0.55; defaults.textAlign = 'center'; defaults.textColor = 'theme'; defaults.roundedCorners = true; defaults.triggerAnchorId = ''; defaults.cta_primary_linkType = 'none'; defaults.cta_secondary_linkType = 'none'; }
   if (type === 'rotating-cards') { defaults.items = []; defaults.visibleCards = 1; defaults.cardHeight = 420; defaults.showDots = true; defaults.showArrows = true; defaults.showPeek = true; defaults.autoplay = false; defaults.autoplaySpeed = 4; }
 }
 
@@ -4983,6 +4996,39 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
     sec.cta_secondary_anchorId = get('cta_secondary_anchorId') || '';
   }
 
+  // Popup
+  if (type === 'popup') {
+    sec.popupStyle = get('popupStyle') === 'toast' ? 'toast' : 'modal';
+    sec.imageLayout = ['top','full','left','right'].includes(get('imageLayout')) ? get('imageLayout') : 'none';
+    sec.imagePath = get('imagePath');
+    sec.imagePosition = heroCollectPosition(secCard, pi, si, 'imagePosition');
+    sec.overlayColor = get('overlayColor') || '#0f2340';
+    let popupOverlayOpacity = parseFloat(get('overlayOpacity'));
+    sec.overlayOpacity = isNaN(popupOverlayOpacity) ? 0.55 : popupOverlayOpacity;
+    sec.textAlign = ['left','center','right'].includes(get('textAlign')) ? get('textAlign') : 'center';
+    sec.textColor = ['white','black','chrome','lightbg','theme'].includes(get('textColor')) ? get('textColor') : 'theme';
+    sec.roundedCorners = secCard.querySelector(`[data-cp="${pi}"][data-sec="${si}"][data-field="roundedCorners"]`)?.checked !== false;
+    sec.triggerAnchorId = get('triggerAnchorId') || '';
+    sec.cta_primary_linkLabel   = get('cta_primary_linkLabel')   || '';
+    sec.cta_secondary_linkLabel = get('cta_secondary_linkLabel') || '';
+    sec.cta_primary_linkType    = get('cta_primary_linkType')    || 'none';
+    sec.cta_secondary_linkType  = get('cta_secondary_linkType')  || 'none';
+    const popupPrimKey = `${pi}-${si}-cta_primary_`;
+    const popupSecKey  = `${pi}-${si}-cta_secondary_`;
+    const popupReadUrl = (key, linkType) => {
+      if (linkType === 'internal') {
+        const sel = document.getElementById(`cp-link-isel-${key}`);
+        return sel ? sel.value : '';
+      }
+      const inp = document.getElementById(`cp-link-url-${key}`);
+      return inp ? inp.value.trim() : '';
+    };
+    sec.cta_primary_linkUrl    = popupReadUrl(popupPrimKey, sec.cta_primary_linkType);
+    sec.cta_secondary_linkUrl  = popupReadUrl(popupSecKey,  sec.cta_secondary_linkType);
+    sec.cta_primary_anchorId   = get('cta_primary_anchorId')  || '';
+    sec.cta_secondary_anchorId = get('cta_secondary_anchorId') || '';
+  }
+
   // Hero Section
   if (type === 'hero-section') {
     sec.heightVariant = get('heightVariant') || 'full';
@@ -4990,6 +5036,8 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
     sec.vAlign = get('vAlign') || 'center';
     sec.hAlign = get('hAlign') || 'center';
     sec.textColor = ['white','black','chrome','lightbg','theme'].includes(get('textColor')) ? get('textColor') : 'white';
+    sec.entranceAnimation = ['default','media-left','media-right'].includes(get('entranceAnimation')) ? get('entranceAnimation') : 'default';
+    sec.entranceDistance = Math.max(10, parseInt(get('entranceDistance')) || 100);
     const bgTypeSel = secCard.querySelector(`[data-cp="${pi}"][data-sec="${si}"][data-field="bgType"]`);
     const bgType = bgTypeSel ? bgTypeSel.value : 'image';
     // Single-image path is scoped away from slideshow rows (both use data-field="imagePath")
@@ -5602,8 +5650,9 @@ function buildCustomSectionHtml(sec, pi, si) {
   const isImageSection = sec.type === 'image';
   const isStats = sec.type === 'stats';
   const isHero  = sec.type === 'hero-section';
+  const isPopup = sec.type === 'popup';
   const bgOpts = CP_BG_OPTIONS
-    .filter(bg => isAppendage ? bg.value !== 'inherit' : true)
+    .filter(bg => (isAppendage || isPopup) ? bg.value !== 'inherit' : true)
     .map(bg =>
       `<div class="cp-bg-option${(sec.background||( isRichtext ? 'inherit' : 'light'))===bg.value?' selected':''}"
         onclick="setCpSecBg(${typeof pi==='string'?("'"+pi+"'"):pi},${si},'${bg.value}',this)">${bg.label}</div>`
@@ -5611,7 +5660,7 @@ function buildCustomSectionHtml(sec, pi, si) {
 
   const commonFields = (isAppendage || isRichtext || isLogoStrip || isImageSection) ? '' : `
     <div class="form-row-2" style="margin-bottom:12px;">
-      ${isStats || isHero ? '' : `
+      ${isStats || isHero || isPopup ? '' : `
       <div class="field-group">
         <label>Section Label (small gold text)</label>
         <input type="text" data-cp="${pi}" data-sec="${si}" data-field="label" value="${escHtml(sec.label||'')}" placeholder="Practice Area"/>
@@ -5645,7 +5694,7 @@ function buildCustomSectionHtml(sec, pi, si) {
   return `<div class="cp-section-card" data-pi="${pi}" data-si="${si}">
     <div class="cp-section-header" onclick="toggleCpSection(this)">
       <span class="cp-section-type-badge">${typeLabel}${sec.label ? ' — ' + escHtml(sec.label) : ''}</span>
-      ${!isAppendage && !isRichtext && !isLogoStrip && !isImageSection ? `<div class="cp-anchor-field" onclick="event.stopPropagation()">
+      ${!isAppendage && !isRichtext && !isLogoStrip && !isImageSection && !isPopup ? `<div class="cp-anchor-field" onclick="event.stopPropagation()">
         <label>#</label>
         <input type="text" data-cp="${pi}" data-sec="${si}" data-field="anchorId" value="${escHtml(sec.anchorId||'')}" placeholder="auto-generated on save" title="Anchor ID — used for section links and search"/>
       </div>` : ''}
@@ -6380,6 +6429,8 @@ function buildCpSectionTypeFields(sec, pi, si) {
       const hAlign = ['left','center','right'].includes(sec.hAlign) ? sec.hAlign : 'center';
       const linkStyle = sec.linkStyle === 'whole-image' ? 'whole-image' : 'text';
       const textColor = ['white','black','chrome','lightbg','theme'].includes(sec.textColor) ? sec.textColor : 'white';
+      const entranceAnimation = ['default','media-left','media-right'].includes(sec.entranceAnimation) ? sec.entranceAnimation : 'default';
+      const entranceDistance = Math.max(10, parseInt(sec.entranceDistance) || 100);
       const piStr = typeof pi === 'string' ? ("'" + pi + "'") : pi;
       const dispImage     = bgType === 'image'     ? '' : 'display:none;';
       const dispSlideshow = bgType === 'slideshow' ? '' : 'display:none;';
@@ -6444,6 +6495,18 @@ function buildCpSectionTypeFields(sec, pi, si) {
             <option value="banner"${heightVariant==='banner'?' selected':''}>Page Banner (shorter)</option>
             <option value="custom"${heightVariant==='custom'?' selected':''}>Custom Height (px)</option>
           </select>
+        </div>
+        <div class="field-group"><label>Entrance Animation</label>
+          <select ${p} data-field="entranceAnimation" onchange="onHeroEntranceAnimChange(this)">
+            <option value="default"${entranceAnimation==='default'?' selected':''}>Fade Up (Default)</option>
+            <option value="media-left"${entranceAnimation==='media-left'?' selected':''}>Media from Left / Text from Right</option>
+            <option value="media-right"${entranceAnimation==='media-right'?' selected':''}>Media from Right / Text from Left</option>
+          </select>
+        </div>
+        <div class="cps-hero-entrance-distance-field" style="${entranceAnimation==='default'?'display:none;':''}margin-bottom:16px;">
+          <div class="field-group" style="margin:0;"><label>Slide Distance (px)</label>
+            <input type="number" min="10" data-cp="${pi}" data-sec="${si}" data-field="entranceDistance" value="${entranceDistance}" placeholder="e.g. 100"/>
+          </div>
         </div>
         <div class="cps-hero-custom-height-field" style="${heightVariant==='custom'?'':'display:none;'}margin-bottom:16px;">
           <div class="field-group" style="margin:0;"><label>Custom Height (px)</label>
@@ -6533,6 +6596,103 @@ function buildCpSectionTypeFields(sec, pi, si) {
         <div class="field-hint">${linkStyle==='whole-image'
           ? 'The entire hero becomes clickable — no visible button or text appears. The label above is still used as the accessible name for screen readers.'
           : 'Renders as a small text link below the subtitle, styled like the standalone Link section.'}</div>`;
+    }
+
+    case 'popup': {
+      const popupStyle = sec.popupStyle === 'toast' ? 'toast' : 'modal';
+      const imageLayout = ['top','full','left','right'].includes(sec.imageLayout) ? sec.imageLayout : 'none';
+      const textAlign = ['left','center','right'].includes(sec.textAlign) ? sec.textAlign : 'center';
+      const rounded = sec.roundedCorners !== false;
+      const textColor = ['white','black','chrome','lightbg','theme'].includes(sec.textColor) ? sec.textColor : 'theme';
+      const pageSlug = piToPageSlug(pi);
+      const piStr = typeof pi === 'string' ? ("'" + pi + "'") : pi;
+      const dispImageField   = imageLayout === 'none' ? 'display:none;' : '';
+      const dispOverlayField = imageLayout === 'full' ? '' : 'display:none;';
+
+      return `
+        <div class="field-group"><label>Popup Style</label>
+          <select ${p} data-field="popupStyle">
+            <option value="modal"${popupStyle==='modal'?' selected':''}>Centered Modal</option>
+            <option value="toast"${popupStyle==='toast'?' selected':''}>Corner Toast</option>
+          </select>
+        </div>
+        <div class="field-group"><label>Heading</label><input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
+        <div class="field-group"><label>Body</label><textarea rows="2" style="width:100%;box-sizing:border-box;resize:vertical;min-height:56px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="body">${v('body')}</textarea></div>
+        <div class="field-group"><label>Text Color</label>
+          <select ${p} data-field="textColor">
+            <option value="white"${textColor==='white'?' selected':''}>White</option>
+            <option value="black"${textColor==='black'?' selected':''}>Black</option>
+            <option value="chrome"${textColor==='chrome'?' selected':''}>Chrome Background Color</option>
+            <option value="lightbg"${textColor==='lightbg'?' selected':''}>Light Background Color</option>
+            <option value="theme"${textColor==='theme'?' selected':''}>Match Section Background</option>
+          </select>
+          <div class="field-hint">Chrome Background Color and Light Background Color use the matching fields in Colors &amp; Fonts. "Match Section Background" follows the Background setting below, flipping to white automatically on Dark — same as every other section.</div>
+        </div>
+
+        <div class="divider" style="margin:14px 0;"></div>
+        <div class="field-group"><label>Image Layout</label>
+          <select ${p} data-field="imageLayout" onchange="onPopupImageLayoutChange(this)">
+            <option value="none"${imageLayout==='none'?' selected':''}>None</option>
+            <option value="top"${imageLayout==='top'?' selected':''}>Top Banner</option>
+            <option value="full"${imageLayout==='full'?' selected':''}>Full Background (Faded)</option>
+            <option value="left"${imageLayout==='left'?' selected':''}>Image Left / Text Right</option>
+            <option value="right"${imageLayout==='right'?' selected':''}>Image Right / Text Left</option>
+          </select>
+          <div class="field-hint">Corner Toast always shows a compact thumbnail regardless of layout choice — these four layouts apply to Centered Modal.</div>
+        </div>
+        <div class="cps-popup-image-field" style="${dispImageField}">
+          <div class="field-group"><label>Image Path</label>
+            <input type="text" ${p} data-field="imagePath" value="${escHtml(sec.imagePath||'')}" placeholder="images/popup.jpg" oninput="updatePhotoPreview(this)"/>
+            <div class="photo-preview-wrap" style="margin-top:10px;display:${sec.imagePath ? 'block' : 'none'};">
+              <img src="${escHtml(sec.imagePath||'')}" alt="Popup image preview" style="max-height:140px;max-width:100%;border-radius:4px;border:1px solid var(--border);object-fit:cover;" onerror="this.parentElement.style.display='none';"/>
+            </div>
+          </div>
+          ${heroFocusFieldsHtml(pi, si, 'imagePosition', sec.imagePosition||'center center')}
+        </div>
+        <div class="cps-popup-overlay-field" style="${dispOverlayField}">
+          <div class="form-row-2">
+            <div class="field-group" style="margin:0;"><label>Overlay Color</label>
+              <div style="display:flex;gap:8px;align-items:center;">
+                <input type="color" data-cp="${pi}" data-sec="${si}" data-field="overlayColor" id="popup-ovc-${pi}-${si}" value="${sec.overlayColor||'#0f2340'}" oninput="syncColorHex('popup-ovc-${pi}-${si}','popup-ovc-${pi}-${si}Hex')"/>
+                <button type="button" class="color-swatch-btn" id="popup-ovc-${pi}-${si}-swatch" style="background:${sec.overlayColor||'#0f2340'};" onclick="colorSwatchClick('popup-ovc-${pi}-${si}Hex','Overlay Color','popup-ovc-${pi}-${si}')" title="Overlay Color"></button>
+                <input type="text" id="popup-ovc-${pi}-${si}Hex" value="${sec.overlayColor||'#0f2340'}" oninput="syncColorPicker('popup-ovc-${pi}-${si}Hex','popup-ovc-${pi}-${si}');autosave();"/>
+              </div>
+            </div>
+            <div class="field-group" style="margin:0;"><label>Overlay Opacity</label>
+              <input type="range" min="0" max="1" step="0.05" data-cp="${pi}" data-sec="${si}" data-field="overlayOpacity" value="${sec.overlayOpacity!==undefined?sec.overlayOpacity:0.55}"/></div>
+          </div>
+        </div>
+
+        <div class="divider" style="margin:14px 0;"></div>
+        <div class="form-row-2">
+          <div class="field-group" style="margin:0;"><label>Text Alignment</label>
+            <select ${p} data-field="textAlign">
+              <option value="left"${textAlign==='left'?' selected':''}>Left</option>
+              <option value="center"${textAlign==='center'?' selected':''}>Center</option>
+              <option value="right"${textAlign==='right'?' selected':''}>Right</option>
+            </select>
+          </div>
+          <div class="field-group" style="margin:0;"><label>Rounded Corners</label>
+            <div class="switch-row" style="margin-top:8px;justify-content:flex-start;gap:10px;">
+              <label class="switch"><input type="checkbox" ${p} data-field="roundedCorners" ${rounded?'checked':''}/><span class="switch-slider"></span></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider" style="margin:14px 0;"></div>
+        <div class="field-group"><label>Trigger</label>
+          <select ${p} data-field="triggerAnchorId">
+            <option value="__immediate__"${sec.triggerAnchorId==='__immediate__'?' selected':''}>⚡ Immediately on Page Load</option>
+            ${getAnchorOptions(pageSlug, sec.triggerAnchorId||'')}
+          </select>
+          <div class="field-hint">"Immediately on Page Load" shows the popup shortly after the page finishes loading. Anchor options only list sections that have an anchor ID set (the # field in each section's header) — picking one shows the popup once that section scrolls into view. Either way, shown once per browser session.</div>
+        </div>
+
+        <div class="divider" style="margin:14px 0;"></div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Primary Button</div>
+        ${cpSmartLinkFields(sec, pi, si, 'Shop Now', 'cta_primary')}
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin:14px 0 10px;">Secondary Button (optional)</div>
+        ${cpSmartLinkFields(sec, pi, si, 'Maybe Later', 'cta_secondary')}`;
     }
 
     case 'cta': {
@@ -9114,6 +9274,18 @@ function moveCpSection(pi, si, dir) {
   const newIdx = si + dir;
   if (newIdx < 0 || newIdx >= secs.length) return;
   [secs[si], secs[newIdx]] = [secs[newIdx], secs[si]];
+
+  // Carry open/collapsed state along with the section that actually moved.
+  // rebuildAfterMutation() restores openness by index position, so without
+  // this, a section that was open before the move ends up collapsed after —
+  // its data is still there, just hidden, which looks exactly like data loss.
+  const cardA = document.querySelector(`.cp-section-card[data-pi="${pi}"][data-si="${si}"]`);
+  const cardB = document.querySelector(`.cp-section-card[data-pi="${pi}"][data-si="${newIdx}"]`);
+  const aWasOpen = cardA ? cardA.classList.contains('open') : false;
+  const bWasOpen = cardB ? cardB.classList.contains('open') : false;
+  if (cardA) cardA.classList.toggle('open', bWasOpen);
+  if (cardB) cardB.classList.toggle('open', aWasOpen);
+
   rebuildAfterMutation(pi);
   autosave();
 }
@@ -9325,6 +9497,24 @@ function onHeroHeightVariantChange(sel) {
   autosave();
 }
 
+function onHeroEntranceAnimChange(sel) {
+  const card = sel.closest('.cp-section-card');
+  if (!card) return;
+  const field = card.querySelector('.cps-hero-entrance-distance-field');
+  if (field) field.style.display = (sel.value === 'default') ? 'none' : '';
+  autosave();
+}
+
+function onPopupImageLayoutChange(sel) {
+  const card = sel.closest('.cp-section-card');
+  if (!card) return;
+  const imgField = card.querySelector('.cps-popup-image-field');
+  const overlayField = card.querySelector('.cps-popup-overlay-field');
+  if (imgField) imgField.style.display = (sel.value === 'none') ? 'none' : '';
+  if (overlayField) overlayField.style.display = (sel.value === 'full') ? '' : 'none';
+  autosave();
+}
+
 function initCpSubItemDragDrop(container, pi, si, arr) {
   if (!container) return;
   let dragIdx = null;
@@ -9502,6 +9692,29 @@ function collectCpSections(card, pi, existingSections) {
         sec.cta_primary_anchorId    = get('cta_primary_anchorId');
         sec.cta_secondary_anchorId  = get('cta_secondary_anchorId');
         break;
+      case 'popup': {
+        sec.heading = get('heading'); sec.body = get('body');
+        sec.popupStyle = get('popupStyle') === 'toast' ? 'toast' : 'modal';
+        sec.imageLayout = ['top','full','left','right'].includes(get('imageLayout')) ? get('imageLayout') : 'none';
+        sec.imagePath = get('imagePath');
+        sec.imagePosition = heroCollectPosition(secCard, pi, renderedSi, 'imagePosition');
+        sec.overlayColor = get('overlayColor') || '#0f2340';
+        let popupOverlayOpacity = parseFloat(get('overlayOpacity'));
+        sec.overlayOpacity = isNaN(popupOverlayOpacity) ? 0.55 : popupOverlayOpacity;
+        sec.textAlign = ['left','center','right'].includes(get('textAlign')) ? get('textAlign') : 'center';
+        sec.textColor = ['white','black','chrome','lightbg','theme'].includes(get('textColor')) ? get('textColor') : 'theme';
+        sec.roundedCorners = secCard.querySelector(`[data-cp="${pi}"][data-sec="${renderedSi}"][data-field="roundedCorners"]`)?.checked !== false;
+        sec.triggerAnchorId = get('triggerAnchorId') || '';
+        sec.cta_primary_linkLabel   = get('cta_primary_linkLabel')   || '';
+        sec.cta_secondary_linkLabel = get('cta_secondary_linkLabel') || '';
+        sec.cta_primary_linkType    = get('cta_primary_linkType')    || 'none';
+        sec.cta_secondary_linkType  = get('cta_secondary_linkType')  || 'none';
+        sec.cta_primary_linkUrl     = collectCpSmartLinkUrl(secCard, pi, renderedSi, 'cta_primary_',   sec.cta_primary_linkType);
+        sec.cta_secondary_linkUrl   = collectCpSmartLinkUrl(secCard, pi, renderedSi, 'cta_secondary_', sec.cta_secondary_linkType);
+        sec.cta_primary_anchorId    = get('cta_primary_anchorId');
+        sec.cta_secondary_anchorId  = get('cta_secondary_anchorId');
+        break;
+      }
       case 'hero-section': {
         sec.heading = get('heading'); sec.subtitle = get('subtitle');
         sec.heightVariant = get('heightVariant') || 'full';
@@ -9509,6 +9722,8 @@ function collectCpSections(card, pi, existingSections) {
         sec.vAlign = get('vAlign') || 'center';
         sec.hAlign = get('hAlign') || 'center';
         sec.textColor = ['white','black','chrome','lightbg','theme'].includes(get('textColor')) ? get('textColor') : 'white';
+        sec.entranceAnimation = ['default','media-left','media-right'].includes(get('entranceAnimation')) ? get('entranceAnimation') : 'default';
+        sec.entranceDistance = Math.max(10, parseInt(get('entranceDistance')) || 100);
         const bgTypeSel = secCard.querySelector(`[data-cp="${pi}"][data-sec="${renderedSi}"][data-field="bgType"]`);
         const bgType = bgTypeSel ? bgTypeSel.value : 'image';
         // Single-image path is scoped away from slideshow rows (both use data-field="imagePath")
