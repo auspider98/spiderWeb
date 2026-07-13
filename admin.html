@@ -983,19 +983,27 @@ html, body { height: 100%; font-family: 'DM Sans', system-ui, sans-serif; backgr
           </div>
 
           <div id="splashBgWatermarkFields" style="display:none;">
-            <div class="form-row-2" style="margin-top:10px;">
+            <div class="field-group" style="margin-top:10px;">
+              <label>Watermark Logo</label>
+              <select id="f_splashWatermarkChoice" onchange="onSplashWatermarkChoiceChange()">
+                <option value="primary">Primary Logo</option>
+                <option value="alternate">Alternate Logo</option>
+                <option value="custom">Custom Image</option>
+              </select>
+              <div class="field-hint" id="splashWatermarkChoiceHint">Requires a Primary or Alternate Logo path above.</div>
+            </div>
+            <div id="splashWatermarkCustomImageField" style="display:none;margin-top:10px;">
               <div class="field-group" style="margin:0;">
-                <label>Watermark Logo</label>
-                <select id="f_splashWatermarkChoice">
-                  <option value="primary">Primary Logo</option>
-                  <option value="alternate">Alternate Logo</option>
-                </select>
-                <div class="field-hint">Requires a Primary or Alternate Logo path above.</div>
+                <label>Watermark Image Path</label>
+                <input type="text" id="f_splashWatermarkImagePath" placeholder="images/watermark.png" oninput="updatePhotoPreview(this)"/>
+                <div class="photo-preview-wrap" style="margin-top:10px;display:none;">
+                  <img alt="Watermark image preview" style="max-height:140px;max-width:100%;border-radius:4px;border:1px solid var(--border);object-fit:cover;" onerror="this.parentElement.style.display='none';"/>
+                </div>
               </div>
-              <div class="field-group" style="margin:0;">
-                <label>Watermark Size (px)</label>
-                <input type="number" id="f_splashWatermarkSize" placeholder="420" min="100" max="1000" style="width:100px;"/>
-              </div>
+            </div>
+            <div class="field-group" style="margin-top:10px;">
+              <label>Watermark Size (px)</label>
+              <input type="number" id="f_splashWatermarkSize" placeholder="420" min="100" max="1000" style="width:100px;"/>
             </div>
             <div class="field-group" style="margin-top:10px;">
               <label>Watermark Opacity</label>
@@ -2391,6 +2399,15 @@ function loadForm() {
   if (sbWmEl) sbWmEl.value = sb.watermarkChoice || 'primary';
   setVal('f_splashWatermarkSize', sb.watermarkSize !== undefined ? sb.watermarkSize : 420);
   setRange('f_splashWatermarkOpacity', 'f_splashWatermarkOpacityVal', sb.watermarkOpacity !== undefined ? sb.watermarkOpacity : 0.06, '');
+  setVal('f_splashWatermarkImagePath', sb.watermarkImagePath || '');
+  const swCustomField = document.getElementById('splashWatermarkCustomImageField');
+  if (swCustomField) swCustomField.style.display = (sb.watermarkChoice === 'custom') ? '' : 'none';
+  const swHint = document.getElementById('splashWatermarkChoiceHint');
+  if (swHint) swHint.textContent = (sb.watermarkChoice === 'custom')
+    ? 'Uses the image path below instead of a logo.'
+    : 'Requires a Primary or Alternate Logo path above.';
+  const swImgInput = document.getElementById('f_splashWatermarkImagePath');
+  if (swImgInput) updatePhotoPreview(swImgInput);
   setVal('f_splashImagePath', sb.imagePath || '');
   updateSplashImagePreview(sb.imagePath || '');
   setColor('f_splashOverlayColor', 'f_splashOverlayColorHex', sb.overlayColor || '#0a1628');
@@ -2901,6 +2918,7 @@ function collectData() {
     overlayColor: getVal('f_splashOverlayColorHex') || '#0a1628',
     overlayOpacity: parseFloat(getVal('f_splashOverlayOpacity')),
     watermarkChoice: getVal('f_splashWatermarkChoice') || 'primary',
+    watermarkImagePath: getVal('f_splashWatermarkImagePath'),
     watermarkOpacity: parseFloat(getVal('f_splashWatermarkOpacity')),
     watermarkSize: parseInt(getVal('f_splashWatermarkSize')) || 420,
   };
@@ -4756,7 +4774,7 @@ function applySectionTypeDefaults(defaults, type) {
   if (type === 'locations') { defaults.items = []; defaults.displayMode = 'cards'; defaults.layoutMode = 'top'; defaults.mapMode = 'linkout'; defaults.maxCols = 2; defaults.showHours = true; }
   if (type === 'table') { defaults.cols = 2; defaults.col1Label = 'Column 1'; defaults.col2Label = 'Column 2'; defaults.col3Label = ''; defaults.col1Style = 'normal'; defaults.col2Style = 'normal'; defaults.col3Style = 'normal'; defaults.firstColHeader = false; defaults.mobileStack = false; defaults.items = []; }
   if (type === 'hero-section') { defaults.heightVariant = 'full'; defaults.customHeight = 400; defaults.vAlign = 'center'; defaults.hAlign = 'center'; defaults.textColor = 'white'; defaults.entranceAnimation = 'default'; defaults.entranceDistance = 100; defaults.bg = { type:'image', bgColor:'#0f2340', imagePosition:'center center', overlayColor:'#0f2340', overlayOpacity:0.5, shadowEnabled:true, slides:[], autoplay:true, showDots:true, slideDuration:8 }; defaults.linkType = 'none'; defaults.linkUrl = ''; defaults.linkLabel = ''; defaults.linkStyle = 'text'; }
-  if (type === 'popup') { defaults.popupStyle = 'modal'; defaults.imageLayout = 'none'; defaults.imagePath = ''; defaults.imagePosition = 'center center'; defaults.overlayColor = '#0f2340'; defaults.overlayOpacity = 0.55; defaults.textAlign = 'center'; defaults.textColor = 'theme'; defaults.roundedCorners = true; defaults.triggerAnchorId = ''; defaults.cta_primary_linkType = 'none'; defaults.cta_secondary_linkType = 'none'; }
+  if (type === 'popup') { defaults.popupStyle = 'modal'; defaults.imageLayout = 'none'; defaults.imagePath = ''; defaults.imagePosition = 'center center'; defaults.overlayColor = '#0f2340'; defaults.overlayOpacity = 0.55; defaults.textAlign = 'center'; defaults.textColor = 'theme'; defaults.roundedCorners = true; defaults.triggerAnchorId = ''; defaults.triggerDelay = 0.6; defaults.cta_primary_linkType = 'none'; defaults.cta_secondary_linkType = 'none'; }
   if (type === 'rotating-cards') { defaults.items = []; defaults.visibleCards = 1; defaults.cardHeight = 420; defaults.showDots = true; defaults.showArrows = true; defaults.showPeek = true; defaults.autoplay = false; defaults.autoplaySpeed = 4; }
 }
 
@@ -5009,6 +5027,8 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
     sec.textColor = ['white','black','chrome','lightbg','theme'].includes(get('textColor')) ? get('textColor') : 'theme';
     sec.roundedCorners = secCard.querySelector(`[data-cp="${pi}"][data-sec="${si}"][data-field="roundedCorners"]`)?.checked !== false;
     sec.triggerAnchorId = get('triggerAnchorId') || '';
+    let popupTriggerDelay = parseFloat(get('triggerDelay'));
+    sec.triggerDelay = isNaN(popupTriggerDelay) ? 0.6 : Math.max(0, popupTriggerDelay);
     sec.cta_primary_linkLabel   = get('cta_primary_linkLabel')   || '';
     sec.cta_secondary_linkLabel = get('cta_secondary_linkLabel') || '';
     sec.cta_primary_linkType    = get('cta_primary_linkType')    || 'none';
@@ -6686,6 +6706,10 @@ function buildCpSectionTypeFields(sec, pi, si) {
             ${getAnchorOptions(pageSlug, sec.triggerAnchorId||'')}
           </select>
           <div class="field-hint">"Immediately on Page Load" shows the popup shortly after the page finishes loading. Anchor options only list sections that have an anchor ID set (the # field in each section's header) — picking one shows the popup once that section scrolls into view. Either way, shown once per browser session.</div>
+        </div>
+        <div class="field-group"><label>Delay (seconds)</label>
+          <input type="number" min="0" step="0.1" ${p} data-field="triggerDelay" value="${sec.triggerDelay!==undefined&&sec.triggerDelay!==''?sec.triggerDelay:0.6}"/>
+          <div class="field-hint">Extra wait time after the trigger condition is met, before the popup actually opens — applies whether the trigger is page load or scrolling to a section.</div>
         </div>
 
         <div class="divider" style="margin:14px 0;"></div>
@@ -9705,6 +9729,8 @@ function collectCpSections(card, pi, existingSections) {
         sec.textColor = ['white','black','chrome','lightbg','theme'].includes(get('textColor')) ? get('textColor') : 'theme';
         sec.roundedCorners = secCard.querySelector(`[data-cp="${pi}"][data-sec="${renderedSi}"][data-field="roundedCorners"]`)?.checked !== false;
         sec.triggerAnchorId = get('triggerAnchorId') || '';
+        let popupTriggerDelayCp = parseFloat(get('triggerDelay'));
+        sec.triggerDelay = isNaN(popupTriggerDelayCp) ? 0.6 : Math.max(0, popupTriggerDelayCp);
         sec.cta_primary_linkLabel   = get('cta_primary_linkLabel')   || '';
         sec.cta_secondary_linkLabel = get('cta_secondary_linkLabel') || '';
         sec.cta_primary_linkType    = get('cta_primary_linkType')    || 'none';
@@ -10118,6 +10144,17 @@ function updateSplashBgUI() {
   const imgFields = document.getElementById('splashBgImageFields');
   if (wmFields)  wmFields.style.display  = val === 'watermark' ? '' : 'none';
   if (imgFields) imgFields.style.display = val === 'image'     ? '' : 'none';
+}
+
+function onSplashWatermarkChoiceChange() {
+  const val = getVal('f_splashWatermarkChoice') || 'primary';
+  const customField = document.getElementById('splashWatermarkCustomImageField');
+  const hint = document.getElementById('splashWatermarkChoiceHint');
+  if (customField) customField.style.display = val === 'custom' ? '' : 'none';
+  if (hint) hint.textContent = val === 'custom'
+    ? 'Uses the image path below instead of a logo.'
+    : 'Requires a Primary or Alternate Logo path above.';
+  autosave();
 }
 
 /* =============================================
