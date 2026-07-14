@@ -420,35 +420,6 @@ html, body { height: 100%; font-family: 'DM Sans', system-ui, sans-serif; backgr
 }
 .btn-add:hover { background: rgba(201,168,76,0.18); }
 
-/* ============ BLOG CARD ADMIN ============ */
-.blog-admin-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  margin-bottom: 10px;
-  overflow: hidden;
-  transition: box-shadow 0.15s, opacity 0.15s;
-  cursor: grab;
-}
-.blog-admin-card:active { cursor: grabbing; }
-.blog-admin-card.dragging { opacity: 0.4; box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
-.blog-admin-card.drag-over { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(201,168,76,0.25); }
-.blog-admin-header {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 10px 14px;
-  background: #f0ede8;
-}
-.blog-admin-header-left { display: flex; align-items: center; gap: 8px; }
-.blog-admin-drag-handle { color: var(--muted); font-size: 14px; cursor: grab; user-select: none; }
-.blog-admin-label { font-weight: 600; font-size: 12px; color: var(--muted); }
-.blog-admin-featured-badge {
-  font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
-  background: rgba(201,168,76,0.15); color: #8a6820;
-  border: 1px solid rgba(201,168,76,0.35); border-radius: 3px;
-  padding: 2px 7px; display: none;
-}
-.blog-admin-card.is-featured .blog-admin-featured-badge { display: inline-block; }
-.blog-admin-body { padding: 14px; }
 .blog-link-field-wrap { display: none; }
 .blog-link-field-wrap.visible { display: block; }
 .cp-smart-link-wrap { display: none; }
@@ -649,10 +620,23 @@ html, body { height: 100%; font-family: 'DM Sans', system-ui, sans-serif; backgr
   flex-wrap: wrap; gap: 6px;
   padding: 10px 14px;
   background: #f0ede8;
+  border-left: 4px solid var(--gold);
   cursor: pointer;
   user-select: none;
+  transition: background 0.15s;
 }
 .cp-section-header:hover { background: #e8e4dd; }
+/* Open sections get a stronger, distinct header so the boundary between an
+   expanded section's body and the next section's header is easy to scan,
+   even with several sections open at once. */
+.cp-section-card.open .cp-section-header { background: var(--navy); border-left-color: var(--gold-light); }
+.cp-section-card.open .cp-section-header:hover { background: var(--navy-mid); }
+.cp-section-card.open .cp-section-header .cp-section-type-badge { color: var(--gold-light); }
+.cp-section-card.open .cp-section-header .cp-anchor-field label { color: rgba(255,255,255,0.55); }
+.cp-section-card.open .cp-section-header .cp-move-btn { border-color: rgba(255,255,255,0.25); color: rgba(255,255,255,0.8); }
+.cp-section-card.open .cp-section-header .cp-move-btn:hover { background: var(--gold); color: var(--navy); border-color: var(--gold); }
+.cp-section-card.open .cp-section-header .btn-remove { opacity: 0.75; }
+.cp-section-card.open .cp-section-header .panel-chevron { color: rgba(255,255,255,0.7); }
 .cp-section-type-badge {
   display: inline-flex; align-items: center; gap: 6px;
   font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
@@ -794,15 +778,6 @@ html, body { height: 100%; font-family: 'DM Sans', system-ui, sans-serif; backgr
   <!-- SIDEBAR -->
   <nav class="sidebar" id="sidebar">
     <div class="sidebar-section">
-      <div class="sidebar-heading">Business Info</div>
-      <div class="sidebar-link active" onclick="showSection('firm')" data-section="firm">
-        <span class="sidebar-link-icon">🏛️</span> Business Details
-      </div>
-      <div class="sidebar-link" onclick="showSection('contact-info')" data-section="contact-info">
-        <span class="sidebar-link-icon">📞</span> Contact & Hours
-      </div>
-    </div>
-    <div class="sidebar-section">
       <div class="sidebar-heading">Content</div>
       <div class="sidebar-link" onclick="showSection('search')" data-section="search">
         <span class="sidebar-link-icon">🔍</span> Search
@@ -815,6 +790,15 @@ html, body { height: 100%; font-family: 'DM Sans', system-ui, sans-serif; backgr
       </div>
 <div id="cp-nav-list"></div>
       <button class="cp-nav-add-btn" onclick="addCustomPage()">＋ Add page</button>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-heading">Business Info</div>
+      <div class="sidebar-link active" onclick="showSection('firm')" data-section="firm">
+        <span class="sidebar-link-icon">🏛️</span> Business Details
+      </div>
+      <div class="sidebar-link" onclick="showSection('contact-info')" data-section="contact-info">
+        <span class="sidebar-link-icon">📞</span> Contact & Hours
+      </div>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-heading">Design</div>
@@ -1946,7 +1930,7 @@ let DATA = {
     {type:'phone', label:'Phone Number',  placeholder:'', required:false, halfWidth:false, options:[]},
     {type:'textarea', label:'Message',    placeholder:'', required:false, halfWidth:false, options:[]}
   ],
-  services:[], faqs:[], testimonials:[], blogPosts:[], processSteps:[], processRequirements:[],
+  services:[], faqs:[], testimonials:[], processSteps:[], processRequirements:[],
   ctaLabel:"", ctaLinkType:"internal", ctaLinkUrl:"contact",
   navDefaultOpen:false, footerNavDefaultOpen:false, headerAlwaysSolid:false,
   pageToggles:{about:true,contact:true},
@@ -3079,15 +3063,6 @@ function collectArray(listId, fields) {
     return obj;
   });
 }
-function collectNumberedArray(listId, fields) {
-  const items = collectArray(listId, fields);
-  return items.map((item, i) => ({ num: i+1, ...item }));
-}
-function collectSingleArray(listId, field) {
-  const list = document.getElementById(listId);
-  if (!list) return [];
-  return Array.from(list.querySelectorAll(`[data-field="${field}"]`)).map(el => el.value.replace(/\s+$/,'')).filter(s => s.trim().length > 0);
-}
 
 /* =============================================
    ATTORNEY ACCORDION BUILDER
@@ -3354,28 +3329,6 @@ function collectAttorneys() {
 /* =============================================
    ARRAY BUILDERS
    ============================================= */
-function arrayItemHtml(idx, fields, values, listId) {
-  const fieldsHtml = fields.map(f => `
-    <div class="field-group" style="margin-bottom:8px;">
-      <label>${f.label}</label>
-      ${f.type==='textarea' ? `<textarea data-field="${f.key}" rows="2">${escHtml(values[f.key]||'')}</textarea>`
-        : `<input type="text" data-field="${f.key}" value="${escHtml(values[f.key]||'')}"/>`}
-    </div>`).join('');
-  return `<div class="array-item" draggable="false" data-list-id="${listId}" data-idx="${idx}">
-    <div class="array-item-header">
-      <div style="display:flex;align-items:center;gap:8px;">
-        <span class="array-item-drag-handle" title="Drag to reorder">⠿</span>
-        <span class="array-item-label">#${idx+1}</span>
-      </div>
-      <div style="display:flex;align-items:center;gap:4px;">
-        <button class="cp-move-btn" onclick="moveArrayItem('${listId}',${idx},-1)" title="Move up">↑</button>
-        <button class="cp-move-btn" onclick="moveArrayItem('${listId}',${idx},1)" title="Move down">↓</button>
-        <button class="btn-remove" onclick="removeArrayItem(this)" title="Remove">×</button>
-      </div>
-    </div>
-    ${fieldsHtml}
-  </div>`;
-}
 function removeArrayItem(btn) { btn.closest('.array-item').remove(); collectData(); }
 function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
@@ -3660,12 +3613,6 @@ function collectLocations() {
     return { name:g('name'), phone:g('phone'), phoneRaw:g('phoneRaw'), fax:g('fax'), email:g('email'), address:g('address'), city:g('city'), state:g('state'), stateAbbr:g('stateAbbr'), zip:g('zip'), hours };
   });
 }
-
-function buildHoursList() {
-  // Hours are now managed per-location inside buildLocationsList()
-  // This function is kept as a no-op for backwards compatibility
-}
-function addHour() { /* no-op — use addLocationHour(li) instead */ }
 
 const SOCIAL_PLATFORMS = [
   { value:'facebook',  label:'Facebook' },
@@ -4019,122 +3966,6 @@ function collectContactForm() {
       options:     opts,
     };
   });
-}
-
-function buildBlogList() {
-  const list = document.getElementById('blog-list');
-  if (!list) return;
-  list.innerHTML = '';
-  (DATA.blogPosts||[]).forEach((p, i) => {
-    const card = buildBlogAdminCard(p, i);
-    list.appendChild(card);
-  });
-  initBlogDragDrop();
-}
-
-function buildBlogAdminCard(p, i) {
-  const card = document.createElement('div');
-  card.className = 'blog-admin-card' + (p.featured ? ' is-featured' : '');
-  card.draggable = false;
-  card.dataset.idx = i;
-
-  const linkType = p.linkType || 'none';
-  const showLink = linkType !== 'none';
-
-  const internalOpts = getInternalPageOptions(p.linkUrl || '');
-  const defaultCta = linkType === 'file' ? 'Download →' : linkType === 'external' ? 'Read More →' : linkType === 'internal' ? 'View Page →' : '';
-
-  card.innerHTML = `
-    <div class="blog-admin-header">
-      <div class="blog-admin-header-left">
-        <span class="blog-admin-drag-handle" title="Drag to reorder">⠿</span>
-        <span class="blog-admin-label">Post #${i+1}</span>
-        <span class="blog-admin-featured-badge">⭐ Featured</span>
-      </div>
-      <div style="display:flex;align-items:center;gap:6px;">
-        <button class="cp-move-btn" onclick="moveBlogPost(${i},-1)" title="Move up">↑</button>
-        <button class="cp-move-btn" onclick="moveBlogPost(${i},1)" title="Move down">↓</button>
-        <button class="btn-remove" onclick="removeBlogPost(${i})">×</button>
-      </div>
-    </div>
-    <div class="blog-admin-body">
-      <div class="form-row-2" style="margin-bottom:10px;">
-        <div class="field-group" style="margin:0;">
-          <label>Emoji Icon</label>
-          <input type="text" data-bi="${i}" data-field="emoji" value="${escHtml(p.emoji||'📋')}" placeholder="📋"/>
-        </div>
-        <div class="field-group" style="margin:0;">
-          <label>Tag / Category</label>
-          <input type="text" data-bi="${i}" data-field="tag" value="${escHtml(p.tag||'')}" placeholder="Article"/>
-        </div>
-      </div>
-      <div class="field-group" style="margin-bottom:10px;">
-        <label>Image Path / URL <span style="font-weight:400;text-transform:none;letter-spacing:0;">(replaces emoji header if set)</span></label>
-        <input type="text" data-bi="${i}" data-field="imagePath" value="${escHtml(p.imagePath||'')}" placeholder="images/blog-post.jpg" oninput="updateBlogImagePreview(this,${i})"/>
-        <div class="photo-preview-wrap" style="margin-top:8px;display:${p.imagePath?'block':'none'};" id="blog-img-preview-${i}">
-          <img src="${escHtml(p.imagePath||'')}" alt="" style="max-height:120px;max-width:100%;border-radius:4px;border:1px solid var(--border);object-fit:cover;" onerror="this.parentElement.style.display='none';"/>
-        </div>
-      </div>
-      <div class="field-group" style="margin-bottom:10px;">
-        <label>Title</label>
-        <input type="text" data-bi="${i}" data-field="title" value="${escHtml(p.title||'')}"/>
-      </div>
-      <div class="field-group" style="margin-bottom:10px;">
-        <label>Excerpt</label>
-        <textarea data-bi="${i}" data-field="excerpt" rows="2">${escHtml(p.excerpt||'')}</textarea>
-      </div>
-      <div class="form-row-3" style="margin-bottom:10px;">
-        <div class="field-group" style="margin:0;">
-          <label>Date</label>
-          <input type="text" data-bi="${i}" data-field="date" value="${escHtml(p.date||'')}" placeholder="Jan 2025"/>
-        </div>
-        <div class="field-group" style="margin:0;">
-          <label>Read Time</label>
-          <input type="text" data-bi="${i}" data-field="readTime" value="${escHtml(p.readTime||'')}" placeholder="5 min read"/>
-        </div>
-        <div class="field-group" style="margin:0;">
-          <label>Featured</label>
-          <div class="switch-row" style="margin:0;padding-top:6px;">
-            <span class="switch-label" style="font-size:12px;">Pin to top</span>
-            <label class="switch"><input type="checkbox" data-bi="${i}" data-field="featured" ${p.featured?'checked':''} onchange="onBlogFeaturedChange(${i},this)"/><span class="switch-slider"></span></label>
-          </div>
-        </div>
-      </div>
-      <div class="divider" style="margin:10px 0;"></div>
-      <div class="form-row-2" style="margin-bottom:8px;">
-        <div class="field-group" style="margin:0;">
-          <label>Link Type</label>
-          <select data-bi="${i}" data-field="linkType" onchange="onBlogLinkTypeChange(${i},this)">
-            <option value="none"${linkType==='none'?' selected':''}>None</option>
-            <option value="internal"${linkType==='internal'?' selected':''}>Internal Page</option>
-            <option value="external"${linkType==='external'?' selected':''}>External URL</option>
-            <option value="file"${linkType==='file'?' selected':''}>File / Document</option>
-          </select>
-        </div>
-        <div class="field-group" style="margin:0;">
-          <label>CTA Button Label</label>
-          <input type="text" data-bi="${i}" data-field="ctaLabel" value="${escHtml(p.ctaLabel||'')}" placeholder="${defaultCta}"/>
-        </div>
-      </div>
-      <div class="blog-link-field-wrap${showLink?' visible':''}" id="blog-link-wrap-${i}">
-        <div class="field-group" style="margin:0;" id="blog-link-internal-${i}" style="display:${linkType==='internal'?'block':'none'};">
-          <label>Internal Page</label>
-          <select data-bi="${i}" data-field="linkUrl" id="blog-link-internal-sel-${i}" style="display:${linkType==='internal'?'block':'none'};">
-            ${internalOpts}
-          </select>
-        </div>
-        <div id="blog-link-external-${i}" style="display:${linkType==='external'||linkType==='file'?'block':'none'};">
-          <div class="field-group" style="margin:0;">
-            <label>${linkType==='file'?'File Path / URL':'External URL'}</label>
-            <input type="text" data-bi="${i}" data-field="linkUrl" id="blog-link-url-${i}"
-              value="${escHtml(linkType!=='internal' ? (p.linkUrl||'') : '')}"
-              placeholder="${linkType==='file'?'files/document.pdf':'https://'}"/>
-            <div class="field-hint">${linkType==='file'?'PDF, DOC, XLS, etc. — opens in a new tab.':'Opens in a new tab.'}</div>
-          </div>
-        </div>
-      </div>
-    </div>`;
-  return card;
 }
 
 function onCpLinkTypeChange(pi, si, pref, sel) {
@@ -4506,149 +4337,17 @@ function onCpSubResourceLinkChange(pi, si, ii, sel) {
   const intEl = document.getElementById('res-link-internal-' + pi + '-' + si + '-' + ii);
   const extEl = document.getElementById('res-link-external-' + pi + '-' + si + '-' + ii);
   if (wrap) wrap.classList.toggle('visible', val !== 'none');
-  if (intEl) intEl.style.display = val === 'internal' ? 'block' : 'none';
+  if (intEl) {
+    intEl.style.display = val === 'internal' ? 'block' : 'none';
+    // The internal <select> carries its own separate display style, baked in
+    // at render time — toggling the wrapper alone doesn't un-hide it.
+    const intSel = intEl.querySelector('select');
+    if (intSel) {
+      intSel.style.display = val === 'internal' ? 'block' : 'none';
+      if (val === 'internal') void intSel.offsetHeight; // force reflow — selects parsed while display:none can fail to paint on unhide
+    }
+  }
   if (extEl) extEl.style.display = (val === 'external' || val === 'file') ? 'block' : 'none';
-}
-
-function onBlogLinkTypeChange(idx, sel) {
-  collectData();
-  DATA.blogPosts[idx].linkType = sel.value;
-  DATA.blogPosts[idx].linkUrl = '';
-  // Update CTA label placeholder default
-  const ctaEl = document.querySelector(`[data-bi="${idx}"][data-field="ctaLabel"]`);
-  if (ctaEl && !ctaEl.value) {
-    const defaults = { internal:'View Page →', external:'Read More →', file:'Download →', none:'' };
-    ctaEl.placeholder = defaults[sel.value] || '';
-  }
-  buildBlogList();
-  autosave();
-}
-
-function onBlogFeaturedChange(idx, cb) {
-  collectData();
-  if (cb.checked) {
-    // Clear featured from all others
-    DATA.blogPosts.forEach((p, i) => { if (i !== idx) p.featured = false; });
-  }
-  DATA.blogPosts[idx].featured = cb.checked;
-  buildBlogList();
-  autosave();
-}
-
-function updateBlogImagePreview(input, idx) {
-  const wrap = document.getElementById(`blog-img-preview-${idx}`);
-  if (!wrap) return;
-  const img = wrap.querySelector('img');
-  if (input.value.trim()) {
-    if (img) img.src = input.value.trim();
-    wrap.style.display = 'block';
-  } else {
-    wrap.style.display = 'none';
-  }
-}
-
-function moveBlogPost(idx, dir) {
-  collectData();
-  const posts = DATA.blogPosts;
-  const newIdx = idx + dir;
-  if (newIdx < 0 || newIdx >= posts.length) return;
-  [posts[idx], posts[newIdx]] = [posts[newIdx], posts[idx]];
-  buildBlogList();
-  autosave();
-}
-
-function removeBlogPost(idx) {
-  collectData();
-  DATA.blogPosts.splice(idx, 1);
-  buildBlogList();
-  autosave();
-}
-
-function addBlogPost() {
-  collectData();
-  DATA.blogPosts.push({ emoji:'📋', tag:'', title:'', excerpt:'', date:'', readTime:'', imagePath:'', linkType:'none', linkUrl:'', ctaLabel:'', featured:false });
-  buildBlogList();
-  autosave();
-}
-
-function initBlogDragDrop() {
-  const list = document.getElementById('blog-list');
-  if (!list) return;
-  let dragIdx = null;
-
-  list.querySelectorAll('.blog-admin-card').forEach(card => {
-    const handle = card.querySelector('.blog-admin-drag-handle');
-    card.draggable = false; // only enable via handle
-    if (handle) {
-      handle.addEventListener('mousedown', () => { card.draggable = true; });
-      handle.addEventListener('mouseup',   () => { card.draggable = false; });
-    }
-    card.addEventListener('dragstart', e => {
-      dragIdx = parseInt(card.dataset.idx);
-      card.classList.add('dragging');
-      e.dataTransfer.effectAllowed = 'move';
-    });
-    card.addEventListener('dragend', () => {
-      card.draggable = false;
-      card.classList.remove('dragging');
-      list.querySelectorAll('.blog-admin-card').forEach(c => c.classList.remove('drag-over'));
-    });
-    card.addEventListener('dragover', e => {
-      e.preventDefault();
-      list.querySelectorAll('.blog-admin-card').forEach(c => c.classList.remove('drag-over'));
-      card.classList.add('drag-over');
-    });
-    card.addEventListener('drop', e => {
-      e.preventDefault();
-      const dropIdx = parseInt(card.dataset.idx);
-      if (dragIdx === null || dragIdx === dropIdx) return;
-      collectData();
-      const posts = DATA.blogPosts;
-      const [moved] = posts.splice(dragIdx, 1);
-      posts.splice(dropIdx, 0, moved);
-      buildBlogList();
-      autosave();
-      dragIdx = null;
-    });
-  });
-}
-
-function collectBlogPosts() {
-  const list = document.getElementById('blog-list');
-  if (!list) return DATA.blogPosts || [];
-  return Array.from(list.querySelectorAll('.blog-admin-card')).map((card, i) => {
-    const get = field => {
-      const el = card.querySelector(`[data-bi="${i}"][data-field="${field}"]`);
-      return el ? cleanFieldValue(el.value) : '';
-    };
-    const getCheck = field => {
-      const el = card.querySelector(`[data-bi="${i}"][data-field="${field}"]`);
-      return el ? el.checked : false;
-    };
-    const linkType = get('linkType') || 'none';
-    // linkUrl comes from either the select (internal) or text input (external/file)
-    let linkUrl = '';
-    if (linkType === 'internal') {
-      const sel = card.querySelector(`#blog-link-internal-sel-${i}`);
-      linkUrl = sel ? sel.value : '';
-    } else {
-      const inp = card.querySelector(`#blog-link-url-${i}`);
-      linkUrl = inp ? inp.value.trim() : '';
-    }
-    return {
-      emoji:    get('emoji'),
-      tag:      get('tag'),
-      imagePath:get('imagePath'),
-      title:    get('title'),
-      excerpt:  get('excerpt'),
-      date:     get('date'),
-      readTime: get('readTime'),
-      featured: getCheck('featured'),
-      linkType,
-      linkUrl,
-      ctaLabel: get('ctaLabel'),
-    };
-  });
 }
 
 /* =============================================
@@ -4773,8 +4472,8 @@ function applySectionTypeDefaults(defaults, type) {
   if (type === 'pricing') { defaults.items = []; }
   if (type === 'locations') { defaults.items = []; defaults.displayMode = 'cards'; defaults.layoutMode = 'top'; defaults.mapMode = 'linkout'; defaults.maxCols = 2; defaults.showHours = true; }
   if (type === 'table') { defaults.cols = 2; defaults.col1Label = 'Column 1'; defaults.col2Label = 'Column 2'; defaults.col3Label = ''; defaults.col1Style = 'normal'; defaults.col2Style = 'normal'; defaults.col3Style = 'normal'; defaults.firstColHeader = false; defaults.mobileStack = false; defaults.items = []; }
-  if (type === 'hero-section') { defaults.heightVariant = 'full'; defaults.customHeight = 400; defaults.vAlign = 'center'; defaults.hAlign = 'center'; defaults.textColor = 'white'; defaults.entranceAnimation = 'default'; defaults.entranceDistance = 100; defaults.bg = { type:'image', bgColor:'#0f2340', imagePosition:'center center', overlayColor:'#0f2340', overlayOpacity:0.5, shadowEnabled:true, slides:[], autoplay:true, showDots:true, slideDuration:8 }; defaults.linkType = 'none'; defaults.linkUrl = ''; defaults.linkLabel = ''; defaults.linkStyle = 'text'; }
-  if (type === 'popup') { defaults.popupStyle = 'modal'; defaults.imageLayout = 'none'; defaults.imagePath = ''; defaults.imagePosition = 'center center'; defaults.overlayColor = '#0f2340'; defaults.overlayOpacity = 0.55; defaults.textAlign = 'center'; defaults.textColor = 'theme'; defaults.roundedCorners = true; defaults.triggerAnchorId = ''; defaults.triggerDelay = 0.6; defaults.cta_primary_linkType = 'none'; defaults.cta_secondary_linkType = 'none'; }
+  if (type === 'hero-section') { defaults.heightVariant = 'full'; defaults.customHeight = 400; defaults.vAlign = 'center'; defaults.hAlign = 'center'; defaults.textColor = 'white'; defaults.entranceAnimation = 'default'; defaults.entranceDistance = 100; defaults.headingMaxWidth = 820; defaults.headingFullWidth = false; defaults.subtitleMaxWidth = 620; defaults.subtitleFullWidth = false; defaults.bottomSpacing = false; defaults.bg = { type:'image', bgColor:'#0f2340', imagePosition:'center center', mobileImagePosition:'center center', overlayColor:'#0f2340', overlayOpacity:0.5, shadowEnabled:true, slides:[], autoplay:true, showDots:true, slideDuration:8 }; defaults.linkType = 'none'; defaults.linkUrl = ''; defaults.linkLabel = ''; defaults.linkStyle = 'text'; }
+  if (type === 'popup') { defaults.popupStyle = 'modal'; defaults.imageLayout = 'none'; defaults.imagePath = ''; defaults.imagePosition = 'center center'; defaults.mobileImagePosition = 'center center'; defaults.overlayTextOnImage = true; defaults.imageClickable = false; defaults.overlayColor = '#0f2340'; defaults.overlayOpacity = 0.55; defaults.textAlign = 'center'; defaults.textColor = 'theme'; defaults.roundedCorners = true; defaults.triggerAnchorId = ''; defaults.triggerDelay = 0.6; defaults.cta_primary_linkType = 'none'; defaults.cta_secondary_linkType = 'none'; }
   if (type === 'rotating-cards') { defaults.items = []; defaults.visibleCards = 1; defaults.cardHeight = 420; defaults.showDots = true; defaults.showArrows = true; defaults.showPeek = true; defaults.autoplay = false; defaults.autoplaySpeed = 4; }
 }
 
@@ -5017,9 +4716,12 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
   // Popup
   if (type === 'popup') {
     sec.popupStyle = get('popupStyle') === 'toast' ? 'toast' : 'modal';
-    sec.imageLayout = ['top','full','left','right'].includes(get('imageLayout')) ? get('imageLayout') : 'none';
+    sec.imageLayout = ['top','full','left','right','nocrop'].includes(get('imageLayout')) ? get('imageLayout') : 'none';
     sec.imagePath = get('imagePath');
     sec.imagePosition = heroCollectPosition(secCard, pi, si, 'imagePosition');
+    sec.mobileImagePosition = heroCollectPosition(secCard, pi, si, 'mobileImagePosition');
+    sec.overlayTextOnImage = secCard.querySelector(`[data-cp="${pi}"][data-sec="${si}"][data-field="overlayTextOnImage"]`)?.checked !== false;
+    sec.imageClickable = secCard.querySelector(`[data-cp="${pi}"][data-sec="${si}"][data-field="imageClickable"]`)?.checked === true;
     sec.overlayColor = get('overlayColor') || '#0f2340';
     let popupOverlayOpacity = parseFloat(get('overlayOpacity'));
     sec.overlayOpacity = isNaN(popupOverlayOpacity) ? 0.55 : popupOverlayOpacity;
@@ -5058,6 +4760,11 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
     sec.textColor = ['white','black','chrome','lightbg','theme'].includes(get('textColor')) ? get('textColor') : 'white';
     sec.entranceAnimation = ['default','media-left','media-right'].includes(get('entranceAnimation')) ? get('entranceAnimation') : 'default';
     sec.entranceDistance = Math.max(10, parseInt(get('entranceDistance')) || 100);
+    sec.headingFullWidth = secCard.querySelector(`[data-cp="${pi}"][data-sec="${si}"][data-field="headingFullWidth"]`)?.checked === true;
+    sec.headingMaxWidth = Math.max(200, parseInt(get('headingMaxWidth')) || 820);
+    sec.subtitleFullWidth = secCard.querySelector(`[data-cp="${pi}"][data-sec="${si}"][data-field="subtitleFullWidth"]`)?.checked === true;
+    sec.subtitleMaxWidth = Math.max(200, parseInt(get('subtitleMaxWidth')) || 620);
+    sec.bottomSpacing = secCard.querySelector(`[data-cp="${pi}"][data-sec="${si}"][data-field="bottomSpacing"]`)?.checked === true;
     const bgTypeSel = secCard.querySelector(`[data-cp="${pi}"][data-sec="${si}"][data-field="bgType"]`);
     const bgType = bgTypeSel ? bgTypeSel.value : 'image';
     // Single-image path is scoped away from slideshow rows (both use data-field="imagePath")
@@ -5075,6 +4782,7 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
       bgColor: get('bgColor') || '#0f2340',
       imagePath: singleImgEl ? cleanFieldValue(singleImgEl.value) : '',
       imagePosition: heroCollectPosition(secCard, pi, si, 'imagePosition'),
+      mobileImagePosition: heroCollectPosition(secCard, pi, si, 'mobileImagePosition'),
       slides,
       slideDuration: parseInt(get('slideDuration')) || 8,
       autoplay: secCard.querySelector(`[data-cp="${pi}"][data-sec="${si}"][data-field="autoplay"]`)?.checked !== false,
@@ -5781,14 +5489,14 @@ function heroParsePosition(pos) {
 // (e.g. "imagePosition" -> imagePositionX/imagePositionY for the single image,
 // "position" -> positionX/positionY for slideshow slide rows).
 // heroslideIdx is passed for slide rows only, to scope the data-heroslide attribute.
-function heroFocusFieldsHtml(pi, si, fieldPrefix, currentValue, heroslideIdx) {
+function heroFocusFieldsHtml(pi, si, fieldPrefix, currentValue, heroslideIdx, label) {
   const xy = heroParsePosition(currentValue);
   const hasSlideIdx = heroslideIdx !== undefined && heroslideIdx !== null;
   const slideAttr = hasSlideIdx ? ` data-heroslide="${heroslideIdx}"` : '';
   const uid = `hero-pos-${pi}-${si}${hasSlideIdx ? '-' + heroslideIdx : ''}-${fieldPrefix}`;
   return `
     <div class="field-group" style="margin:0;">
-      <label>Focus Position</label>
+      <label>${label || 'Focus Position'}</label>
       <div class="range-row" style="margin-bottom:4px;">
         <span style="font-size:11px;color:var(--muted);width:12px;flex-shrink:0;">X</span>
         <input type="range" min="0" max="100" step="1" data-cp="${pi}" data-sec="${si}"${slideAttr} data-field="${fieldPrefix}X" value="${xy.x}"
@@ -6451,6 +6159,11 @@ function buildCpSectionTypeFields(sec, pi, si) {
       const textColor = ['white','black','chrome','lightbg','theme'].includes(sec.textColor) ? sec.textColor : 'white';
       const entranceAnimation = ['default','media-left','media-right'].includes(sec.entranceAnimation) ? sec.entranceAnimation : 'default';
       const entranceDistance = Math.max(10, parseInt(sec.entranceDistance) || 100);
+      const headingMaxWidth = Math.max(200, parseInt(sec.headingMaxWidth) || 820);
+      const headingFullWidth = sec.headingFullWidth === true;
+      const subtitleMaxWidth = Math.max(200, parseInt(sec.subtitleMaxWidth) || 620);
+      const subtitleFullWidth = sec.subtitleFullWidth === true;
+      const bottomSpacing = sec.bottomSpacing === true;
       const piStr = typeof pi === 'string' ? ("'" + pi + "'") : pi;
       const dispImage     = bgType === 'image'     ? '' : 'display:none;';
       const dispSlideshow = bgType === 'slideshow' ? '' : 'display:none;';
@@ -6482,6 +6195,22 @@ function buildCpSectionTypeFields(sec, pi, si) {
 
       return `
         <div class="field-group"><label>Heading</label><input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
+        <div class="form-row-2" style="margin-bottom:16px;">
+          <div class="field-group" style="margin:0;"><label>Title Max Width (px)</label>
+            <input type="number" min="200" ${p} data-field="headingMaxWidth" value="${headingMaxWidth}" ${headingFullWidth?'disabled':''} id="hero-heading-mw-${pi}-${si}"/>
+            <div class="switch-row" style="margin-top:8px;justify-content:flex-start;gap:10px;">
+              <label class="switch"><input type="checkbox" ${p} data-field="headingFullWidth" ${headingFullWidth?'checked':''} onchange="document.getElementById('hero-heading-mw-${pi}-${si}').disabled=this.checked;autosave();"/><span class="switch-slider"></span></label>
+              <span class="switch-label">Full Width</span>
+            </div>
+          </div>
+          <div class="field-group" style="margin:0;"><label>Subtitle Max Width (px)</label>
+            <input type="number" min="200" ${p} data-field="subtitleMaxWidth" value="${subtitleMaxWidth}" ${subtitleFullWidth?'disabled':''} id="hero-subtitle-mw-${pi}-${si}"/>
+            <div class="switch-row" style="margin-top:8px;justify-content:flex-start;gap:10px;">
+              <label class="switch"><input type="checkbox" ${p} data-field="subtitleFullWidth" ${subtitleFullWidth?'checked':''} onchange="document.getElementById('hero-subtitle-mw-${pi}-${si}').disabled=this.checked;autosave();"/><span class="switch-slider"></span></label>
+              <span class="switch-label">Full Width</span>
+            </div>
+          </div>
+        </div>
         <div class="field-group"><label>Subtitle</label><textarea rows="2" style="width:100%;box-sizing:border-box;resize:vertical;min-height:56px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
         <div class="field-group"><label>Text Color</label>
           <select ${p} data-field="textColor">
@@ -6534,6 +6263,13 @@ function buildCpSectionTypeFields(sec, pi, si) {
             <div class="field-hint">250px+ is comfortable for a heading, subtitle, and link. Below that (down to 100px minimum), spacing squeezes automatically, but consider trimming content too.</div>
           </div>
         </div>
+        <div class="field-group" style="margin-bottom:16px;"><label>Bottom Spacing</label>
+          <div class="switch-row" style="margin-top:4px;justify-content:flex-start;gap:10px;">
+            <label class="switch"><input type="checkbox" ${p} data-field="bottomSpacing" ${bottomSpacing?'checked':''}/><span class="switch-slider"></span></label>
+            <span class="switch-label">Add a small gap (20px) before the next section</span>
+          </div>
+          <div class="field-hint">Off by default so Hero Sections can stack flush against each other — turn on only where you want breathing room before whatever comes next.</div>
+        </div>
         <div class="divider" style="margin:14px 0;"></div>
         <div class="field-group"><label>Background Type</label>
           <select data-cp="${pi}" data-sec="${si}" data-field="bgType" onchange="onHeroBgTypeChange(${piStr},${si},this)">
@@ -6552,6 +6288,10 @@ function buildCpSectionTypeFields(sec, pi, si) {
               </div>
             </div>
             ${heroFocusFieldsHtml(pi, si, 'imagePosition', bg.imagePosition||'center center')}
+          </div>
+          <div class="form-row-2" style="margin-top:12px;">
+            <div class="field-group" style="margin:0;"><div class="field-hint">On phones (below 640px wide), the crop window's shape changes a lot from desktop — this lets you choose a different focal point just for that narrower view, instead of one point trying to serve both.</div></div>
+            ${heroFocusFieldsHtml(pi, si, 'mobileImagePosition', bg.mobileImagePosition||bg.imagePosition||'center center', undefined, 'Mobile Focus Position')}
           </div>
         </div>
 
@@ -6620,14 +6360,18 @@ function buildCpSectionTypeFields(sec, pi, si) {
 
     case 'popup': {
       const popupStyle = sec.popupStyle === 'toast' ? 'toast' : 'modal';
-      const imageLayout = ['top','full','left','right'].includes(sec.imageLayout) ? sec.imageLayout : 'none';
+      const imageLayout = ['top','full','left','right','nocrop'].includes(sec.imageLayout) ? sec.imageLayout : 'none';
       const textAlign = ['left','center','right'].includes(sec.textAlign) ? sec.textAlign : 'center';
       const rounded = sec.roundedCorners !== false;
       const textColor = ['white','black','chrome','lightbg','theme'].includes(sec.textColor) ? sec.textColor : 'theme';
+      const overlayTextOnImage = sec.overlayTextOnImage !== false;
+      const imageClickable = sec.imageClickable === true;
       const pageSlug = piToPageSlug(pi);
       const piStr = typeof pi === 'string' ? ("'" + pi + "'") : pi;
       const dispImageField   = imageLayout === 'none' ? 'display:none;' : '';
       const dispOverlayField = imageLayout === 'full' ? '' : 'display:none;';
+      const dispFocusField   = (imageLayout === 'none' || imageLayout === 'nocrop') ? 'display:none;' : '';
+      const dispNocropField  = imageLayout === 'nocrop' ? '' : 'display:none;';
 
       return `
         <div class="field-group"><label>Popup Style</label>
@@ -6657,8 +6401,9 @@ function buildCpSectionTypeFields(sec, pi, si) {
             <option value="full"${imageLayout==='full'?' selected':''}>Full Background (Faded)</option>
             <option value="left"${imageLayout==='left'?' selected':''}>Image Left / Text Right</option>
             <option value="right"${imageLayout==='right'?' selected':''}>Image Right / Text Left</option>
+            <option value="nocrop"${imageLayout==='nocrop'?' selected':''}>Full Image (No Crop)</option>
           </select>
-          <div class="field-hint">Corner Toast always shows a compact thumbnail regardless of layout choice — these four layouts apply to Centered Modal.</div>
+          <div class="field-hint">Corner Toast always shows a compact thumbnail regardless of layout choice — these layouts apply to Centered Modal. "Full Image (No Crop)" shows the whole image at its own proportions instead of cropping it to fill a fixed area — best for a designed graphic that already has its own message on it.</div>
         </div>
         <div class="cps-popup-image-field" style="${dispImageField}">
           <div class="field-group"><label>Image Path</label>
@@ -6667,7 +6412,27 @@ function buildCpSectionTypeFields(sec, pi, si) {
               <img src="${escHtml(sec.imagePath||'')}" alt="Popup image preview" style="max-height:140px;max-width:100%;border-radius:4px;border:1px solid var(--border);object-fit:cover;" onerror="this.parentElement.style.display='none';"/>
             </div>
           </div>
-          ${heroFocusFieldsHtml(pi, si, 'imagePosition', sec.imagePosition||'center center')}
+          <div class="cps-popup-focus-field" style="${dispFocusField}">
+            ${heroFocusFieldsHtml(pi, si, 'imagePosition', sec.imagePosition||'center center')}
+            <div class="field-hint" style="margin-top:8px;">On phones (below 640px wide), the crop window's shape changes a lot from desktop — set this to choose a different focal point just for that narrower view.</div>
+            ${heroFocusFieldsHtml(pi, si, 'mobileImagePosition', sec.mobileImagePosition||sec.imagePosition||'center center', undefined, 'Mobile Focus Position')}
+          </div>
+          <div class="cps-popup-nocrop-field" style="${dispNocropField}margin-top:12px;">
+            <div class="field-group" style="margin:0;"><label>Overlay Text on Image</label>
+              <div class="switch-row" style="margin-top:4px;justify-content:flex-start;gap:10px;">
+                <label class="switch"><input type="checkbox" ${p} data-field="overlayTextOnImage" ${overlayTextOnImage?'checked':''}/><span class="switch-slider"></span></label>
+                <span class="switch-label">Show Heading/Body/CTA on top of the image</span>
+              </div>
+              <div class="field-hint">On: text sits over the image, using the Text Alignment and Text Color settings above. Off: the image displays alone, and Heading/Body/CTA render below it instead.</div>
+            </div>
+            <div class="field-group" style="margin:12px 0 0;"><label>Make Image Clickable</label>
+              <div class="switch-row" style="margin-top:4px;justify-content:flex-start;gap:10px;">
+                <label class="switch"><input type="checkbox" ${p} data-field="imageClickable" ${imageClickable?'checked':''}/><span class="switch-slider"></span></label>
+                <span class="switch-label">Whole image links to the Primary Button's destination</span>
+              </div>
+              <div class="field-hint">Uses whatever the Primary Button below is linked to — set that first, or this won't have anywhere to link to.</div>
+            </div>
+          </div>
         </div>
         <div class="cps-popup-overlay-field" style="${dispOverlayField}">
           <div class="form-row-2">
@@ -7455,13 +7220,13 @@ function buildCpSectionTypeFields(sec, pi, si) {
               <option value="full"      ${layout==='full'     ?'selected':''}>Full Width</option>
               <option value="two-col"   ${layout==='two-col'  ?'selected':''}>Two Column</option>
             </select></div>
-          <div class="field-group" style="margin:0;" data-video-pos-row ${isTwoCol?'':'style="display:none;"'}>
+          <div class="field-group" style="margin:0;${isTwoCol?'':'display:none;'}" data-video-pos-row>
             <label>Video Position</label>
             <select ${p} data-field="videoPosition">
               <option value="left"  ${vidPos==='left' ?'selected':''}>Video Left</option>
               <option value="right" ${vidPos==='right'?'selected':''}>Video Right</option>
             </select></div>
-          <div class="field-group" style="margin:0;" data-video-width-row ${!isTwoCol && layout==='contained'?'':'style="display:none;"'}>
+          <div class="field-group" style="margin:0;${!isTwoCol && layout==='contained'?'':'display:none;'}" data-video-width-row>
             <label>Video Width</label>
             <select ${p} data-field="containedWidth">
               <option value="narrow" ${(sec.containedWidth||'medium')==='narrow'?'selected':''}>Narrow (560px)</option>
@@ -9534,8 +9299,12 @@ function onPopupImageLayoutChange(sel) {
   if (!card) return;
   const imgField = card.querySelector('.cps-popup-image-field');
   const overlayField = card.querySelector('.cps-popup-overlay-field');
+  const focusField = card.querySelector('.cps-popup-focus-field');
+  const nocropField = card.querySelector('.cps-popup-nocrop-field');
   if (imgField) imgField.style.display = (sel.value === 'none') ? 'none' : '';
   if (overlayField) overlayField.style.display = (sel.value === 'full') ? '' : 'none';
+  if (focusField) focusField.style.display = (sel.value === 'none' || sel.value === 'nocrop') ? 'none' : '';
+  if (nocropField) nocropField.style.display = (sel.value === 'nocrop') ? '' : 'none';
   autosave();
 }
 
@@ -9719,9 +9488,12 @@ function collectCpSections(card, pi, existingSections) {
       case 'popup': {
         sec.heading = get('heading'); sec.body = get('body');
         sec.popupStyle = get('popupStyle') === 'toast' ? 'toast' : 'modal';
-        sec.imageLayout = ['top','full','left','right'].includes(get('imageLayout')) ? get('imageLayout') : 'none';
+        sec.imageLayout = ['top','full','left','right','nocrop'].includes(get('imageLayout')) ? get('imageLayout') : 'none';
         sec.imagePath = get('imagePath');
         sec.imagePosition = heroCollectPosition(secCard, pi, renderedSi, 'imagePosition');
+        sec.mobileImagePosition = heroCollectPosition(secCard, pi, renderedSi, 'mobileImagePosition');
+        sec.overlayTextOnImage = secCard.querySelector(`[data-cp="${pi}"][data-sec="${renderedSi}"][data-field="overlayTextOnImage"]`)?.checked !== false;
+        sec.imageClickable = secCard.querySelector(`[data-cp="${pi}"][data-sec="${renderedSi}"][data-field="imageClickable"]`)?.checked === true;
         sec.overlayColor = get('overlayColor') || '#0f2340';
         let popupOverlayOpacity = parseFloat(get('overlayOpacity'));
         sec.overlayOpacity = isNaN(popupOverlayOpacity) ? 0.55 : popupOverlayOpacity;
@@ -9750,6 +9522,11 @@ function collectCpSections(card, pi, existingSections) {
         sec.textColor = ['white','black','chrome','lightbg','theme'].includes(get('textColor')) ? get('textColor') : 'white';
         sec.entranceAnimation = ['default','media-left','media-right'].includes(get('entranceAnimation')) ? get('entranceAnimation') : 'default';
         sec.entranceDistance = Math.max(10, parseInt(get('entranceDistance')) || 100);
+        sec.headingFullWidth = secCard.querySelector(`[data-cp="${pi}"][data-sec="${renderedSi}"][data-field="headingFullWidth"]`)?.checked === true;
+        sec.headingMaxWidth = Math.max(200, parseInt(get('headingMaxWidth')) || 820);
+        sec.subtitleFullWidth = secCard.querySelector(`[data-cp="${pi}"][data-sec="${renderedSi}"][data-field="subtitleFullWidth"]`)?.checked === true;
+        sec.subtitleMaxWidth = Math.max(200, parseInt(get('subtitleMaxWidth')) || 620);
+        sec.bottomSpacing = secCard.querySelector(`[data-cp="${pi}"][data-sec="${renderedSi}"][data-field="bottomSpacing"]`)?.checked === true;
         const bgTypeSel = secCard.querySelector(`[data-cp="${pi}"][data-sec="${renderedSi}"][data-field="bgType"]`);
         const bgType = bgTypeSel ? bgTypeSel.value : 'image';
         // Single-image path is scoped away from slideshow rows (both use data-field="imagePath")
@@ -9767,6 +9544,7 @@ function collectCpSections(card, pi, existingSections) {
           bgColor: get('bgColor') || '#0f2340',
           imagePath: singleImgEl ? cleanFieldValue(singleImgEl.value) : '',
           imagePosition: heroCollectPosition(secCard, pi, renderedSi, 'imagePosition'),
+          mobileImagePosition: heroCollectPosition(secCard, pi, renderedSi, 'mobileImagePosition'),
           slides,
           slideDuration: parseInt(get('slideDuration')) || 8,
           autoplay: secCard.querySelector(`[data-cp="${pi}"][data-sec="${renderedSi}"][data-field="autoplay"]`)?.checked !== false,
@@ -10458,10 +10236,6 @@ function saveData() {
   localStorage.setItem(LS_PREVIEW(), JSON.stringify(DATA));
   toast('💾 Saved! Preview opening...', 'success');
   document.getElementById('lastSaved').textContent = 'Saved ' + new Date().toLocaleTimeString();
-}
-
-function saveAndPreview() {
-  saveData();
 }
 
 /* =============================================
