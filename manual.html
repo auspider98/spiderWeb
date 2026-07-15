@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SpiderWeb v1 — Site Admin Manual</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --navy: #0f2340;
+  --navy-mid: #162840;
+  --navy-light: #1a3560;
+  --gold: #c9a84c;
+  --gold-light: #e8c97a;
+  --gold-pale: #faf6ec;
+  --warm-white: #fffdf9;
+  --cream: #f9f6f0;
+  --chrome: #060f1d;
+  --border: #e2ddd6;
+  --text: #2a2520;
+  --muted: #7a7570;
+  --danger: #c0392b;
+  --success: #2d7a5f;
+  --sidebar-w: 264px;
+  --font-display: 'Raleway', sans-serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+body {
+  font-family: var(--font-body);
+  background: var(--warm-white);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+/* ============ SIDEBAR ============ */
+.sidebar {
+  position: fixed; top: 0; left: 0; bottom: 0;
+  width: var(--sidebar-w);
+  background: var(--chrome);
+  overflow-y: auto;
+  padding: 26px 0 40px;
+  z-index: 50;
+}
+.sidebar-brand {
+  color: #fff; font-weight: 700; font-size: 15px;
+  padding: 24px 22px 20px;
+  display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  margin-bottom: 18px;
+}
+.sidebar-brand-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
+.sidebar-brand-text { width: 100%; }
+.sidebar-brand small { display:block; font-weight: 400; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-top: 4px; }
+.sb-heading {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+  padding: 14px 22px 6px;
+}
+.sb-link {
+  display: block;
+  padding: 6px 22px;
+  color: rgba(255,255,255,0.72);
+  text-decoration: none;
+  font-size: 13px;
+  border-left: 3px solid transparent;
+  transition: all 0.15s;
+}
+.sb-link:hover { color: #fff; background: rgba(255,255,255,0.05); }
+.sb-link.sub { padding-left: 36px; font-size: 12px; color: rgba(255,255,255,0.5); }
+.sb-link.sub:hover { color: var(--gold-light); }
+
+/* ============ MAIN ============ */
+.main { margin-left: var(--sidebar-w); }
+.container { max-width: 860px; margin: 0 auto; padding: 0 40px 120px; }
+
+/* ============ HERO ============ */
+.hero {
+  background: linear-gradient(160deg, var(--navy) 0%, var(--chrome) 100%);
+  color: #fff;
+  padding: 90px 40px 70px;
+  margin-bottom: 60px;
+  position: relative;
+}
+.hero-inner { max-width: 860px; margin: 0 auto; }
+.hero-logo {
+  display: none;
+  position: absolute;
+  top: 38px;
+  left: 50%;
+  transform: translateX(-50%);
+  height: var(--hero-logo-h, 40px);
+  width: auto;
+  max-width: 300px;
+  object-fit: contain;
+}
+@media (max-width: 960px) {
+  .hero-logo { display: block; max-width: 200px; }
+}
+.hero .eyebrow { color: var(--gold); }
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(34px, 5vw, 52px);
+  font-weight: 800; line-height: 1.1; letter-spacing: -0.01em;
+  margin: 14px 0 18px;
+}
+.hero p { color: rgba(255,255,255,0.75); max-width: 560px; font-size: 16px; }
+.hero .hero-meta { margin-top: 28px; display: flex; gap: 26px; flex-wrap: wrap; }
+.hero .hero-meta span { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.45); }
+.hero .hero-meta b { color: var(--gold-light); font-weight: 600; }
+
+/* ============ TYPOGRAPHY ============ */
+.eyebrow {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--gold);
+}
+h2 {
+  font-family: var(--font-display);
+  font-size: 36px; font-weight: 700; letter-spacing: -0.005em;
+  color: var(--navy);
+  margin: 8px 0 16px;
+  scroll-margin-top: 30px;
+}
+h3 {
+  font-family: var(--font-display);
+  font-size: 21px; font-weight: 600;
+  color: var(--navy);
+  margin: 34px 0 10px;
+  scroll-margin-top: 30px;
+}
+h4 { font-size: 14px; font-weight: 700; color: var(--navy); margin: 20px 0 6px; letter-spacing: 0.02em; }
+p { margin-bottom: 14px; }
+p, li { color: #4a453e; }
+strong { color: var(--text); }
+section { margin-bottom: 96px; padding-top: 26px; }
+section > .eyebrow {
+  display: block;
+  padding-top: 22px;
+  margin-bottom: 2px;
+  border-top: 4px solid var(--gold);
+}
+ul, ol { margin: 0 0 16px 22px; }
+li { margin-bottom: 7px; }
+a { color: var(--gold); }
+code {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.86em;
+  background: var(--cream);
+  border: 1px solid var(--border);
+  padding: 1px 6px;
+  border-radius: 4px;
+  color: var(--navy);
+  white-space: nowrap;
+}
+
+/* ============ COMPONENTS ============ */
+.panel {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 22px 24px;
+  margin: 18px 0;
+}
+.panel-title {
+  font-weight: 700; font-size: 14px; color: var(--navy);
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 10px;
+}
+.callout {
+  border-left: 4px solid var(--gold);
+  background: var(--gold-pale);
+  border-radius: 0 8px 8px 0;
+  padding: 14px 18px;
+  margin: 18px 0;
+  font-size: 14px;
+}
+.callout.warn { border-left-color: var(--danger); background: #fbf0ee; }
+.callout.ok { border-left-color: var(--success); background: #eef6f2; }
+.callout b:first-child { display: block; margin-bottom: 3px; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
+.callout p:last-child { margin-bottom: 0; }
+
+.steps { counter-reset: step; margin: 20px 0; list-style: none; margin-left: 0; }
+.steps li {
+  counter-increment: step;
+  position: relative;
+  padding: 0 0 18px 52px;
+  margin: 0;
+}
+.steps li::before {
+  content: counter(step, decimal-leading-zero);
+  position: absolute; left: 0; top: 1px;
+  font-family: 'DM Mono', monospace;
+  font-size: 13px; font-weight: 500;
+  color: var(--gold);
+  width: 34px; height: 34px;
+  border: 1.5px solid var(--gold);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: #fff;
+}
+.steps li:not(:last-child)::after {
+  content: '';
+  position: absolute; left: 17px; top: 38px; bottom: 2px;
+  width: 1px; background: var(--border);
+}
+.steps li b { color: var(--navy); }
+
+table { width: 100%; border-collapse: collapse; margin: 16px 0 22px; font-size: 13.5px; }
+th {
+  text-align: left; font-size: 11px; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--muted);
+  padding: 8px 12px;
+  border-bottom: 2px solid var(--navy);
+}
+td { padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+td:first-child { font-weight: 600; color: var(--navy); white-space: nowrap; }
+tr:nth-child(even) td { background: var(--cream); }
+
+kbd, .btn-demo {
+  display: inline-block;
+  font-size: 12px; font-weight: 600;
+  padding: 3px 12px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.btn-demo.gold { background: var(--gold); color: var(--navy); }
+.btn-demo.ghost { background: transparent; color: var(--navy); border: 1px solid var(--border); }
+.btn-demo.dark { background: var(--navy); color: #fff; }
+
+/* ============ FILE FLOW DIAGRAM ============ */
+.flow { margin: 30px 0; }
+.flow-row { display: grid; grid-template-columns: 1fr 60px 1fr 60px 1fr; align-items: stretch; gap: 0; }
+.flow-card {
+  border: 1.5px solid var(--navy);
+  border-radius: 8px;
+  background: #fff;
+  padding: 18px 16px 16px;
+  text-align: center;
+  position: relative;
+}
+.flow-card.gold-card { border-color: var(--gold); background: var(--gold-pale); }
+.flow-card .file-icon { font-size: 26px; margin-bottom: 6px; }
+.flow-card .file-name { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; color: var(--navy); }
+.flow-card .file-role { font-size: 11.5px; color: var(--muted); margin-top: 5px; line-height: 1.5; }
+.flow-arrow {
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gold); font-size: 20px; font-weight: 700;
+  flex-direction: column; gap: 2px;
+}
+.flow-arrow small { font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.flow-caption { text-align: center; font-size: 12px; color: var(--muted); margin-top: 14px; }
+
+/* ============ FOLDER TREE ============ */
+.tree {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  background: var(--chrome);
+  color: #d9d4c8;
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin: 18px 0;
+  line-height: 1.9;
+  overflow-x: auto;
+}
+.tree .dir { color: var(--gold-light); font-weight: 500; }
+.tree .cm { color: rgba(255,255,255,0.35); }
+
+/* ============ SECTION TYPE CARDS ============ */
+.group-head {
+  display: flex; align-items: baseline; gap: 12px;
+  margin: 68px 0 8px;
+  padding-top: 22px;
+  border-top: 3px solid var(--gold);
+}
+.group-head h3 { margin: 0; font-size: 28px; scroll-margin-top: 30px; }
+.group-head .count { font-size: 12px; color: var(--muted); }
+.group-intro {
+  font-size: 14px; color: #4a453e;
+  margin: 10px 0 22px;
+  max-width: 720px;
+}
+.stype {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin: 16px 0;
+  overflow: hidden;
+  scroll-margin-top: 24px;
+}
+.stype-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 13px 20px;
+  background: var(--cream);
+  border-bottom: 1px solid var(--border);
+}
+.stype-head .stype-name { font-weight: 700; font-size: 14.5px; color: var(--navy); }
+.stype-head .stype-tag {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--gold); background: #fff;
+  border: 1px solid var(--gold);
+  padding: 2px 10px; border-radius: 20px;
+  white-space: nowrap;
+}
+.stype-body { padding: 16px 20px 18px; font-size: 14px; }
+.stype-body p { margin-bottom: 10px; }
+details.fields {
+  font-size: 13px;
+  background: var(--gold-pale);
+  border: 1px solid #efe6cf;
+  border-radius: 6px;
+  margin: 12px 0 4px;
+}
+details.fields summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 9px 14px;
+  font-size: 10.5px; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--navy);
+  user-select: none;
+  display: flex; align-items: center; gap: 8px;
+}
+details.fields summary::-webkit-details-marker { display: none; }
+details.fields summary::before {
+  content: '▸';
+  color: var(--gold);
+  font-size: 11px;
+  transition: transform 0.15s;
+}
+details.fields[open] summary::before { transform: rotate(90deg); }
+details.fields summary:hover { color: var(--gold); }
+details.fields .fbody { padding: 2px 14px 12px; }
+.fgroup {
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--gold);
+  margin: 10px 0 4px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid #ecdfc0;
+}
+.fgroup:first-child { margin-top: 4px; }
+ul.flist { list-style: none; margin: 0; }
+ul.flist li {
+  margin: 0;
+  padding: 4px 0;
+  border-bottom: 1px dotted #e8ddc2;
+  line-height: 1.55;
+}
+ul.flist li:last-child { border-bottom: none; }
+ul.flist b { color: var(--navy); font-weight: 600; font-size: 13px; }
+.fkind {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 0 6px;
+  margin-left: 7px;
+  white-space: nowrap;
+  vertical-align: 1px;
+}
+.fopts { display: block; font-size: 12px; color: #6b6357; }
+.fopts::before { content: '↳ '; color: var(--gold); }
+.fnote { display: block; font-size: 11.5px; color: var(--muted); font-style: italic; }
+.tip { font-size: 13px; color: var(--success); margin-top: 10px; }
+.tip::before { content: '💡 '; }
+
+/* ============ RESPONSIVE + PRINT ============ */
+.sidebar-backdrop {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(6,15,29,0.55);
+  z-index: 200;
+}
+.sidebar-backdrop.visible { display: block; }
+.nav-fab {
+  display: none;
+  position: fixed; bottom: 22px; right: 22px;
+  z-index: 220;
+  align-items: center; gap: 8px;
+  background: var(--navy); color: #fff;
+  border: none; border-radius: 30px;
+  padding: 13px 20px;
+  font-family: var(--font-body); font-size: 13px; font-weight: 600;
+  box-shadow: 0 6px 20px rgba(6,15,29,0.35);
+  cursor: pointer;
+}
+.nav-fab-icon { font-size: 16px; line-height: 1; }
+@media (max-width: 960px) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 210;
+  }
+  .sidebar.open { transform: translateX(0); }
+  .main { margin-left: 0; }
+  .container, .hero { padding-left: 22px; padding-right: 22px; }
+  .flow-row { grid-template-columns: 1fr; gap: 4px; }
+  .flow-arrow { transform: rotate(90deg); padding: 8px 0; }
+  .flow-arrow small { transform: rotate(-90deg); display:none; }
+  .nav-fab { display: flex; }
+}
+@media print {
+  .sidebar { display: none; }
+  .main { margin-left: 0; }
+  .hero { padding: 40px; }
+  section { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <div class="sidebar-brand-dot"></div>
+    <div class="sidebar-brand-text">Site Admin Manual<small>SpiderWeb v1</small></div>
+  </div>
+  <div class="sb-heading">Getting Oriented</div>
+  <a class="sb-link" href="#how-it-works">🧩 How Your Website Works</a>
+  <a class="sb-link" href="#folder-structure">📁 Folder Structure</a>
+  <a class="sb-link" href="#backups">🗄️ Backups &amp; Archives</a>
+  <div class="sb-heading">Using the Admin</div>
+  <a class="sb-link" href="#admin-basics">⚙️ Admin Basics</a>
+  <a class="sb-link" href="#sidebar-tour">🧭 Sidebar Tour</a>
+  <a class="sb-link sub" href="#sb-business">🏛️ Business Details</a>
+  <a class="sb-link sub" href="#sb-contact">📞 Contact &amp; Hours</a>
+  <a class="sb-link sub" href="#sb-search">🔍 Search</a>
+  <a class="sb-link sub" href="#sb-splash">🌅 Splash Screen</a>
+  <a class="sb-link sub" href="#sb-home">🏠 Home Page</a>
+  <a class="sb-link sub" href="#sb-about">👥 About Us</a>
+  <a class="sb-link sub" href="#sb-design">🎨 Colors &amp; Fonts</a>
+  <a class="sb-link sub" href="#sb-nav">🧭 Navigation</a>
+  <a class="sb-link sub" href="#sb-seo">🔍 SEO &amp; Meta</a>
+  <a class="sb-link sub" href="#sb-members">🔐 Members &amp; Access</a>
+  <a class="sb-link sub" href="#sb-export">📤 Export</a>
+  <div class="sb-heading">Building the Site</div>
+  <a class="sb-link" href="#pages">📄 Pages &amp; Navigation</a>
+  <a class="sb-link" href="#sections-common">🧱 How Sections Work</a>
+  <div class="sb-heading">Section Library</div>
+  <a class="sb-link sub" href="#g-content">🗒️ Content &amp; Text</a>
+  <a class="sb-link sub" href="#g-cards">🃏 Cards &amp; Grids</a>
+  <a class="sb-link sub" href="#g-process">📋 Process &amp; Info</a>
+  <a class="sb-link sub" href="#g-data">📊 Data &amp; Structure</a>
+  <a class="sb-link sub" href="#g-media">🎬 Media</a>
+  <a class="sb-link sub" href="#g-people">👥 People &amp; Social Proof</a>
+  <a class="sb-link sub" href="#g-structure">📐 Page Structure</a>
+  <a class="sb-link sub" href="#g-overlays">🔔 Overlays</a>
+  <div class="sb-heading">Going Live</div>
+  <a class="sb-link" href="#publishing">🚀 Publishing Changes</a>
+  <a class="sb-link" href="#troubleshooting">🛠️ Troubleshooting</a>
+</nav>
+
+<div class="main">
+
+<div class="hero">
+  <div class="hero-inner">
+    <span class="eyebrow">Owner's Manual</span>
+    <h1>Your Website,<br/>In Your Hands.</h1>
+    <p>Everything you need to keep your site fresh — no coding, no special software. If you can browse the web and move a file between folders, you can manage this website.</p>
+    <div class="hero-meta">
+      <span>Template <b>SpiderWeb v1</b></span>
+      <span>Audience <b>Site Owners &amp; Editors</b></span>
+      <span>Skill Needed <b>Basic Browser + Files</b></span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+<!-- ============================================================ -->
+<section id="how-it-works">
+  <span class="eyebrow">Getting Oriented</span>
+  <h2>How Your Website Works</h2>
+  <p>Your entire website is just a small handful of files sitting together in one folder. There's no database, no subscription CMS, no server software — which means nothing to break, nothing to pay monthly for, and nothing that can lock you out.</p>
+
+  <div class="flow">
+    <div class="flow-row">
+      <div class="flow-card">
+        <div class="file-icon">🛠️</div>
+        <div class="file-name">admin.html</div>
+        <div class="file-role">The control panel.<br/>Where you make edits.</div>
+      </div>
+      <div class="flow-arrow">→<small>exports</small></div>
+      <div class="flow-card gold-card">
+        <div class="file-icon">🧠</div>
+        <div class="file-name">config.js</div>
+        <div class="file-role">The memory.<br/>Every word, photo path, color &amp; setting.</div>
+      </div>
+      <div class="flow-arrow">→<small>feeds</small></div>
+      <div class="flow-card">
+        <div class="file-icon">🌐</div>
+        <div class="file-name">index.html</div>
+        <div class="file-role">The website.<br/>What your visitors see.</div>
+      </div>
+    </div>
+    <div class="flow-caption">Plus one small extra: <code>favicon</code> — the tiny icon shown in the browser tab.</div>
+  </div>
+
+  <h3>The four files, in plain English</h3>
+  <table>
+    <tr><th>File</th><th>What it is</th><th>Do you ever edit it?</th></tr>
+    <tr><td>index.html</td><td>The website itself — the page your visitors open. It reads all of its text, images, and colors from config.js.</td><td><strong>Never.</strong> Leave it alone.</td></tr>
+    <tr><td>admin.html</td><td>Your private control panel. Open it in a browser to change anything about the site through friendly forms.</td><td>You <em>use</em> it, but never edit the file itself.</td></tr>
+    <tr><td>config.js</td><td>The site's memory. A single file holding all of your content and settings. The admin creates fresh copies of this for you.</td><td><strong>Only by replacing it</strong> with a new copy exported from the admin.</td></tr>
+    <tr><td>favicon</td><td>The little icon in the browser tab (usually <code>favicon.ico</code> or <code>favicon.png</code>).</td><td>Only if you want a new tab icon — just swap the image file.</td></tr>
+  </table>
+
+  <div class="callout">
+    <b>The one idea to remember</b>
+    <p>The admin does <strong>not</strong> change your live website directly. It saves your work inside your browser, then lets you download a fresh <code>config.js</code>. Your website only changes when you <strong>replace the old config.js in your site folder with the new one</strong>. This is covered step-by-step in <a href="#publishing">Publishing Changes</a>.</p>
+  </div>
+
+  <h3>The edit → preview → publish cycle</h3>
+  <ol class="steps">
+    <li><b>Edit</b> — open <code>admin.html</code> in your browser and make changes. Everything autosaves to the browser as you type (watch for “Autosaved” in the top bar).</li>
+    <li><b>Preview</b> — click <span class="btn-demo ghost">💾 Save &amp; Preview</span> in the top bar. The site opens in a new tab showing your changes. <em>Only you can see this preview — it lives in your browser.</em></li>
+    <li><b>Publish</b> — happy with it? Click <span class="btn-demo gold">⬇ Export config.js</span>, then put the downloaded file into your website folder, replacing the old one. Now the whole world sees it.</li>
+  </ol>
+</section>
+
+<!-- ============================================================ -->
+<section id="folder-structure">
+  <span class="eyebrow">Getting Oriented</span>
+  <h2>Folder Structure</h2>
+  <p>Keeping the folder tidy isn't just about neatness — the admin refers to images and documents <strong>by their path</strong> (their address inside the folder), so a predictable structure makes every image field easy to fill in.</p>
+
+  <div class="tree">
+<span class="dir">my-website/</span>
+├── index.html          <span class="cm">← the website (never edit)</span>
+├── admin.html          <span class="cm">← the control panel (never edit)</span>
+├── config.js           <span class="cm">← the content (replace when publishing)</span>
+├── favicon.png         <span class="cm">← browser tab icon</span>
+├── <span class="dir">images/</span>             <span class="cm">← all photos, logos &amp; graphics</span>
+│   ├── logo.png
+│   ├── logo-alt.png
+│   ├── hero.jpg
+│   └── team-jane.jpg
+└── <span class="dir">files/</span>              <span class="cm">← downloadable documents (PDFs etc.)</span>
+    └── intake-form.pdf
+  </div>
+
+  <h3>How paths work</h3>
+  <p>When an admin field asks for an “Image Path,” you type the file's address <em>relative to the site folder</em>. If your photo lives at <code>images/hero.jpg</code>, that's exactly what you type — lowercase, with the folder name, separated by a forward slash.</p>
+  <ul>
+    <li><strong>Match capitalization exactly.</strong> On most web hosts, <code>Hero.JPG</code> and <code>hero.jpg</code> are different files. Sticking to all-lowercase filenames avoids this trap entirely.</li>
+    <li><strong>Avoid spaces in filenames.</strong> Use dashes instead: <code>team-photo-2026.jpg</code>, not <code>Team Photo 2026.jpg</code>.</li>
+    <li><strong>Web addresses work too.</strong> Any field that takes a path also accepts a full URL like <code>https://example.com/photo.jpg</code>, but files stored in your own <code>images/</code> folder are more reliable — outside links can vanish.</li>
+    <li><strong>Adding a new image</strong> is a two-part job: copy the image file into <code>images/</code> using your file explorer, then type its path into the admin field. Many admin fields show a small live preview when the path is correct.</li>
+  </ul>
+
+  <div class="callout">
+    <b>Good habit</b>
+    <p>Name images by what they are: <code>images/hero-office.jpg</code>, <code>images/logo-white.png</code>, <code>images/gallery-kitchen-01.jpg</code>. Six months from now, you'll thank yourself.</p>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="backups">
+  <span class="eyebrow">Getting Oriented</span>
+  <h2>Backups &amp; Archives</h2>
+  <p>Here's the good news: because your entire site's content lives in <strong>one file</strong> (<code>config.js</code>), backing up is almost embarrassingly easy. There are two levels of backup, and you should use both.</p>
+
+  <h3>Level 1 — Content backups (do this often)</h3>
+  <p>Every time you finish a round of edits, export <code>config.js</code> and keep a dated copy in a backup folder:</p>
+  <div class="tree">
+<span class="dir">my-website-backups/</span>
+├── config-2026-07-01.js
+├── config-2026-07-10.js
+└── config-2026-07-15.js   <span class="cm">← today's export, renamed with the date</span>
+  </div>
+  <ol class="steps">
+    <li><b>Export</b> — in the admin, click <span class="btn-demo gold">⬇ Export config.js</span>. The file lands in your Downloads folder.</li>
+    <li><b>Rename</b> — add today's date to the copy you're archiving, e.g. <code>config-2026-07-15.js</code>.</li>
+    <li><b>Store</b> — move it into a backup folder that lives somewhere safe — ideally a cloud-synced folder (Google Drive, Dropbox, OneDrive) so a broken computer can't take it with it.</li>
+  </ol>
+  <div class="callout ok">
+    <b>Why this works</b>
+    <p>Restoring from a backup takes seconds: open the admin, drag the backup file onto the <strong>“Drag &amp; drop your config.js here”</strong> zone at the top, and the entire site state from that date loads back in. Then export and publish as usual.</p>
+  </div>
+
+  <h3>Level 2 — Full-site archives (do this occasionally)</h3>
+  <p>Once in a while — and always before big changes — archive the <em>whole folder</em>, including images and documents:</p>
+  <ol class="steps">
+    <li><b>Right-click your website folder</b> in your file explorer.</li>
+    <li><b>Compress it</b> — choose “Compress to ZIP file” (Windows) or “Compress” (Mac).</li>
+    <li><b>Date it and store it</b> — rename to something like <code>my-website-2026-07-15.zip</code> and keep it with your backups. This single ZIP is a complete, restorable copy of your entire website.</li>
+  </ol>
+
+  <div class="callout warn">
+    <b>What autosave does NOT protect you from</b>
+    <p>The admin's autosave lives inside <em>one browser on one computer</em>. Clearing your browser data, switching computers, or a hard drive failure will erase it. Your exported <code>config.js</code> files are the only backups that truly count — export early, export often.</p>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="admin-basics">
+  <span class="eyebrow">Using the Admin</span>
+  <h2>Admin Basics</h2>
+  <p>Open <code>admin.html</code> in any modern browser (Chrome, Edge, Firefox, Safari). You'll see three areas: a dark <strong>top bar</strong>, a dark <strong>sidebar</strong> on the left, and the <strong>editing area</strong> in the middle.</p>
+
+  <h3>The top bar</h3>
+  <table>
+    <tr><th>Control</th><th>What it does</th></tr>
+    <tr><td>Status text</td><td>Shows “Autosaved 3:42 PM” style messages. If you've typed something and this hasn't updated within a couple of seconds, pause before closing the tab.</td></tr>
+    <tr><td>💾 Save &amp; Preview</td><td>Saves everything and opens the website in a new tab so you can see your changes. This preview is private to your browser — visitors still see the old site.</td></tr>
+    <tr><td>⬇ Export config.js</td><td>Downloads the file that makes changes real. See <a href="#publishing">Publishing Changes</a>.</td></tr>
+  </table>
+
+  <h3>The import zone</h3>
+  <p>At the top of the editing area sits a dashed box: <em>“Drag &amp; drop your config.js here to import existing settings.”</em> Use it when:</p>
+  <ul>
+    <li><strong>Starting a session on a new computer or browser</strong> — drag in your current live <code>config.js</code> so the admin picks up where the site actually is.</li>
+    <li><strong>Restoring a backup</strong> — drag in any dated backup to roll back to that moment.</li>
+  </ul>
+  <div class="callout">
+    <b>Rule of thumb</b>
+    <p>If you're ever unsure whether the admin is showing the latest version of your site, import the <code>config.js</code> that's currently sitting in your website folder. That file is always the source of truth for what's live.</p>
+  </div>
+
+  <h3>Panels, switches, and repeating items</h3>
+  <ul>
+    <li><strong>Panels</strong> — white cards with a title bar. Click the title bar to open or collapse a panel. Collapsing is just for tidiness; your data is safe either way.</li>
+    <li><strong>Toggle switches</strong> — sliding on/off switches. Some hide entire pages (e.g., the About Us page toggle); when off, that page disappears from navigation and visitors are redirected home. Your content is kept — flip it back on any time.</li>
+    <li><strong>Repeating items</strong> — anywhere you see a <span class="btn-demo ghost">+ Add …</span> button (stats, team members, locations, cards…), you can add as many items as you like. Each item has <strong>↑ ↓ arrows</strong> and a <strong>⋇ drag handle</strong> to reorder, and a <strong>×</strong> to remove it.</li>
+    <li><strong>Color fields</strong> — offer a color-picker square, a swatch button that suggests colors from your palette, and a text box for exact hex codes (like <code>#c9a84c</code>) if you have brand colors.</li>
+    <li><strong>On phones and tablets</strong> — the sidebar hides behind a floating ☰ Menu button in the corner.</li>
+  </ul>
+
+  <div class="callout warn">
+    <b>Deleting is instant</b>
+    <p>Removing an item, section, or page takes effect immediately — there is no undo button. If you're about to delete something substantial, export a <code>config.js</code> backup first, or use the section's <strong>Export JSON</strong> button (see <a href="#sections-common">How Sections Work</a>) to save just that piece.</p>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="sidebar-tour">
+  <span class="eyebrow">Using the Admin</span>
+  <h2>Sidebar Tour</h2>
+  <p>The sidebar is your map. It's organized into three groups — <strong>Content</strong> (the pages themselves), <strong>Business Info</strong> (facts about your organization), and <strong>Design</strong> (site-wide look, behavior, and publishing). Here's what lives in each entry.</p>
+
+  <h3 id="sb-business">🏛️ Business Details</h3>
+  <p>The core identity used all over the site.</p>
+  <ul>
+    <li><strong>Business Identity</strong> — business name, tagline/specialty, the tagline shown on the launch screen, a short footer bio (1–2 sentences), and an optional custom copyright line. Also holds the <strong>Google Maps API Key</strong>, which Location sections need for embedded interactive maps (leave blank to use a “open in Google Maps” link instead).</li>
+    <li><strong>Branding &amp; Logo</strong> — paths for a Primary and an optional Alternate logo (typically a light version for dark backgrounds), plus separate controls for which logo appears in the <strong>header</strong>, on the <strong>splash screen</strong>, and in the <strong>footer</strong>, each with its own height.</li>
+  </ul>
+
+  <h3 id="sb-contact">📞 Contact &amp; Hours</h3>
+  <p>Everything on the Contact page, plus a master switch to hide the page entirely.</p>
+  <ul>
+    <li><strong>Page Header</strong> — the label, headline, and subline at the top of the Contact page.</li>
+    <li><strong>Locations</strong> — add one card per office/branch with address, phone, hours, and map settings. Reorder freely.</li>
+    <li><strong>Contact Form</strong> — heading, intro, privacy note, submit-button label, and success message. The <strong>Formspree Endpoint</strong> is where submissions get emailed to you: create a free form at <a href="https://formspree.io" target="_blank">formspree.io</a> and paste the URL it gives you. Below that is a <strong>form field builder</strong> — add, reorder, and configure every field on the form (text, email, phone, dropdowns, message boxes; mark fields required or half-width).</li>
+    <li><strong>Social Media</strong> — add links that appear in the footer.</li>
+  </ul>
+
+  <h3 id="sb-search">🔍 Search</h3>
+  <p>Visitors can search your whole site from the magnifying-glass icon in the header. Here you set the placeholder text, the “no results” messages (use <code>{query}</code> to echo back what they typed), results per page, and — under <strong>Excluded Pages</strong> — toggle off any pages you'd rather keep out of search results (useful for members-only pages).</p>
+
+  <h3 id="sb-splash">🌅 Splash / Launch Screen</h3>
+  <p>The brief branded screen shown while the site loads. Choose which logo appears (or none, showing the site name as text), its size, and a <strong>display mode</strong> (logo + name + tagline, logo + tagline, or logo only). The <strong>background</strong> beneath it can be a solid color, a gradient texture, a large faint <strong>watermark</strong> logo (with size and opacity sliders — even a custom image), or a full <strong>photo</strong> with a color overlay to keep the text readable.</p>
+
+  <h3 id="sb-home">🏠 Home Page</h3>
+  <p>Three stacked parts:</p>
+  <ul>
+    <li><strong>Hero Section</strong> — the full-screen banner at the top. <em>Headline &amp; Text</em>: the headline (commas split it into separate animated lines), subline, trust bullets (one per line), and two buttons with smart links. <em>Background</em>: pick Solid Color, Single Image, Slideshow (multiple slides with crossfade/slide transitions, duration, autoplay, dots), or Video (a playlist of MP4 clips with a shared fallback image for mobile and an optional “hold on fallback” pause between loops). All backgrounds get optional <strong>Ken Burns motion</strong> (zoom/pan with a speed slider) and a color <strong>overlay</strong> with opacity to keep the text legible.</li>
+    <li><strong>Stats Bar</strong> — the row of numbers under the hero (e.g., “20+ Years”). Add stats, reorder, and toggle count-up animation.</li>
+    <li><strong>Page Sections</strong> — the full section builder for everything below the stats bar. Works identically to custom pages — see <a href="#sections-common">How Sections Work</a>.</li>
+  </ul>
+
+  <h3 id="sb-about">👥 About Us</h3>
+  <p>A page toggle, a rename field (change “About Us” to “Our Team,” “Meet the Doctor,” anything — it updates the navigation everywhere), banner label/title, and then <strong>team member profiles</strong>: add as many people as you need, each with name, credentials, photo, and biography. Below the profiles, an <strong>Additional Sections</strong> builder lets you add any section type to extend the page.</p>
+
+  <h3 id="sb-design">🎨 Colors &amp; Fonts</h3>
+  <p>The site-wide visual identity, with a live preview that updates as you pick.</p>
+  <ul>
+    <li><strong>Section Backgrounds</strong> — the Light, Alt, and Dark background colors that every section on the site chooses from, plus a lighter dark-variant used for hovers and gradients.</li>
+    <li><strong>Accent Colors</strong> — the main accent (buttons, labels, highlights), its hover shade, and a subtle pale tint.</li>
+    <li><strong>Text Colors</strong> — heading and body text colors.</li>
+    <li><strong>Chrome</strong> — the header/footer bar color only; it never affects section backgrounds.</li>
+    <li><strong>Typography</strong> — pick a display font (headlines) and body font from curated lists, or type any font name from <a href="https://fonts.google.com" target="_blank">Google Fonts</a> into the custom override fields (spelling and capitalization must match exactly). A preview box shows the pairing live.</li>
+  </ul>
+
+  <h3 id="sb-nav">🧭 Navigation</h3>
+  <p>Behavior switches for the menus: whether groups of subpages start expanded in the main nav and footer nav, and whether the header is always solid (instead of starting transparent over the hero). Also home of the <strong>Nav/Footer CTA button</strong> — the prominent call-to-action button in the header and footer, with a label and smart link.</p>
+
+  <h3 id="sb-seo">🔍 SEO &amp; Meta</h3>
+  <p>How your site appears to search engines: the meta description (aim for 150–160 characters), keywords, an optional Google Analytics ID (looks like <code>G-XXXXXXXXXX</code>), and individual browser-tab titles for the Home, About, Contact, and Privacy pages. Custom pages set their titles in their own settings.</p>
+
+  <h3 id="sb-members">🔐 Members &amp; Access</h3>
+  <p>PIN-protect the whole site or individual pages.</p>
+  <ul>
+    <li><strong>Site Access</strong> — Public, or PIN Required (the PIN pad appears when a visitor opens the menu or scrolls). Session duration controls how many days a member stays logged in.</li>
+    <li><strong>PIN Pad Appearance</strong> — every word on the lock screen is editable: headline, subtext, wrong-PIN message, max attempts, theme (Dark/Gold/Light), the lock icon shown next to protected pages, a personalized welcome screen (<code>{name}</code> inserts the member's name), and an optional “imposter” screen after too many failed attempts.</li>
+    <li><strong>Members</strong> — add each member with their own unique PIN; the site greets them by name.</li>
+    <li><strong>Page Access</strong> — per-page dropdown: public, or locked. Locked pages show the lock icon in the nav for guests.</li>
+  </ul>
+
+  <h3 id="sb-export">📤 Export</h3>
+  <p>Preview the generated <code>config.js</code> as text, download it, and read the built-in deployment reminder. Full walkthrough in <a href="#publishing">Publishing Changes</a>.</p>
+</section>
+
+<!-- ============================================================ -->
+<section id="pages">
+  <span class="eyebrow">Building the Site</span>
+  <h2>Pages &amp; Navigation</h2>
+  <p>Beyond the built-in Home, About, and Contact pages, you can create unlimited <strong>custom pages</strong>. Each becomes an entry in the sidebar and in your site's navigation menus.</p>
+
+  <h3>Creating a page</h3>
+  <ol class="steps">
+    <li><b>Click “＋ Add page”</b> at the bottom of the Content group in the sidebar. A new page appears instantly.</li>
+    <li><b>Open its Page Settings panel</b> and give it an emoji (its nav icon), a Navigation Label (e.g., “Estate Planning”), and confirm the URL slug.</li>
+    <li><b>Add sections</b> using the builder below — that's the entire body of the page. See <a href="#sections-common">How Sections Work</a>.</li>
+  </ol>
+
+  <h3>Page settings explained</h3>
+  <table>
+    <tr><th>Setting</th><th>What it does</th></tr>
+    <tr><td>Show in navigation</td><td>The master switch. Off = the page is hidden from all menus and visitors who try its address are sent home. Content is kept.</td></tr>
+    <tr><td>Page Emoji</td><td>The little icon shown beside the page name in menus and the admin sidebar.</td></tr>
+    <tr><td>Navigation Label</td><td>The page's name as shown in menus.</td></tr>
+    <tr><td>URL Slug</td><td>The page's web address ending, e.g. <code>estate-planning</code>. It's generated automatically from the label, but you can set it manually.</td></tr>
+    <tr><td>Parent Page</td><td>Nest this page under another to create a dropdown of subpages in the navigation. (A page that already has subpages can't itself become a subpage.)</td></tr>
+    <tr><td>Hide from main / footer nav</td><td>Keep the page reachable by link, but out of one or both menus — handy for landing pages you share directly.</td></tr>
+    <tr><td>Organizer-only</td><td>For a parent page: makes its nav entry a pure dropdown label that isn't clickable itself.</td></tr>
+    <tr><td>Access</td><td>Public or PIN-locked — mirrors the Members &amp; Access page settings.</td></tr>
+  </table>
+
+  <div class="callout warn">
+    <b>Careful with slugs</b>
+    <p>Changing a page's URL slug <strong>after your site is live</strong> breaks any links to the old address — bookmarks, links you emailed out, search engine results. Settle on slugs before you promote the page, and avoid changing them afterward.</p>
+  </div>
+
+  <h3>Ordering and nesting</h3>
+  <ul>
+    <li><strong>Reorder pages</strong> by grabbing the drag handle next to a page's name in the admin sidebar and dropping it where you want. Moving a parent brings its subpages along with it.</li>
+    <li><strong>Subpages</strong> reorder among their siblings the same way.</li>
+    <li><strong>Deleting a page</strong> — the × Delete Page button at the top of the page's panel removes it and all of its sections. Export a backup first if in doubt.</li>
+  </ul>
+</section>
+
+<!-- ============================================================ -->
+<section id="sections-common">
+  <span class="eyebrow">Building the Site</span>
+  <h2>How Sections Work</h2>
+  <p>Sections are the building blocks of every page. A page is simply a stack of sections, top to bottom — a text block, then a card grid, then a gallery, then a call-to-action banner. There are over 30 section types (fully catalogued in the <a href="#g-content">Section Library</a>), but they all share the same controls, so once you've configured one, you can configure any of them.</p>
+
+  <h3>Adding a section</h3>
+  <p>At the bottom of any page's section list you'll find a dropdown of section types, a <span class="btn-demo gold">+ Add Section</span> button, and an <span class="btn-demo ghost">⊕ Import</span> button. Pick a type, click add, and the new section card appears at the bottom of the list — click its header to expand and fill it in.</p>
+
+  <h3>Anatomy of a section card</h3>
+  <p>Every section card's header bar carries the same shared controls:</p>
+  <table>
+    <tr><th>Control</th><th>What it does</th></tr>
+    <tr><td>Section Label</td><td>The small gold eyebrow text shown above the section's heading on the live site (e.g., “OUR SERVICES”). Optional.</td></tr>
+    <tr><td>Background</td><td>Choose <strong>Light</strong>, <strong>Alt</strong>, or <strong>Dark</strong> (the three palette backgrounds from Colors &amp; Fonts), or <strong>Inherit</strong> to continue whatever the previous section uses. Alternating Light/Alt gives pages gentle rhythm; Dark makes a section stand out.</td></tr>
+    <tr><td># Anchor ID</td><td>A short name (like <code>pricing</code>) that lets buttons and links scroll directly to this section — it powers every “Scroll to Section” dropdown across the admin, and helps search find the section.</td></tr>
+    <tr><td>↑ ↓ and drag</td><td>Move the section up or down the page. You can also drag the whole card by its handle.</td></tr>
+    <tr><td>⧉ Duplicate</td><td>Makes an exact copy right below — great for repeating a layout you've already perfected.</td></tr>
+    <tr><td>Export JSON</td><td>Downloads just this one section as a small text file — a mini-backup, and the way sections travel between pages or between whole sites.</td></tr>
+    <tr><td>Copy to page</td><td>Sends a copy of the section directly to another page.</td></tr>
+    <tr><td>× Remove</td><td>Deletes the section immediately. No undo — Export JSON first if unsure.</td></tr>
+  </table>
+
+  <h3>Smart links — used everywhere</h3>
+  <p>Buttons, cards, and list items across nearly every section type share one linking system. Wherever you see a <strong>Link Type</strong> dropdown:</p>
+  <ul>
+    <li><strong>None</strong> — no link (buttons are hidden).</li>
+    <li><strong>Internal Page</strong> — pick any page of your own site from a dropdown, plus an optional <strong>Scroll to Section</strong> target (populated from the Anchor IDs you've set).</li>
+    <li><strong>External URL</strong> — any web address, e.g. <code>https://example.com</code>.</li>
+    <li><strong>File / Document</strong> — a file from your <code>files/</code> folder, e.g. <code>files/intake-form.pdf</code>.</li>
+  </ul>
+
+  <h3>Import / Export sections</h3>
+  <p>The <strong>⊕ Import</strong> button next to “Add Section” accepts a section JSON file exported earlier. Together with Export JSON this gives you a personal library of reusable, pre-styled sections: export your best CTA banner once, import it onto every new page in seconds.</p>
+
+  <div class="callout">
+    <b>Writing text in sections</b>
+    <p>In multi-paragraph text areas, press Enter twice (a blank line) to start a new paragraph. Most body fields also accept simple HTML if you know it, but you never need it — the Rich Text Block section offers bold, italics, lists, and headings with toolbar buttons.</p>
+  </div>
+</section>
+<!-- ============================================================ -->
+<section id="g-content">
+  <span class="eyebrow">Section Library</span>
+  <h2>Customizable Page Sections</h2>
+  <p>Every page on your site — Home, About Us, and every custom page you create — is just a stack of sections, one after another. There's no separate "homepage builder" or "custom page builder" hiding underneath; it's the same 33 section types and the same shared controls everywhere, which means what you learn in this chapter works identically no matter which page you're standing in.</p>
+  <p>That makes this the workhorse chapter of the whole manual. Business Details and Design get set up once and mostly left alone; sections are what you'll open the admin for again and again — adding a new service, updating a gallery, building an entire new page from scratch. Knowing this reference well is what turns "I want to add something to the site" into a five-minute task instead of a guessing game.</p>
+  <div class="callout">
+    <b>How to use this chapter</b>
+    <p>You don't need to read it start to finish. Each of the 8 groups below opens with a short writeup — skim those first to find the family of section that fits what you're trying to add. Then jump to that specific type, click "Fields &amp; Controls" to expand its field list, and use it as a checklist while you build. Bookmark this page (or the sidebar link) and come back to it any time you're reaching for a new section.</p>
+  </div>
+
+  <div class="group-head"><h3>🗒️ Content &amp; Text</h3><span class="count">4 types</span></div>
+  <p class="group-intro">This is where most pages start and often where they end — plain writing, well presented. Reach for this group whenever the content is fundamentally a paragraph or two: an explanation, a policy, an origin story, a detailed answer to "what does this actually involve." The four types differ mainly in how much visual structure they add: Text Block is bare prose, Two Column pairs it with a photo, Rich Text adds real formatting for longer pieces, and Hero Section turns an opening statement into a full banner moment. A good rule of thumb: if you're tempted to write more than 3–4 sentences inside a card or bullet item elsewhere in the admin, that content probably belongs here instead.</p>
+
+  <div class="stype"><div class="stype-head"><span class="stype-name">🗒️ Text Block</span><span class="stype-tag">Simplest</span></div>
+    <div class="stype-body">
+      <p>A heading and paragraphs. The workhorse for plain written content.</p>
+      <details class="fields"><summary>Fields &amp; Controls</summary><div class="fbody"><ul class="flist"><li><b>Heading</b><span class="fkind">text</span></li><li><b>Body Text</b><span class="fkind">text area</span><span class="fnote">Blank lines start new paragraphs; simple HTML allowed.</span></li></ul></div></details>
+      <p class="tip">Reach for Rich Text Block instead when you need bold, lists, or headings inside the text.</p>
+    </div>
+  </div>
+
+  <div class="stype"><div class="stype-head"><span class="stype-name">🗒️ Hero Section</span><span class="stype-tag">Page banner</span></div>
+    <div class="stype-body">
+      <p>A large banner with a background image, slideshow, or video — like the homepage hero, but placeable on any page. Great as the opening statement of a custom page.</p>
+      <details class="fields"><summary>Fields &amp; Controls</summary><div class="fbody"><div class="fgroup">Text</div><ul class="flist"><li><b>Heading</b><span class="fkind">text</span></li><li><b>Title Max Width</b><span class="fkind">number (px)</span><span class="fnote">With a Full Width toggle to ignore the limit.</span></li><li><b>Subtitle</b><span class="fkind">text area</span></li><li><b>Subtitle Max Width</b><span class="fkind">number (px)</span><span class="fnote">With a Full Width toggle.</span></li><li><b>Text Color</b><span class="fkind">dropdown</span><span class="fopts">White / Black / Chrome Background Color / Light Background Color / Match Section Background</span></li><li><b>Vertical Position</b><span class="fkind">dropdown</span><span class="fopts">Top / Center / Bottom</span></li><li><b>Horizontal Position</b><span class="fkind">dropdown</span><span class="fopts">Left / Center / Right</span></li></ul><div class="fgroup">Size &amp; Motion</div><ul class="flist"><li><b>Height</b><span class="fkind">dropdown</span><span class="fopts">Full Viewport (100vh) / Page Banner (shorter) / Custom Height (px)</span></li><li><b>Custom Height</b><span class="fkind">number (px)</span><span class="fnote">250px+ fits a heading, subtitle, and link comfortably; 100px minimum.</span></li><li><b>Entrance Animation</b><span class="fkind">dropdown</span><span class="fopts">Fade Up (default) / Media from Left, Text from Right / Media from Right, Text from Left</span></li><li><b>Slide Distance</b><span class="fkind">number (px)</span><span class="fnote">How far the slide-in animations travel.</span></li><li><b>Bottom Spacing</b><span class="fkind">toggle</span><span class="fnote">Adds a small gap before the next section — off by default so heroes can stack flush.</span></li></ul><div class="fgroup">Background</div><ul class="flist"><li><b>Background Type</b><span class="fkind">dropdown</span><span class="fopts">Single Image / Slideshow / Video</span></li><li><b>Image Path</b><span class="fkind">path</span><span class="fnote">For Single Image mode; includes a live preview.</span></li><li><b>Image Focus Position</b><span class="fkind">sliders</span><span class="fnote">Choose the focal point of the crop — with a separate Mobile Focus Position for narrow phone screens.</span></li><li><b>Slides</b><span class="fkind">repeating items</span><span class="fnote">For Slideshow mode: add images, set Slide Duration (seconds), plus Autoplay and Show Dots toggles.</span></li><li><b>Video MP4 Path</b><span class="fkind">path</span></li><li><b>Video WebM Path</b><span class="fkind">path</span><span class="fnote">Optional alternate format.</span></li><li><b>Poster / Fallback Image</b><span class="fkind">path</span><span class="fnote">Shown while the video loads and on devices that can’t autoplay it.</span></li></ul><div class="fgroup">Overlay &amp; Finish</div><ul class="flist"><li><b>Overlay Color</b><span class="fkind">color</span></li><li><b>Overlay Opacity</b><span class="fkind">slider (0–1)</span></li><li><b>Bottom Shadow</b><span class="fkind">toggle</span><span class="fnote">A depth effect along the bottom edge, tinted with the Overlay Color.</span></li></ul><div class="fgroup">Link (optional)</div><ul class="flist"><li><b>Link Style</b><span class="fkind">dropdown</span><span class="fopts">Text Link / Whole Image Clickable</span></li><li><b>Link</b><span class="fkind">smart link</span><span class="fopts">None / Internal Page (+ optional Scroll to Section) / External URL / File &amp; Document</span></li></ul></div></details>
+      <p class="tip">Use “Page Banner (shorter)” height for interior pages — full-viewport heroes are best saved for the homepage and major landing pages.</p>
+    </div>
+  </div>
+
+  <div class="stype"><div class="stype-head"><span class="stype-name">🗒️ Two Column (Text + Image)</span><span class="stype-tag">Text beside photo</span></div>
+    <div class="stype-body">
+      <p>Text on one side, an image on the other. The classic “about this service” layout.</p>
+      <details class="fields"><summary>Fields &amp; Controls</summary><div class="fbody"><ul class="flist"><li><b>Heading</b><span class="fkind">text</span></li><li><b>Body Text</b><span class="fkind">text area</span></li><li><b>Image Path / URL</b><span class="fkind">path</span></li><li><b>Image Max Width</b><span class="fkind">number (px)</span></li><li><b>Image Position</b><span class="fkind">dropdown</span><span class="fopts">Image Left / Image Right</span></li><li><b>CTA Button</b><span class="fkind">smart link</span><span class="fopts">None / Internal Page (+ optional Scroll to Section) / External URL / File &amp; Document</span><span class="fnote">Optional button below the text.</span></li></ul></div></details>
+      <p class="tip">Alternate image-left and image-right down a page for a pleasing zig-zag rhythm.</p>
+    </div>
+  </div>
+
+  <div class="stype"><div class="stype-head"><span class="stype-name">🗒️ Rich Text Block</span><span class="stype-tag">Formatted writing</span></div>
+    <div class="stype-body">
+      <p>A word-processor-style editor with a toolbar: bold, italic, underline, bullet and numbered lists, two heading levels, four text sizes, and clear-formatting. The right choice for long-form writing like articles, policies, or detailed explanations.</p>
+      <details class="fields"><summary>Fields &amp; Controls</summary><div class="fbody"><ul class="flist"><li><b>Rich Text</b><span class="fkind">rich text editor</span><span class="fnote">Toolbar: bold, italic, underline, bullet &amp; numbered lists, H1/H2 headings, four text sizes (S/M/L/XL), clear formatting.</span></li><li><b>Image Position</b><span class="fkind">dropdown</span><span class="fopts">No Image / Float Left / Float Right</span></li><li><b>Image Size</b><span class="fkind">dropdown</span><span class="fopts">Small (~30%) / Medium (~40%) / Large (~50%)</span></li><li><b>Image Path</b><span class="fkind">path</span></li><li><b>Image Caption</b><span class="fkind">text</span><span class="fnote">Optional.</span></li></ul></div></details>
+      <p class="tip">This section can inherit the previous section's background seamlessly, so a Rich Text Block reads as a natural continuation of the section above it.</p>
+    </div>
+  </div>
+
+  <div class="group-head" id="g-cards"><h3>🃏 Cards &amp; Grids</h3><span class="count">5 types</span></div>
+  <p class="group-intro">Use this group when you have several <em>comparable things</em> — services, packages, differentiators, plans — and want a visitor to scan and compare them at a glance rather than read them in sequence. The five types trade off information density against interactivity: Feature Cards and Services Grid work well for "here's what we offer" overviews (Services Grid is the better pick when each item needs a longer explanation, since the detail hides in a popup until clicked); Tier Cards and Flip Cards both suit pricing or package comparisons, with Flip Cards adding a bit of showmanship via the hover reveal; Rotating Cards is the odd one out — a slow-moving carousel that's better for a rotating gallery of projects, testimonials, or team highlights than for anything a visitor needs to compare side by side. Keep card counts consistent with your column count (3 cards in 3 columns, not 4) for a tidy grid.</p>
+
+  <div class="stype"><div class="stype-head"><span class="stype-name">🃏 Feature Cards</span><span class="stype-tag">Numbered highlights</span></div>
+    <div class="stype-body">
+      <p>A grid of cards each led by a large number (01, 02, …) or an image. Perfect for “why choose us” points or service highlights.</p>
+      <details class="fields"><summary>Fields &amp; Controls</summary><div class="fbody"><div class="fgroup">Section</div><ul class="flist"><li><b>Heading</b><span class="fkind">text</span></li><li><b>Body / Subtext</b><span class="fkind">text area</span></li><li><b>Badge Number + Badge Label</b><span class="fkind">text</span><span class="fnote">Optional corner badge, e.g. “20+ Years”.</span></li><li><b>Max Columns</b><span class="fkind">dropdown</span><span class="fopts">1 / 2 / 3 / 4 Columns</span><span class="fnote">1 Column unlocks a Full Width toggle.</span></li></ul><div class="fgroup">Per Card</div><ul class="flist"><li><b>Card Number</b><span class="fkind">text</span><span class="fnote">Auto-fills 01, 02… but accepts any text or emoji.</span></li><li><b>Title</b><span class="fkind">text</span></li><li><b>Image Path</b><span class="fkind">path</span><span class="fnote">Optional — replaces the number.</span></li><li><b>Image Size</b><span class="fkind">dropdown</span><span class="fopts">Thumbnail (80px) / Small (200px) / Full Width</span></li><li><b>Description</b><span class="fkind">text area</span></li><li><b>Link Label + Link</b><span class="fkind">smart link</span><span class="fopts">None / Internal Page (+ optional Scroll to Section) / External URL / File &amp; Document</span><span class="fnote">Optional.</span></li></ul></div></details>
+      <p class="tip">Card numbers auto-fill (01, 02…) but accept anything — try short words or emoji.</p>
+    </div>
+  </div>
+
+  <div class="stype"><div class="stype-head"><span class="stype-name">🃏 Services Grid</span><span class="stype-tag">Click for detail</span></div>
+    <div class="stype-body">
+      <p>Cards with an icon or image, a short description — and a hidden longer <strong>Detail</strong> that opens in a popup when a visitor clicks. Fit a lot of information into a tidy grid.</p>
+      <details class="fields"><summary>Fields &amp; Controls</summary><div class="fbody"><div class="fgroup">Section</div><ul class="flist"><li><b>Heading</b><span class="fkind">text</span></li><li><b>Subtitle</b><span class="fkind">text area</span></li><li><b>Max Columns</b><span class="fkind">dropdown</span><span class="fopts">1 / 2 / 3 / 4 Columns</span><span class="fnote">1 Column unlocks a Full Width toggle.</span></li></ul><div class="fgroup">Per Card</div><ul class="flist"><li><b>Icon</b><span class="fkind">emoji</span></li><li><b>Image Path</b><span class="fkind">path</span><span class="fnote">Optional — replaces the icon.</span></li><li><b>Image Size</b><span class="fkind">dropdown</span><span class="fopts">Thumbnail (48px) / Small (80px) / Full Width</span></li><li><b>Title</b><span class="fkind">text</span></li><li><b>Short Description</b><span class="fkind">text area</span></li><li><b>Detail</b><span class="fkind">text area</span><span class="fnote">The longer text shown in the click-to-open popup.</span></li><li><b>Button Label + Link</b><span class="fkind">smart link</span><span class="fopts">None / Internal Page (+ optional Scroll to Section) / External URL / File &amp; Document</span></li></ul></div></details>
+      <p class="tip">The popup automatically matches the color mode of the card that opened it.</p>
+    </div>
+  </div>
+
+  <div class="stype"><div class="stype-head"><span class="stype-name">🃏 Flip Cards</span><span class="stype-tag">Front &amp; back</span></div>
+    <div class="stype-body">
+      <p>Cards that flip over on hover or tap to reveal more on the back — pricing-style cards with a playful twist.</p>
+      <details class="fields"><summary>Fields &amp; Controls</summary><div class="fbody"><div class="fgroup">Section</div><ul class="flist"><li><b>Heading</b><span class="fkind">text</span><span class="fnote">Optional.</span></li><li><b>Subtitle</b><span class="fkind">text area</span><span class="fnote">Optional.</span></li><li><b>Max Columns</b><span class="fkind">dropdown</span><span class="fopts">1 / 2 / 3 / 4 Columns</span></li><li><b>Group Header</b><span class="fkind">checkbox per card</span><span class="fnote">Turns a card row into a labeled divider between groups.</span></li></ul><div class="fgroup">Per Card — Front</div><ul class="flist"><li><b>Card Name</b><span class="fkind">text</span></li><li><b>Tagline</b><span class="fkind">text</span><span class="fnote">Optional.</span></li><li><b>Price + Billing Period</b><span class="fkind">text</span></li><li><b>Icon / Emoji</b><span class="fkind">emoji</span><span class="fnote">Optional.</span></li><li><b>Image Path</b><span class="fkind">path</span><span class="fnote">Optional.</span></li><li><b>Image Size</b><span class="fkind">dropdown</span><span class="fopts">Small (120px) / Medium (200px) / Large (280px) / Square (1:1)</span></li><li><b>Ribbon Label</b><span class="fkind">text</span><span class="fnote">Optional corner ribbon, e.g. “Most Popular”.</span></li><li><b>Card Style</b><span class="fkind">dropdown</span><span class="fopts">Light / Alt / Dark / Gold</span></li><li><b>Feature Rows</b><span class="fkind">repeating items</span><span class="fopts">✓ Yes / ✗ No / ~ Part / —</span><span class="fnote">Each row: a feature label + one of these marks.</span></li></ul><div class="fgroup">Per Card — Back</div><ul class="flist"><li><b>Details</b><span class="fkind">text area</span><span class="fnote">The reveal text on the card’s back.</span></li><li><b>Button Label + Link</b><span class="fkind">smart link</span><span class="fopts">None / Internal Page (+ optional Scroll to Section) / External URL / File &amp; Document</span></li><li><b>Note / Fine Print</b><span class="fkind">text</span><span class="fnote">Optional.</span></li></ul></div></details>
+      <p class="tip">The ribbon label (“Most Popular”) is a strong nudge — use it on exactly one card.</p>
+    </div>
+  </div>
+
+  <div class="stype"><div class="stype-head"><span class="stype-name">🃏 Rotating Cards</span><span class="stype-tag">Carousel</span></div>
+    <div class="stype-body">
+      <p>A carousel of image cards that rotate automatically — a slideshow that still reads as tidy cards.</p>
+      <details class="fields"><summary>Fields &amp; Controls</summary><div class="fbody"><div class="fgroup">Section</div><ul class="flist"><li><b>Heading</b><span class="fkind">text</span><span class="fnote">Optional.</span></li><li><b>Subtitle</b><span class="fkind">text area</span><span class="fnote">Optional.</span></li><li><b>Cards Visible (desktop)</b><span class="fkind">dropdown</span><span class="fopts">1 / 2 / 3 Cards</span></li><li><b>Card Height</b><span class="fkind">number (px)</span></li><li><b>Autoplay Speed</b><span class="fkind">number (seconds)</span></li></ul><div class="fgroup">Per Card</div><ul class="flist"><li><b>Title</b><span class="fkind">text</span></li><li><b>Image Path</b><span class="fkind">path</span><span class="fnote">Optional — with a Fallback Background Color if no image.</span></li><li><b>Image Overlay</b><span class="fkind">toggle</span><span class="fnote">Darkens the image for text readability.</span></li><li><b>Click to Zoom</b><span class="fkind">toggle</span><span class="fnote">Lets visitors view the image larger.</span></li><li><b>Body Text</b><span class="fkind">text area</span></li><li><b>Text Color</b><span class="fkind">dropdown</span><span class="fopts">Dark (navy) / Light (white)</span></li><li><b>Button Label + Link</b><span class="fkind">smart link</span><span class="fopts">None / Internal Page (+ optional Scroll to Section) / External URL / File &amp; Document</span><span class="fnote">Optional.</span></li></ul></div></details>
+      <p class="tip">Keep card text brief — visitors only see each card for a few seconds per rotation.</p>
+    </div>
+  </div>
+
+  <div class="stype"><div class="stype-head"><span class="stype-name">🃏 Tier Cards</span><span class="stype-tag">Pricing</span></div>
+    <div class="stype-body">
+      <p>Classic side-by-side pricing/package comparison cards with feature checklists.</p>
+      <details class="fields"><summary>Fields &amp; Controls</summary><div class="fbody"><div class="fgroup">Section</div><ul class="flist"><li><b>Heading</b><span class="fkind">text</span><span class="fnote">Optional.</span></li><li><b>Subtitle</b><span class="fkind">text area</span><span class="fnote">Optional.</span></li><li><b>Max Columns</b><span class="fkind">dropdown</span><span class="fopts">1 / 2 / 3 / 4 Columns</span></li><li><b>Group Header</b><span class="fkind">checkbox per card</span><span class="fnote">Turns a card row into a labeled divider between groups.</span></li></ul><div class="fgroup">Per Tier</div><ul class="flist"><li><b>Tier Name</b><span class="fkind">text</span></li><li><b>Tagline</b><span class="fkind">text</span><span class="fnote">Optional.</span></li><li><b>Price + Billing Period</b><span class="fkind">text</span></li><li><b>Icon / Emoji</b><span class="fkind">emoji</span><span class="fnote">Optional.</span></li><li><b>Image Path</b><span class="fkind">path</span><span class="fnote">Optional.</span></li><li><b>Image Size</b><span class="fkind">dropdown</span><span class="fopts">Small (120px) / Medium (200px) / Large (280px) / Square (1:1)</span></li><li><b>Ribbon Label</b><span class="fkind">text</span><span class="fnote">Optional.</span></li><li><b>Card Style</b><span class="fkind">dropdown</span><span class="fopts">Light / Alt / Dark / Gold</span></li><li><b>Featured Card</b><span class="fkind">checkbox</span><span class="fnote">Visually emphasizes one tier.</span></li><li><b>Feature Rows</b><span class="fkind">repeating items</span><span class="fopts">✓ Yes / ✗ No / ~ Part / —</span><span class="fnote">Keep the feature list identical across tiers; vary only the marks.</span></li><li><b>Button Label + Link</b><span class="fkind">smart link</span><span class="fopts">None / Internal Page (+ optional Scroll to Section) / External URL / File &amp; Document</span></li><li><b>Note / Fine Print</b><span class="fkind">text</span><span class="fnote">Optional.</span></li></ul></div></details>
+      <p class="tip">Feature rows align across cards, so keep the list of features identical between tiers and vary only the ✓/✗ marks.</p>
+    </div>
+  </div>
+
+  <div class="group-head" id="g-process"><h3>📋 Process &amp; Information</h3><span class="count">5 types</span></div>
+  <p class="group-intro">This group answers "what happens, and in what order" or "what do I need to know before I start." Process Steps and Timeline both convey sequence, but for different senses of time — Steps for a repeatable procedure ("first you do X, then Y"), Timeline for history or a schedule with real dates attached ("this happened in March, this in June"). Document Checklist and Bullet List cover information that isn't sequential at all, just grouped: intake requirements, feature lists, things to know. Jurisdiction Notice deserves special mention — it's built for the single most important caveat on a page, styled to be noticed rather than skimmed past, ideal for service-area limits, licensing statements, or "this does not constitute legal/medical advice" language.</p>
+
+  <div class="stype"><div class="stype-head"><span class="stype-name">📋 Process Steps</span><span class="stype-tag">Numbered sequence</span></div>
+    <div class="stype-body">
+      <p>“How it works” in numbered steps.</p>
+      <details class="fields"><summary>Fields &amp; Controls</summary><div class="fbody"><div class="fgroup">Section</div><ul class="flist"><li><b>Heading</b><span class="fkind">text</span></li><li><b>Subtitle</b><span class="fkind">text area</span></li></ul><div class="fgroup">Per Step</div><ul class="flist"><li><b>Title</b><span class="fkind">text</span></li><li><b>Image Path</b><span class="fkind">path</span><span class="fnote">Optional — replaces the step number.</span></li><li><b>Image Size</b><span class="fkind">dropdown</span><span class="fopts">Thumbnail (48px) / Small (80px) / Full Width</span></li><li><b>Description</b><span class="fkind">text area</span></li><li><b>Link Label + Link</b><span class="fkind">smart link</span><span class="fopts">None / Internal Page (+ optional Scroll to Section) / External URL / File &amp; Document</span><span class="fnote">Optional.</span></li></ul></div></details>
+    </div>
+  </div>
+
+  <div class="stype"><div class="stype-head"><span class="stype-name">📋 Timeline</span><span class="stype-tag">Chronological</span></div>
+    <div class="stype-body">
+      <p>Events along a vertical line — company history, project phases, case milestones.</p>
+      <details class="fields"><summary>Fields &amp; Controls</summary><div class="fbody"><div class="fgroup">Section</div><ul class="flist"><li><b>Heading</b><span class="fkind">text</span></li><li><b>Subtitle</b><span class="fkind">text area</span></li></ul><div class="fgroup">Per Event</div><ul class="flist"><li><b>Date / Phase</b><span class="fkind">text</span></li><li><b>Title</b><span class="fkind">text</span></li><li><b>Dot Label</b><span class="fkind">text</span><span class="fnote">Optional — shown inside the timeline dot, e.g. 2024, Q1, or an emoji.</span></li><li><b>Description</b><span class="fkind">text area</span></li><li><b>Link Label + Link</b><span class="fkind">smart link</span><span class="fopts">None / Internal Page (+ optional Scroll to Section) / External URL / File &amp; Document</span><span class="fnote">Optional.</span></li></ul></div></details>
+    </div>
+  </div>
+
+  <div class="stype"><div class="stype-head"><span class="stype-name">📋 Document Checklist</span><span class="stype-tag">What to bring</span></div>
+    <div class="stype-body">
+      <p>Categorized checklists — e.g., “documents to bring to your first appointment.”</p>
+      <details class="fields"><summary>Fields &amp; Controls</summary><div class="fbody"><div class="fgroup">Section</div><ul class="flist"><li><b>Heading</b><span class="fkind">text</span></li><li><b>Subtitle</b><span class="fkind">text area</span></li></ul><div class="fgroup">Per Category</div><ul class="flist"><li><b>Category Title</b><span class="fkind">text</span></li><li><b>Items</b><span class="fkind">text area</span><span class="fnote">One checklist item per line.</span></li></ul></div></details>
+    </div>
+  </div>
+
+  <div class="stype"><div class="stype-head"><span class="stype-name">📋 Bullet List</span><span class="stype-tag">Icon list</span></div>
+    <div class="stype-body">
+      <p>A clean list where each item gets an emoji icon, a bold title, and a description.</p>
+      <details class="fields"><summary>Fields &amp; Controls</summary><div class="fbody"><div class="fgroup">Section</div><ul class="flist"><li><b>Heading</b><span class="fkind">text</span></li><li><b>Subtitle</b><span class="fkind">text area</span></li></ul><div class="fgroup">Per Item</div><ul class="flist"><li><b>Icon</b><span class="fkind">emoji</span><span class="fnote">Defaults to ✓.</span></li><li><b>Title</b><span class="fkind">text</span></li><li><b>Description</b><span class="fkind">text area</span></li><li><b>Link</b><span class="fkind">smart link</span><span class="fopts">None / Internal Page (+ optional Scroll to Section) / External URL / File &amp; Document</span><span class="fnote">Optional.</span></li></ul></div></details>
+    </div>
+  </div>
+
+  <div class="stype"><div class="stype-head"><span class="stype-name">📋 Resources / Blog Cards</span><span class="stype-tag">Articles</span></div>
+    <div class="stype-body">
+      <p>Article-preview cards with a tag, date, and read time — for guides, news, or downloadable resources.</p>
+      <details class="fields"><summary>Fields &amp; Controls</summary><div class="fbody"><div class="fgroup">Section</div><ul class="flist"><li><b>Heading</b><span class="fkind">text</span></li><li><b>Subtitle</b><span class="fkind">text area</span></li></ul><div class="fgroup">Per Card</div><ul class="flist"><li><b>Emoji Icon</b><span class="fkind">emoji</span><span class="fnote">The card header — or use an Image instead.</span></li><li><b>Image Path / URL</b><span class="fkind">path</span><span class="fnote">Optional — replaces the emoji header.</span></li><li><b>Tag / Category</b><span class="fkind">text</span></li><li><b>Title</b><span class="fkind">text</span></li><li><b>Excerpt</b><span class="fkind">text area</span></li><li><b>Date</b><span class="fkind">text</span></li><li><b>Read Time</b><span class="fkind">text</span></li><li><b>CTA Button Label + Link</b><span class="fkind">smart link</span><span class="fopts">None / Internal Page (+ optional Scroll to Section) / External URL / File &amp; Document</span></li></ul></div></details>
+      <p class="tip">Link each card to its own custom page for full articles — or straight to a PDF in <code>files/</code>.</p>
+    </div>
+  </div>
+
+  <div class="group-head" id="g-data"><h3>📊 Data &amp; Structure</h3><span class="count">4 types</span></div>
+  <p class="group-intro">Reach for this group when the content is genuinely tabular or numeric — the kind of information a visitor scans for a specific value rather than reads start to finish. Stats Bar is the exception in tone (it's more marketing than data — big confident numbers like "500+ Clients Served"), while Table, Data Table, and Jurisdiction Notice are closer to reference material. Data Table's three-column shape with a note-per-row and disclaimer line was built with fee schedules and price lists in mind, but works equally well for service comparisons or specification sheets. If your rows would look cramped or repetitive as prose, they belong here instead — a table lets a visitor's eye jump straight to the row they care about.</p>
+
+  <div class="stype"><div class="stype-head"><span class="stype-name">📊 Stats Bar</span><span class="stype-tag">Big numbers</span></div>
+    <div class="stype-body">
+      <p>The row of headline figures (“500+ Cases Won”) — the same component as the homepage stats bar, placeable anywhere.</p>
+      <details class="fields"><summary>Fields &amp; Controls</summary><div class="fbody"><div class="fgroup">Section</div><ul class="flist"><li><b>Animate Numbers &amp; Text</b><span class="fkind">toggle</span><span class="fnote">Section-wide count-up animation.</span></li></ul><div class="fgroup">Per Stat</div><ul class="flist"><li><b>Number / Value</b><span class="fkind">text</span></li><li><b>Label</b><span class="fkind">text</span></li><li><b>Animate This Stat</b><span class="fkind">toggle</span><span class="fnote">Per-stat override.</span></li></ul></div></details>
+    </div>
+  </div>
+
+  <div class="stype"><div class="stype-head"><span class="stype-name">📊 Table</span><span class="stype-tag">General table</span></div>
+    <div class="stype-body">
+      <p>A general-purpose 2- or 3-column table with styled headers.</p>
+      <details class="fields"><summary>Fields &amp; Controls</summary><div class="fbody"><div class="fgroup">Section</div><ul class="flist"><li><b>Heading</b><span class="fkind">text</span><span class="fnote">Optional.</span></li><li><b>Subtitle</b><span class="fkind">text area</span><span class="fnote">Optional.</span></li><li><b>Columns</b><span class="fkind">dropdown</span><span class="fopts">2 Columns / 3 Columns</span></li><li><b>First Column as Row Header</b><span class="fkind">toggle</span><span class="fnote">Styles the first column like a header.</span></li><li><b>Stack as Cards on Mobile</b><span class="fkind">toggle</span><span class="fnote">Rows become cards on small screens.</span></li></ul><div class="fgroup">Per Column</div><ul class="flist"><li><b>Column Header</b><span class="fkind">text</span></li><li><b>Column Style</b><span class="fkind">dropdown</span><span class="fopts">Normal / Bold / Large / Bold + Large</span></li></ul><div class="fgroup">Rows</div><ul class="flist"><li><b>Rows</b><span class="fkind">repeating items</span><span class="fnote">One cell per column; add, reorder, and remove rows freely.</span></li></ul></div></details>
+    </div>
+  </div>
+
+  <div class="stype"><div class="stype-head"><span class="stype-name">📊 Data Table</span><span class="stype-tag">Fees &amp; prices</span></div>
+    <div class="stype-body">
+      <p>A 3-column table designed for fee schedules and price lists, with per-row notes and a disclaimer line.</p>
+      <details class="fields"><summary>Fields &amp; Controls</summary><div class="fbody"><div class="fgroup">Section</div><ul class="flist"><li><b>Heading</b><span class="fkind">text</span></li><li><b>Subtitle</b><span class="fkind">text area</span></li><li><b>Column 1 / 2 / 3 Labels</b><span class="fkind">text</span></li><li><b>Stack as Cards on Mobile</b><span class="fkind">toggle</span></li><li><b>Disclaimer</b><span class="fkind">text</span><span class="fnote">Small print shown below the table.</span></li></ul><div class="fgroup">Per Row</div><ul class="flist"><li><b>Cell Values</b><span class="fkind">text</span><span class="fnote">One value per column.</span></li><li><b>Note</b><span class="fkind">text</span><span class="fnote">Small text under the row. Optional.</span></li><li><b>Link Label + Link</b><span class="fkind">smart link</span><span class="fopts">None / Internal Page (+ optional Scroll to Section) / External URL / File &amp; Document</span><span class="fnote">Optional.</span></li></ul></div></details>
+    </div>
+  </div>
+
+  <div class="stype"><div class="stype-head"><span class="stype-name">📊 Jurisdiction Notice</span><span class="stype-tag">Notice box</span></div>
+    <div class="stype-body">
+      <p>A prominent notice card — service-area statements, legal disclaimers, important advisories.</p>
+      <details class="fields"><summary>Fields &amp; Controls</summary><div class="fbody"><ul class="flist"><li><b>Section Heading</b><span class="fkind">text</span><span class="fnote">Optional heading above the notice card.</span></li><li><b>Icon</b><span class="fkind">emoji</span></li><li><b>Notice Title</b><span class="fkind">text</span></li><li><b>Notice Body</b><span class="fkind">text area</span></li><li><b>Link Label + Link</b><span class="fkind">smart link</span><span class="fopts">None / Internal Page (+ optional Scroll to Section) / External URL / File &amp; Document</span><span class="fnote">Optional.</span></li></ul></div></details>
+    </div>
+  </div>
+
+  <div class="group-head" id="g-media"><h3>🎬 Media</h3><span class="count">5 types</span></div>
+  <p class="group-intro">Photos, video, and motion — the group most likely to shape how a page <em>feels</em> rather than what it says. Image Gallery and Image / Before &amp; After suit static visual proof (a portfolio, a completed project, a transformation); Video Embed carries an explanation that's genuinely easier to show than tell — a walkthrough, a testimonial, a demonstration. Logo Strip and Marquee both display rows of small brand marks but for different purposes: Logo Strip is a quiet, static credibility signal ("as trusted by…"), while Marquee's constant motion draws the eye and suits a livelier brand voice or a longer list of names than would comfortably fit static. A tasteful, unusual use: a Marquee in Vertical Ticker mode makes a good rotating spot for short client quotes or recent case outcomes without needing a full Testimonials section.</p>
+
+  <div class="stype"><div class="stype-head"><span class="stype-name">🎬 Image Gallery</span><span class="stype-tag">Photo grid</span></div>
+    <div class="stype-body">
+      <p>A grid of photos (2–6 columns) that open full-size in a lightbox when clicked.</p>
+      <details class="fields"><summary>Fields &amp; Controls</summary><div class="fbody"><div class="fgroup">Section</div><ul class="flist"><li><b>Heading</b><span class="fkind">text</span><span class="fnote">Optional.</span></li><li><b>Subtitle</b><span class="fkind">text area</span><span class="fnote">Optional.</span></li><li><b>Columns</b><span class="fkind">dropdown</span><span class="fopts">2 / 3 / 4 / 5 / 6 Columns</span></li></ul><div class="fgroup">Per Image</div><ul class="flist"><li><b>Image Path</b><span class="fkind">path</span></li><li><b>Alt Text</b><span class="fkind">text</span><span class="fnote">Describes the photo for search engines and screen readers — always fill it in.</span></li><li><b>Title</b><span class="fkind">text</span><span class="fnote">Optional — shown in the lightbox.</span></li><li><b>Caption</b><span class="fkind">text</span><span class="fnote">Optional.</span></li></ul></div></details>
+      <p class="tip">Always fill in Alt Text — it describes the photo for search engines and screen-reader users.</p>
+    </div>
+  </div>
+
+  <div class="stype"><div class="stype-head"><span class="stype-name">🎬 Image / Before &amp; After</span><span class="stype-tag">Single image+</span></div>
+    <div class="stype-body">
+      <p>One featured image with optional text beside it — or an interactive <strong>before/after slider</strong> visitors can drag.</p>
+      <details class="fields"><summary>Fields &amp; Controls</summary><div class="fbody"><div class="fgroup">Image</div><ul class="flist"><li><b>Image Path</b><span class="fkind">path</span></li><li><b>Image Width</b><span class="fkind">number (px)</span><span class="fnote">Blank = full width.</span></li><li><b>Aspect Ratio</b><span class="fkind">dropdown</span><span class="fopts">Auto (natural) / 16:9 Landscape / 4:3 Standard / 1:1 Square / 3:4 Portrait</span></li><li><b>Object Position</b><span class="fkind">dropdown</span><span class="fopts">Center / Top / Bottom / Left / Right</span></li><li><b>Rounded Corners</b><span class="fkind">toggle</span></li><li><b>Caption</b><span class="fkind">text</span><span class="fnote">Optional.</span></li></ul><div class="fgroup">Interaction</div><ul class="flist"><li><b>Image Interaction</b><span class="fkind">dropdown</span><span class="fopts">None / Zoom / Before &amp; After</span></li><li><b>After Image Path</b><span class="fkind">path</span><span class="fnote">Before/After mode: the second image.</span></li><li><b>Slider Direction</b><span class="fkind">dropdown</span><span class="fopts">Horizontal (left / right) / Vertical (up / down)</span></li><li><b>Start Position</b><span class="fkind">number (%)</span><span class="fnote">Where the divider sits on load.</span></li><li><b>Show Before / After Labels</b><span class="fkind">toggle</span></li><li><b>Before Label + After Label</b><span class="fkind">text</span></li></ul><div class="fgroup">Text Column (optional)</div><ul class="flist"><li><b>Heading</b><span class="fkind">text</span></li><li><b>Body Text</b><span class="fkind">text area</span></li><li><b>Text Side</b><span class="fkind">dropdown</span><span class="fopts">Right of image / Left of image</span></li></ul></div></details>
+    </div>
+  </div>
+
+  <div class="stype"><div class="stype-head"><span class="stype-name">🎬 Video Embed</span><span class="stype-tag">YouTube / MP4</span></div>
+    <div class="stype-body">
+      <p>Embed a YouTube or Vimeo video by pasting its URL — or play a self-hosted MP4 from your own folder.</p>
+      <details class="fields"><summary>Fields &amp; Controls</summary><div class="fbody"><ul class="flist"><li><b>Heading</b><span class="fkind">text</span><span class="fnote">Optional.</span></li><li><b>Body Text</b><span class="fkind">text area</span><span class="fnote">Optional.</span></li><li><b>Layout</b><span class="fkind">dropdown</span><span class="fopts">Contained (centered) / Full Width / Two Column</span></li><li><b>Video Position</b><span class="fkind">dropdown</span><span class="fopts">Video Left / Video Right</span><span class="fnote">Two Column layout only.</span></li><li><b>Video Width</b><span class="fkind">dropdown</span><span class="fopts">Narrow (560px) / Medium (860px) / Wide (1060px) / Full Container</span></li><li><b>YouTube or Vimeo URL</b><span class="fkind">text</span><span class="fnote">Just paste the video’s address.</span></li><li><b>Self-Hosted MP4 Path</b><span class="fkind">path</span><span class="fnote">Alternative to the URL — plays a video file from your own folder.</span></li></ul></div></details>
+    </div>
+  </div>
+
+  <div class="stype"><div class="stype-head"><span class="stype-name">🎬 Logo / Partner Strip</span><span class="stype-tag">Static logos</span></div>
+    <div class="stype-body">
+      <p>A static row of partner, client, or certification logos with an optional caption.</p>
+      <details class="fields"><summary>Fields &amp; Controls</summary><div class="fbody"><div class="fgroup">Section</div><ul class="flist"><li><b>Caption</b><span class="fkind">text</span><span class="fnote">Optional.</span></li><li><b>Caption Position</b><span class="fkind">dropdown</span><span class="fopts">Above logos / Below logos</span></li><li><b>Logo Size</b><span class="fkind">dropdown</span><span class="fopts">Small (80px) / Medium (120px) / Large (160px)</span></li></ul><div class="fgroup">Per Logo</div><ul class="flist"><li><b>Image Path</b><span class="fkind">path</span></li><li><b>Alt Text</b><span class="fkind">text</span></li><li><b>Link URL</b><span class="fkind">text</span><span class="fnote">Optional — makes the logo clickable.</span></li></ul></div></details>
+      <p class="tip">Want them to scroll? Use Marquee / Ticker instead.</p>
+    </div>
+  </div>
+
+  <div class="stype"><div class="stype-head"><span class="stype-name">🎬 Marquee / Ticker</span><span class="stype-tag">Motion strip</span></div>
+    <div class="stype-body">
+      <p>Continuously scrolling content in three modes: scrolling text headlines, scrolling logos, or a vertical ticker that cycles through messages.</p>
+      <details class="fields"><summary>Fields &amp; Controls</summary><div class="fbody"><div class="fgroup">Section</div><ul class="flist"><li><b>Heading</b><span class="fkind">text</span><span class="fnote">Optional.</span></li><li><b>Subtitle</b><span class="fkind">text area</span><span class="fnote">Optional.</span></li><li><b>Mode</b><span class="fkind">dropdown</span><span class="fopts">Scrolling Text / Scrolling Logos / Vertical Ticker</span></li><li><b>Speed</b><span class="fkind">dropdown</span><span class="fopts">Slow / Medium / Fast</span></li><li><b>Direction</b><span class="fkind">dropdown</span><span class="fopts">Left (←) / Right (→)</span></li><li><b>Pause on Hover</b><span class="fkind">toggle</span></li></ul><div class="fgroup">Scrolling Text Mode</div><ul class="flist"><li><b>Separator Character</b><span class="fkind">text</span><span class="fnote">Shown between items, e.g. · or ✦.</span></li><li><b>Text Items</b><span class="fkind">repeating items</span><span class="fnote">Each: Text + optional smart link.</span></li></ul><div class="fgroup">Vertical Ticker Mode</div><ul class="flist"><li><b>Hold Duration</b><span class="fkind">dropdown</span><span class="fopts">2 / 3 / 4 / 5 seconds</span></li><li><b>Transition Speed</b><span class="fkind">dropdown</span><span class="fopts">Fast / Normal / Slow</span></li></ul><div class="fgroup">Scrolling Logos Mode</div><ul class="flist"><li><b>Logos</b><span class="fkind">repeating items</span><span class="fnote">Each: Image Path, Alt Text, optional per-logo Size Override (px).</span></li><li><b>Logo Height</b><span class="fkind">dropdown</span><span class="fopts">Small (32px) / Medium (48px) / Large (64px) / X-Large (96px)</span></li><li><b>Logo Spacing</b><span class="fkind">dropdown</span><span class="fopts">Tight (16px) / Normal (32px) / Wide (48px) / Extra Wide (64px)</span></li><li><b>Fade Edges</b><span class="fkind">toggle</span><span class="fnote">Softly fades logos in and out at the strip’s edges.</span></li><li><b>Fade Width</b><span class="fkind">dropdown</span><span class="fopts">Narrow (48px) / Normal (80px) / Wide (140px)</span></li></ul></div></details>
+    </div>
+  </div>
+
+  <div class="group-head" id="g-people"><h3>👥 People &amp; Social Proof</h3><span class="count">6 types</span></div>
+  <p class="group-intro">Trust is the job of this whole group — showing visitors that real people stand behind the business, and that other real people have vouched for it. Team Block and Locations are unusual in this reference: they don't hold their own content at all, but pull it live from your About Us profiles and Contact &amp; Hours locations, so you can feature "the two attorneys who handle this practice area" on one page and the full team on another without retyping a word. Testimonials and Accordion/FAQ round out the trust-building side — put genuinely specific reviews in Testimonials (a named person, a real outcome, beats a vague quote) and put the questions people actually ask before they call in FAQ. Custom Form is the one true outlier here: a second, independent way to capture a lead directly on a service page, useful when you don't want every inquiry funneling through the single main Contact page.</p>
+
+  <div class="stype"><div class="stype-head"><span class="stype-name">👥 Team Block</span><span class="stype-tag">Reuses About Us</span></div>
+    <div class="stype-body">
+      <p>Displays team members <strong>from your About Us profiles</strong> — no retyping. Tick which people to show on this particular page.</p>
+      <details class="fields"><summary>Fields &amp; Controls</summary><div class="fbody"><ul class="flist"><li><b>Heading</b><span class="fkind">text</span></li><li><b>Max Columns</b><span class="fkind">dropdown</span><span class="fopts">1 / 2 / 3 / 4 Columns</span><span class="fnote">1 Column unlocks a Full Width toggle.</span></li><li><b>Team Members to Show</b><span class="fkind">checkboxes</span><span class="fnote">Tick which About Us profiles appear on this page.</span></li></ul></div></details>
+      <p class="tip">Edit a person once in About Us and every Team Block updates automatically.</p>
+    </div>
+  </div>
+
+  <div class="stype"><div class="stype-head"><span class="stype-name">👥 Locations</span><span class="stype-tag">Reuses Contact</span></div>
+    <div class="stype-body">
+      <p>Shows locations <strong>from Contact &amp; Hours</strong> as cards or a large feature layout, with maps.</p>
+      <details class="fields"><summary>Fields &amp; Controls</summary><div class="fbody"><div class="fgroup">Section</div><ul class="flist"><li><b>Display Mode</b><span class="fkind">dropdown</span><span class="fopts">Cards / Feature (cardless)</span></li><li><b>Map Mode</b><span class="fkind">dropdown</span><span class="fopts">Interactive (API key required) / Link-out button / No map</span></li><li><b>Card Layout</b><span class="fkind">dropdown</span><span class="fopts">Image on top / Image on side</span><span class="fnote">Cards mode.</span></li><li><b>Max Columns</b><span class="fkind">dropdown</span><span class="fopts">2 / 3 columns</span><span class="fnote">Cards mode.</span></li><li><b>Media Side</b><span class="fkind">dropdown</span><span class="fopts">Image &amp; map on left / Image &amp; map on right</span><span class="fnote">Feature mode.</span></li><li><b>Show Hours on Card</b><span class="fkind">toggle</span></li><li><b>Link / Button Label + Link</b><span class="fkind">smart link</span><span class="fopts">None / Internal Page (+ optional Scroll to Section) / External URL / File &amp; Document</span><span class="fnote">Optional.</span></li></ul><div class="fgroup">Per Entry</div><ul class="flist"><li><b>Location</b><span class="fkind">dropdown</span><span class="fopts">Your locations from Contact &amp; Hours</span><span class="fnote">Pick which office/branch this entry shows.</span></li><li><b>Image Path</b><span class="fkind">path</span><span class="fnote">Optional photo for this location.</span></li></ul></div></details>
+    </div>
+  </div>
+
+  <div class="stype"><div class="stype-head"><span class="stype-name">👥 Testimonials</span><span class="stype-tag">Reviews</span></div>
+    <div class="stype-body">
+      <p>Client reviews with star ratings and initialed avatars, plus an optional “read all” view.</p>
+      <details class="fields"><summary>Fields &amp; Controls</summary><div class="fbody"><div class="fgroup">Section</div><ul class="flist"><li><b>Heading</b><span class="fkind">text</span></li><li><b>Subtitle</b><span class="fkind">text area</span></li><li><b>Number to Display</b><span class="fkind">dropdown</span><span class="fopts">3 / 6 / 9</span></li><li><b>Read All Button</b><span class="fkind">toggle</span><span class="fnote">Adds a button that opens every review.</span></li><li><b>Show Relative Dates</b><span class="fkind">toggle</span><span class="fnote">On: “3 weeks ago”. Off: the actual date.</span></li><li><b>Review Source</b><span class="fkind">toggle</span><span class="fnote">On: reuse the site-wide reviews shared by other sections. Off: add reviews just for this section.</span></li></ul><div class="fgroup">Per Review</div><ul class="flist"><li><b>Name</b><span class="fkind">text</span></li><li><b>Initials</b><span class="fkind">text</span><span class="fnote">Two letters for the avatar circle.</span></li><li><b>Stars</b><span class="fkind">number (1–5)</span></li><li><b>Date Submitted</b><span class="fkind">text</span></li><li><b>Review Text</b><span class="fkind">text area</span></li><li><b>Meta</b><span class="fkind">text</span><span class="fnote">Service type, city — shown under the name.</span></li></ul></div></details>
+    </div>
+  </div>
+
+  <div class="stype"><div class="stype-head"><span class="stype-name">👥 Accordion</span><span class="stype-tag">Expanding rows</span></div>
+    <div class="stype-body">
+      <p>Rows that expand when clicked — like an FAQ but general-purpose, and each row can include an image.</p>
+      <details class="fields"><summary>Fields &amp; Controls</summary><div class="fbody"><div class="fgroup">Section</div><ul class="flist"><li><b>Heading</b><span class="fkind">text</span></li><li><b>Subtitle</b><span class="fkind">text area</span><span class="fnote">Optional.</span></li></ul><div class="fgroup">Per Row</div><ul class="flist"><li><b>Title</b><span class="fkind">text</span></li><li><b>Body Text / Answer</b><span class="fkind">text area</span></li><li><b>Image Path</b><span class="fkind">path</span><span class="fnote">Optional.</span></li><li><b>Image Position</b><span class="fkind">dropdown</span><span class="fopts">No Image / Top / Left (side) / Right (side)</span></li></ul></div></details>
+    </div>
+  </div>
+
+  <div class="stype"><div class="stype-head"><span class="stype-name">👥 FAQ</span><span class="stype-tag">Q &amp; A</span></div>
+    <div class="stype-body">
+      <p>Question-and-answer pairs in expandable rows, with an optional link per answer.</p>
+      <details class="fields"><summary>Fields &amp; Controls</summary><div class="fbody"><div class="fgroup">Section</div><ul class="flist"><li><b>Heading</b><span class="fkind">text</span></li><li><b>Subtitle</b><span class="fkind">text area</span></li></ul><div class="fgroup">Per Item</div><ul class="flist"><li><b>Question</b><span class="fkind">text</span></li><li><b>Answer</b><span class="fkind">text area</span></li><li><b>Link Label + Link</b><span class="fkind">smart link</span><span class="fopts">None / Internal Page (+ optional Scroll to Section) / External URL / File &amp; Document</span><span class="fnote">Optional.</span></li></ul></div></details>
+    </div>
+  </div>
+
+  <div class="stype"><div class="stype-head"><span class="stype-name">👥 Custom Form</span><span class="stype-tag">Extra form</span></div>
+    <div class="stype-body">
+      <p>A standalone contact/intake form on any page — independent of the main Contact page form, with its own field builder and its own destination.</p>
+      <details class="fields"><summary>Fields &amp; Controls</summary><div class="fbody"><div class="fgroup">Form</div><ul class="flist"><li><b>Form Heading</b><span class="fkind">text</span></li><li><b>Form Intro</b><span class="fkind">text area</span><span class="fnote">Optional.</span></li><li><b>Submit Button Label</b><span class="fkind">text</span></li><li><b>Success Message</b><span class="fkind">text</span></li><li><b>Form Endpoint</b><span class="fkind">text</span><span class="fnote">Its own Formspree URL or webhook — where submissions are delivered.</span></li></ul><div class="fgroup">Per Field (field builder)</div><ul class="flist"><li><b>Field Type</b><span class="fkind">dropdown</span><span class="fopts">Text / Email / Phone / Text Area / Dropdown / Radio / Checkbox / Date / Stars</span></li><li><b>Label + Placeholder</b><span class="fkind">text</span></li><li><b>Required?</b><span class="fkind">toggle</span></li><li><b>Half Width</b><span class="fkind">toggle</span><span class="fnote">Two half-width fields share a row.</span></li><li><b>Options</b><span class="fkind">text area</span><span class="fnote">One per line — for Dropdown, Radio, and Checkbox types.</span></li></ul></div></details>
+      <p class="tip">Give each form its own Formspree endpoint so you can tell which page a submission came from.</p>
+    </div>
+  </div>
+
+  <div class="group-head" id="g-structure"><h3>📐 Page Structure</h3><span class="count">3 types</span></div>
+  <p class="group-intro">These aren't content types so much as connective tissue — small, quiet tools for directing a visitor to the next thing you want them to do. CTA Banner is the loud, deliberate version: a full-width moment that says "here's the one thing to do next," and works best used sparingly — once per page, usually near the end. Button and Link are their understated cousins: rather than forming a section of their own, they attach quietly to the section above, letting you add a call-to-action to a Text Block or Rich Text piece without switching that section's type or breaking its visual flow. A well-built page usually threads a Button or Link after two or three content sections, then closes with one CTA Banner — guiding without nagging.</p>
+
+  <div class="stype"><div class="stype-head"><span class="stype-name">📐 CTA Banner</span><span class="stype-tag">Call to action</span></div>
+    <div class="stype-body">
+      <p>A bold full-width banner with a heading, supporting line, and one or two buttons. The traditional way to end a page: “Ready to get started?”</p>
+      <details class="fields"><summary>Fields &amp; Controls</summary><div class="fbody"><ul class="flist"><li><b>Heading</b><span class="fkind">text</span></li><li><b>Body Text</b><span class="fkind">text area</span></li><li><b>Primary Button Label + Link</b><span class="fkind">smart link</span><span class="fopts">None / Internal Page (+ optional Scroll to Section) / External URL / File &amp; Document</span></li><li><b>Secondary Button Label + Link</b><span class="fkind">smart link</span><span class="fopts">None / Internal Page (+ optional Scroll to Section) / External URL / File &amp; Document</span><span class="fnote">Optional.</span></li></ul></div></details>
+    </div>
+  </div>
+
+  <div class="stype"><div class="stype-head"><span class="stype-name">📐 Button</span><span class="stype-tag">Appendage</span></div>
+    <div class="stype-body">
+      <p>One or two standalone buttons that attach to the section above them (sharing its background) rather than forming their own section.</p>
+      <details class="fields"><summary>Fields &amp; Controls</summary><div class="fbody"><ul class="flist"><li><b>Primary Button Label + Link</b><span class="fkind">smart link</span><span class="fopts">None / Internal Page (+ optional Scroll to Section) / External URL / File &amp; Document</span></li><li><b>Secondary Button Label + Link</b><span class="fkind">smart link</span><span class="fopts">None / Internal Page (+ optional Scroll to Section) / External URL / File &amp; Document</span><span class="fnote">Optional.</span></li></ul></div></details>
+      <p class="tip">Place it directly after a Text Block to give that block a button without switching to a CTA Banner.</p>
+    </div>
+  </div>
+
+  <div class="stype"><div class="stype-head"><span class="stype-name">📐 Link</span><span class="stype-tag">Appendage</span></div>
+    <div class="stype-body">
+      <p>A simple text link (“Visit our Services page →”) that attaches to the previous section — quieter than a button.</p>
+      <details class="fields"><summary>Fields &amp; Controls</summary><div class="fbody"><ul class="flist"><li><b>Label + Link</b><span class="fkind">smart link</span><span class="fopts">None / Internal Page (+ optional Scroll to Section) / External URL / File &amp; Document</span></li></ul></div></details>
+    </div>
+  </div>
+
+  <div class="group-head" id="g-overlays"><h3>🔔 Overlays</h3><span class="count">1 type</span></div>
+  <p class="group-intro">A group of one, and deliberately so — a popup interrupts, so the admin only offers one way to do it. Good uses tend to be time-bound or attention-worthy: a limited-time offer, a seasonal notice, an event announcement, a "we're now accepting new clients" message. Because it floats over the page rather than living in the flow of content, it's the one type that can appear on every page at once without needing to be added to each one individually — plan its trigger carefully (immediate vs. scroll-to-anchor) so it complements the page instead of blocking the first thing a visitor wanted to read.</p>
+
+  <div class="stype"><div class="stype-head"><span class="stype-name">🔔 Popup</span><span class="stype-tag">Floating overlay</span></div>
+    <div class="stype-body">
+      <p>The one section that doesn't appear <em>in</em> the page — it floats <em>over</em> it. Use it for announcements, offers, or notices. Choose a centered modal or a small corner toast.</p>
+      <details class="fields"><summary>Fields &amp; Controls</summary><div class="fbody"><div class="fgroup">Content</div><ul class="flist"><li><b>Popup Style</b><span class="fkind">dropdown</span><span class="fopts">Centered Modal / Corner Toast</span></li><li><b>Heading</b><span class="fkind">text</span></li><li><b>Body</b><span class="fkind">text area</span></li><li><b>Text Color</b><span class="fkind">dropdown</span><span class="fopts">White / Black / Chrome Background Color / Light Background Color / Match Section Background</span></li><li><b>Text Alignment</b><span class="fkind">dropdown</span><span class="fopts">Left / Center / Right</span></li></ul><div class="fgroup">Image</div><ul class="flist"><li><b>Image Layout</b><span class="fkind">dropdown</span><span class="fopts">None / Top Banner / Full Background (Faded) / Image Left, Text Right / Image Right, Text Left / Full Image (No Crop)</span></li><li><b>Image Path</b><span class="fkind">path</span><span class="fnote">With focus-position controls, including a separate mobile focal point.</span></li><li><b>Overlay Text on Image</b><span class="fkind">toggle</span><span class="fnote">On: text sits over the image. Off: image alone, text below it.</span></li><li><b>Make Image Clickable</b><span class="fkind">toggle</span><span class="fnote">Whole image links to the Primary Button’s destination — set that first.</span></li><li><b>Overlay Color</b><span class="fkind">color</span></li><li><b>Overlay Opacity</b><span class="fkind">slider (0–1)</span></li></ul><div class="fgroup">Appearance &amp; Behavior</div><ul class="flist"><li><b>Rounded Corners</b><span class="fkind">toggle</span></li><li><b>Primary + Secondary Buttons</b><span class="fkind">smart link</span><span class="fopts">None / Internal Page (+ optional Scroll to Section) / External URL / File &amp; Document</span></li><li><b>Trigger</b><span class="fkind">dropdown</span><span class="fopts">⚡ Immediately on Page Load / when the visitor scrolls to a chosen section anchor</span></li><li><b>Delay</b><span class="fkind">number (seconds)</span><span class="fnote">Wait time after the trigger fires.</span></li></ul></div></details>
+      <p class="tip">Popups only appear in Save &amp; Preview or on the live site — they can't be tested by opening index.html straight from a folder. Use one popup per page at most; a delayed corner toast feels far friendlier than an instant full-screen modal.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="publishing">
+  <span class="eyebrow">Going Live</span>
+  <h2>Publishing Changes</h2>
+  <p>Previewing shows changes to <em>you</em>. Publishing shows them to <em>everyone</em>. It's a three-step ritual — the same every time:</p>
+  <ol class="steps">
+    <li><b>Preview first.</b> Click <span class="btn-demo ghost">💾 Save &amp; Preview</span> and click through the site in the new tab. Check the pages you changed — and glance at the ones you didn't.</li>
+    <li><b>Export.</b> Click <span class="btn-demo gold">⬇ Export config.js</span> (top bar, or the Export page in the sidebar). A fresh <code>config.js</code> lands in your Downloads folder.</li>
+    <li><b>Replace.</b> Move that file into your website folder, replacing the existing <code>config.js</code>. When asked whether to overwrite — yes. If your site is hosted online, upload the new config.js to your host the same way your site was originally uploaded (this replaces the copy on the server). Reload the site: your changes are live.</li>
+  </ol>
+  <div class="callout ok">
+    <b>Nothing else needs uploading</b>
+    <p>For everyday content edits, <code>config.js</code> is the only file that changes. The exceptions: if you added <strong>new images or documents</strong>, those files must also be copied into the site's <code>images/</code> or <code>files/</code> folders (and uploaded to your host, if hosted online).</p>
+  </div>
+  <div class="callout">
+    <b>Make it a backup at the same time</b>
+    <p>You already have the exported file in hand — copy it into your backup folder with today's date before you move on. Publishing and backing up become one habit.</p>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="troubleshooting">
+  <span class="eyebrow">Going Live</span>
+  <h2>Troubleshooting</h2>
+
+  <table>
+    <tr><th>Symptom</th><th>Likely cause &amp; fix</th></tr>
+    <tr><td>“My changes aren't on the live site”</td><td>The #1 question — you previewed but didn't publish. Previews live only in your browser. Export <code>config.js</code> and replace the one in your site folder (and on your host). See <a href="#publishing">Publishing Changes</a>.</td></tr>
+    <tr><td>An image won't show</td><td>The path doesn't match the file. Check spelling, capitalization (<code>Hero.jpg</code> ≠ <code>hero.jpg</code>), the folder name, and that the file was actually copied into <code>images/</code>. The admin's live preview thumbnails are a quick truth-test: if the thumbnail is blank, the path is wrong.</td></tr>
+    <tr><td>The admin looks out of date</td><td>You're on a different browser or computer than last time — autosave doesn't travel. Drag your live <code>config.js</code> into the import zone at the top of the admin.</td></tr>
+    <tr><td>A popup won't appear when testing</td><td>Popups (and some other config-driven features) don't run when opening <code>index.html</code> directly from a folder. Test them via <strong>Save &amp; Preview</strong> or on the live site.</td></tr>
+    <tr><td>Contact form does nothing</td><td>The Formspree Endpoint is blank or mistyped. It should look like <code>https://formspree.io/f/xxxxx</code>. Create a free form at formspree.io and paste the exact URL.</td></tr>
+    <tr><td>A custom Google Font isn't applying</td><td>The name in the custom font field must match Google Fonts exactly — spaces and capital letters included (e.g., <code>Cormorant Garamond</code>).</td></tr>
+    <tr><td>“I deleted something by accident”</td><td>Drag your most recent backup <code>config.js</code> into the import zone. This is why the dated backups exist. If you only exported the section as JSON, re-import it via the section builder's ⊕ Import button.</td></tr>
+    <tr><td>A page vanished from the menu</td><td>Check the page's “Show in navigation” switch, its hide-from-main-nav / hide-from-footer settings, and Members &amp; Access (a locked page shows only a lock icon for guests).</td></tr>
+    <tr><td>Old page link broken after renaming</td><td>The URL slug changed. Restore the old slug in Page Settings, or accept the new address and update anywhere you shared the old one.</td></tr>
+    <tr><td>Maps aren't interactive</td><td>Interactive embedded maps need a Google Maps API key in Business Details (with the Maps Embed API enabled). Without one, use the “Link-out button” map mode instead.</td></tr>
+  </table>
+
+  <div class="callout">
+    <b>The universal reset</b>
+    <p>When in doubt: import the live <code>config.js</code> into the admin, make your change, preview, export, replace. That loop recovers from almost any confusion — because the file in your website folder is always the single source of truth.</p>
+  </div>
+
+  <p style="margin-top:60px;text-align:center;color:var(--muted);font-size:12px;letter-spacing:0.12em;text-transform:uppercase;">SpiderWeb v1 · Site Admin Manual</p>
+</section>
+
+</div><!-- /container -->
+</div><!-- /main -->
+
+<!-- Mobile nav trigger — sidebar is off-canvas below 960px wide -->
+<button class="nav-fab" id="navFab" onclick="toggleMobileNav()">
+  <span class="nav-fab-icon" id="navFabIcon">☰</span>
+  <span id="navFabLabel">Menu</span>
+</button>
+<div class="sidebar-backdrop" id="sidebarBackdrop" onclick="closeMobileNav()"></div>
+
+<script>
+function toggleMobileNav() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarBackdrop').classList.toggle('visible');
+  var open = document.getElementById('sidebar').classList.contains('open');
+  document.getElementById('navFabIcon').textContent = open ? '✕' : '☰';
+  document.getElementById('navFabLabel').textContent = open ? 'Close' : 'Menu';
+}
+function closeMobileNav() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarBackdrop').classList.remove('visible');
+  document.getElementById('navFabIcon').textContent = '☰';
+  document.getElementById('navFabLabel').textContent = 'Menu';
+}
+// Tapping any sidebar link closes the drawer so the jumped-to content is visible
+document.querySelectorAll('.sidebar a').forEach(function(a) {
+  a.addEventListener('click', closeMobileNav);
+});
+</script>
+
+<!-- ============================================================
+     OPTIONAL LIVE THEMING
+     If this file sits in the same folder as your site's config.js,
+     the manual borrows your site's colors, fonts, and logo. If
+     config.js isn't found (or can't load — some browsers block
+     local file:// script loads), everything below silently no-ops
+     and the manual keeps its own default look. Nothing breaks.
+     ============================================================ -->
+<script src="config.js"></script>
+<script>
+(function() {
+  try {
+    if (typeof SITE_CONFIG === 'undefined' || !SITE_CONFIG) return;
+    var cfg = SITE_CONFIG;
+    var root = document.documentElement;
+    var applied = false;
+
+    // --- Palette ---
+    var c = cfg.colors || {};
+    var colorMap = {
+      navy: '--navy', navyLight: '--navy-light', gold: '--gold',
+      goldLight: '--gold-light', goldPale: '--gold-pale',
+      warmWhite: '--warm-white', cream: '--cream', chrome: '--chrome'
+    };
+    Object.keys(colorMap).forEach(function(key) {
+      if (c[key]) { root.style.setProperty(colorMap[key], c[key]); applied = true; }
+    });
+    var fc = cfg.fontColors || {};
+    if (fc.heading) root.style.setProperty('--text', fc.heading);
+
+    // --- Typography ---
+    var displayFont = (cfg.fontDisplayCustom || cfg.fontDisplay || '').trim();
+    var bodyFont    = (cfg.fontBodyCustom    || cfg.fontBody    || '').trim();
+    if (displayFont || bodyFont) {
+      var families = [];
+      if (displayFont) families.push(displayFont.replace(/ /g, '+') + ':wght@500;600;700;800');
+      if (bodyFont && bodyFont !== displayFont) families.push(bodyFont.replace(/ /g, '+') + ':wght@300;400;500;600;700');
+      if (families.length) {
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'https://fonts.googleapis.com/css2?family=' + families.join('&family=') + '&display=swap';
+        document.head.appendChild(link);
+      }
+      if (displayFont) root.style.setProperty('--font-display', "'" + displayFont + "', sans-serif");
+      if (bodyFont)    root.style.setProperty('--font-body', "'" + bodyFont + "', sans-serif");
+      applied = true;
+    }
+
+    // --- Business name ---
+    // Set now; the logo block below removes it if a logo image loads successfully,
+    // so it only ever shows as a fallback when there's no logo to speak for the brand.
+    if (cfg.firmName) {
+      var sub = document.querySelector('.sidebar-brand small');
+      if (sub) sub.textContent = cfg.firmName;
+    }
+
+    // --- Sidebar logo (prefers the alternate logo). Visible on desktop; the
+    // sidebar itself is an off-canvas drawer on mobile, so this logo is hidden
+    // there by default — the hero logo below takes over as the visible brand
+    // mark on mobile instead. ---
+    var logoPath = cfg.logoAlternate || cfg.logoPrimary || '';
+    if (logoPath) {
+      var probe = new Image();
+      probe.onload = function() {
+        var dot = document.querySelector('.sidebar-brand-dot');
+        if (!dot) return;
+        var img = document.createElement('img');
+        img.src = logoPath;
+        img.alt = cfg.firmName || 'Logo';
+        img.style.cssText = 'width:65%;max-width:160px;height:auto;object-fit:contain;';
+        dot.replaceWith(img);
+        var sub2 = document.querySelector('.sidebar-brand small');
+        if (sub2) sub2.remove();
+      };
+      probe.src = logoPath;
+    }
+
+    // --- Hero logo (same source as the sidebar logo — prefers alternate).
+    // Hidden on desktop via CSS; only shows on mobile, where the sidebar is
+    // tucked away in its off-canvas drawer. The two never appear at once —
+    // one brand mark, shown in whichever slot is visible at the current
+    // width. Sized off logoHeaderHeight (default 40px) to match the site's
+    // real header logo height. ---
+    var heroLogoPath = cfg.logoAlternate || cfg.logoPrimary || '';
+    if (heroLogoPath) {
+      var heroProbe = new Image();
+      heroProbe.onload = function() {
+        var heroEl = document.querySelector('.hero');
+        if (!heroEl) return;
+        document.documentElement.style.setProperty('--hero-logo-h', (cfg.logoHeaderHeight || 40) + 'px');
+        var himg = document.createElement('img');
+        himg.src = heroLogoPath;
+        himg.alt = cfg.firmName || 'Logo';
+        himg.className = 'hero-logo';
+        heroEl.appendChild(himg);
+      };
+      heroProbe.src = heroLogoPath;
+    }
+
+    // --- Quiet confirmation, only shown when theming actually applied ---
+    if (applied) {
+      var note = document.createElement('div');
+      note.textContent = '✓ Styled to match your site';
+      note.style.cssText = 'font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.32);padding:12px 22px 0;';
+      var brand = document.querySelector('.sidebar-brand');
+      if (brand) brand.insertAdjacentElement('afterend', note);
+    }
+  } catch (e) {
+    /* config.js missing, blocked, or malformed — keep default manual styling */
+  }
+})();
+</script>
+</body>
+</html>
