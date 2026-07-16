@@ -200,14 +200,6 @@ a.hs-result:hover, a.hs-result.kb-active { background: var(--gold-pale); }
    the tutorials page doesn't exist yet (or the probe can't run, e.g.
    under a plain file:// open), nothing shows up and nothing links
    anywhere broken. ============================================= */
-.hero-tut-link {
-  display: none;
-  margin-top: 16px;
-  font-size: 13px; font-weight: 600;
-  color: var(--gold-light);
-  text-decoration: none;
-}
-.hero-tut-link:hover { text-decoration: underline; }
 #sbTutorialsHeading, #sbTutorialsLink { display: none; }
 #footerTutCallout { display: none; }
 .hero .hero-meta b { color: var(--gold-light); font-weight: 600; }
@@ -581,7 +573,6 @@ ul.flist b { color: var(--navy); font-weight: 600; font-size: 13px; }
       <span>Audience <b>Site Owners &amp; Editors</b></span>
       <span>Skill Needed <b>Basic Browser + Files</b></span>
     </div>
-    <a class="hero-tut-link" href="tutorials.html" id="heroTutLink">🎓 Prefer hands-on steps? Try the Tutorials →</a>
   </div>
 </div>
 
@@ -1280,23 +1271,29 @@ let _manualIndex = null;
 let _hsActive = -1;
 let _tutorialsAvailable = false;
 
-/* Bridge to the companion tutorials hub. A background fetch checks whether
-   tutorials.html actually exists alongside this manual; only on success do
-   we reveal any of the four tutorials links (hero badge, sidebar entry,
-   footer callout, search no-results suggestion). If the file is missing,
-   the fetch fails, or fetch itself can't run (e.g. a plain file:// open,
-   same caveat as the config.js theming), everything just stays hidden —
-   no dead links, no visible gap. */
+/* Bridge to the companion tutorials hub. Checks whether tutorials.html
+   actually exists alongside this manual; only on success do we reveal any
+   of the three tutorials links (sidebar entry, footer callout, search
+   no-results suggestion). Uses the same mechanism config.js relies on — a
+   <script src="..."> tag — rather than fetch(), since browsers are far more
+   permissive about loading a local sibling file that way than through
+   fetch()/XHR, which get blocked under a plain file:// open regardless of
+   folder location. tutorials.html isn't valid JavaScript, so if it does
+   load, the browser logs a harmless console syntax error while attempting
+   to parse it — invisible to the visitor, doesn't affect anything, and is
+   only relevant if you happen to have dev tools open. The load/error
+   events fire based on whether the resource was fetched at all, regardless
+   of whether it parses as JS, so detection itself stays reliable. */
 (function probeTutorials() {
-  fetch('tutorials.html', { method: 'GET', cache: 'no-store' })
-    .then(function(res) {
-      if (res && res.ok) revealTutorialsLinks();
-    })
-    .catch(function() { /* not available — leave everything hidden */ });
+  var s = document.createElement('script');
+  s.src = 'tutorials.html';
+  s.onload = function() { revealTutorialsLinks(); s.remove(); };
+  s.onerror = function() { s.remove(); /* not available — leave everything hidden */ };
+  document.head.appendChild(s);
 })();
 function revealTutorialsLinks() {
   _tutorialsAvailable = true;
-  ['sbTutorialsHeading', 'sbTutorialsLink', 'heroTutLink', 'footerTutCallout'].forEach(function(id) {
+  ['sbTutorialsHeading', 'sbTutorialsLink', 'footerTutCallout'].forEach(function(id) {
     const el = document.getElementById(id);
     if (el) el.style.display = 'block';
   });
@@ -1474,8 +1471,11 @@ function renderManualSearch() {
   const res = msSearchQuery(q);
   let html = '';
   if (!res.hits.length) {
-    const tutSuggestion = _tutorialsAvailable ? ' Or check the <a href="tutorials.html">Step-by-Step Tutorials</a>.' : '';
-    html = '<div class="hs-no-results">No matches for “<b>' + msEscTxt(q.trim()) + '</b>” yet.<br/>Try different words, or browse the Section Library in the sidebar.' + tutSuggestion + '</div>';
+    const tutRow = _tutorialsAvailable ? '<div>Or check the <a href="tutorials.html">Step-by-Step Tutorials</a>.</div>' : '';
+    html = '<div class="hs-no-results">' +
+           '<div>No matches for “<b>' + msEscTxt(q.trim()) + '</b>” yet.</div>' +
+           '<div>Try different words, or browse the Section Library in the sidebar.</div>' +
+           tutRow + '</div>';
   } else {
     res.hits.forEach(function(h) {
       const t = h.item;

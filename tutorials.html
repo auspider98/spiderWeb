@@ -95,6 +95,11 @@ body {
   transition: max-height 0.22s ease;
 }
 .sb-cat.open + .sb-cat-body { max-height: 600px; }
+.sb-heading {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+  padding: 14px 22px 6px;
+}
 .sb-link {
   display: block;
   padding: 6px 22px 6px 30px;
@@ -119,6 +124,19 @@ body {
 }
 .sb-link.soon { color: rgba(255,255,255,0.32); cursor: default; }
 .sb-link.soon:hover { background: none; color: rgba(255,255,255,0.32); }
+/* Flat variant: a top-level sidebar link that sits directly under a
+   static .sb-heading (not nested inside a collapsible category), so it
+   uses the heading's own left padding instead of the sub-item indent. */
+.sb-link.flat { padding-left: 22px; }
+
+/* ============ MANUAL BRIDGE ============
+   Every element here starts hidden. A background probe (see script,
+   bottom of file) checks whether manual.html exists alongside this
+   file; only if that succeeds does JS reveal these — so if the manual
+   isn't there (or the probe can't run), nothing shows up and nothing
+   links anywhere broken. ============================================= */
+#sbManualHeading, #sbManualLink { display: none; }
+#footerManualCallout { display: none; }
 
 /* ============ MAIN ============ */
 .main { margin-left: var(--sidebar-w); }
@@ -529,6 +547,8 @@ kbd, .btn-demo {
   </div>
   <a class="sb-home" href="#home" id="sbHome">🏠 All Tutorials</a>
   <div id="sbCats"><!-- built by JS from the TUTORIALS registry --></div>
+  <div class="sb-heading" id="sbManualHeading">More Help</div>
+  <a class="sb-link flat" href="manual.html" id="sbManualLink">📖 Site Admin Manual</a>
 </nav>
 <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="closeMobileNav()"></div>
 <button class="nav-fab" onclick="toggleMobileNav()">
@@ -563,6 +583,12 @@ kbd, .btn-demo {
     </div>
   </div>
   <div class="container" id="hubGroups"><!-- built by JS from the TUTORIALS registry --></div>
+  <div class="container">
+    <div class="callout" id="footerManualCallout">
+      <b>Need the full picture?</b>
+      <p>The <a href="manual.html">Site Admin Manual</a> covers every screen, field, and setting in depth — a good companion to these tutorials if you'd rather look something up than follow along step by step.</p>
+    </div>
+  </div>
 </section>
 
 <!-- ============================================================
@@ -936,7 +962,7 @@ function renderTutSearch() {
   let html = '';
   if (!res.hits.length) {
     html = '<div class="hs-no-results">No tutorial matches “<b>' + escTxt(q.trim()) + '</b>” yet.<br/>' +
-           'Try different words — or check the <a href="manual.html">Site Admin Manual</a>, which covers every screen and setting.</div>';
+           'Try different words'+ (_manualAvailable ? ' — or check the <a href="manual.html">Site Admin Manual</a>, which covers every screen and setting.' : '.') + '</div>';
   } else {
     res.hits.forEach(function(h) {
       const t = h.item.t;
@@ -1005,6 +1031,42 @@ function hsSetKbActive(links) {
       links[idx].click();
     }
   });
+})();
+
+/* =============================================
+   MANUAL BRIDGE — probes for manual.html
+   ---------------------------------------------
+   Mirrors the exact technique manual.html already uses in reverse (its
+   probeTutorials() checking for this file). Browsers are far more
+   permissive about loading a local sibling file this way than through
+   fetch()/XHR, which get blocked under a plain file:// open regardless
+   of same-folder location. manual.html isn't valid JavaScript, so if it
+   does load, the browser logs a harmless console syntax error while
+   attempting to parse it — invisible to the visitor, doesn't affect
+   anything. The load/error events fire based on whether the resource
+   was fetched at all, not whether it parses as JS, so detection stays
+   reliable either way. The <script> tag is removed afterward regardless
+   of outcome.
+   ============================================= */
+let _manualAvailable = false;
+
+function revealManualLinks() {
+  _manualAvailable = true;
+  ['sbManualHeading', 'sbManualLink', 'footerManualCallout'].forEach(function(id) {
+    const el = document.getElementById(id);
+    // Explicit 'block' rather than clearing to '' — some of these are
+    // hidden via #id-selector CSS with higher specificity than a class
+    // rule would carry, so clearing the inline style wouldn't win.
+    if (el) el.style.display = 'block';
+  });
+}
+
+(function probeManual() {
+  var s = document.createElement('script');
+  s.src = 'manual.html';
+  s.onload = function() { revealManualLinks(); s.remove(); };
+  s.onerror = function() { s.remove(); /* not available — leave everything hidden */ };
+  document.head.appendChild(s);
 })();
 
 /* =============================================
