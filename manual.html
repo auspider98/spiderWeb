@@ -28,6 +28,25 @@
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; scroll-padding-top: 24px; overflow-x: hidden; }
+
+/* ============ SCROLLBARS ============
+   Left unstyled, browsers default the document scrollbar and any
+   nested overflow:auto element independently — some (Chrome) auto-dark
+   the document scrollbar against a dark page background but don't
+   extend that to inner scroll containers like the sidebar, leaving it
+   on the plain OS scrollbar. Styling both explicitly keeps them
+   consistent across browsers instead of relying on that heuristic. */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.22) var(--chrome);
+}
+html::-webkit-scrollbar { width: 10px; }
+html::-webkit-scrollbar-track { background: var(--chrome); }
+html::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.22);
+  border-radius: 6px;
+}
+html::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.35); }
 body {
   font-family: var(--font-body);
   background: var(--warm-white);
@@ -45,7 +64,16 @@ body {
   overflow-y: auto;
   padding: 26px 0 40px;
   z-index: 50;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.22) var(--chrome);
 }
+.sidebar::-webkit-scrollbar { width: 9px; }
+.sidebar::-webkit-scrollbar-track { background: var(--chrome); }
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.22);
+  border-radius: 6px;
+}
+.sidebar::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.35); }
 .sidebar-brand {
   color: #fff; font-weight: 700; font-size: 15px;
   padding: 24px 22px 20px;
@@ -479,7 +507,7 @@ ul.flist b { color: var(--navy); font-weight: 600; font-size: 13px; }
   position: fixed; bottom: 22px; right: 22px;
   z-index: 220;
   align-items: center; gap: 8px;
-  background: var(--navy); color: #fff;
+  background: var(--gold); color: var(--navy);
   border: none; border-radius: 30px;
   padding: 13px 20px;
   font-family: var(--font-body); font-size: 13px; font-weight: 600;
@@ -1221,7 +1249,7 @@ ul.flist b { color: var(--navy); font-weight: 600; font-size: 13px; }
     <p>The <a href="tutorials.html">Step-by-Step Tutorials</a> hub walks common tasks click by click, start to finish — a good companion to this reference if you'd rather follow along than look something up.</p>
   </div>
 
-  <p style="margin-top:60px;text-align:center;color:var(--muted);font-size:12px;letter-spacing:0.12em;text-transform:uppercase;">SpiderWeb v1 · Site Admin Manual</p>
+  <p class="section-signature" style="margin-top:60px;text-align:center;color:var(--muted);font-size:12px;letter-spacing:0.12em;text-transform:uppercase;">SpiderWeb v1 · Site Admin Manual</p>
 </section>
 
 </div><!-- /container -->
@@ -1361,7 +1389,13 @@ function buildManualIndex() {
     const label = msStripEmoji(raw);
     let body = '';
     if (target.tagName === 'SECTION') {
-      body = target.textContent;
+      // Clone first so we can strip boilerplate/chrome (the tutorials-bridge
+      // callout, the closing "SpiderWeb v1" signature line) without touching
+      // the real, visible section — mirrors the tutorials hub's own fix for
+      // its per-page Previous/Next nav bleeding into that page's search text.
+      const clone = target.cloneNode(true);
+      clone.querySelectorAll('#footerTutCallout, .section-signature').forEach(function(el) { el.remove(); });
+      body = clone.textContent;
     } else if (target.classList.contains('group-head')) {
       const intro = target.nextElementSibling;
       body = intro && intro.classList.contains('group-intro') ? intro.textContent : '';

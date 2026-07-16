@@ -37,6 +37,37 @@ body {
   line-height: 1.7;
 }
 
+/* ============ SCROLLBARS ============
+   Left unstyled, browsers default the document scrollbar and any
+   nested overflow:auto element independently — some (Chrome) auto-dark
+   the document scrollbar against a dark page background but don't
+   extend that to inner scroll containers like the sidebar, leaving it
+   on the plain OS scrollbar. Styling both explicitly keeps them
+   consistent across browsers instead of relying on that heuristic. */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.22) var(--chrome);
+}
+html::-webkit-scrollbar { width: 10px; }
+html::-webkit-scrollbar-track { background: var(--chrome); }
+html::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.22);
+  border-radius: 6px;
+}
+html::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.35); }
+
+.sidebar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.22) var(--chrome);
+}
+.sidebar::-webkit-scrollbar { width: 9px; }
+.sidebar::-webkit-scrollbar-track { background: var(--chrome); }
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.22);
+  border-radius: 6px;
+}
+.sidebar::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.35); }
+
 /* ============ SIDEBAR ============ */
 .sidebar {
   position: fixed; top: 0; left: 0; bottom: 0;
@@ -509,7 +540,7 @@ kbd, .btn-demo {
   position: fixed; bottom: 22px; right: 22px;
   z-index: 220;
   align-items: center; gap: 8px;
-  background: var(--navy); color: #fff;
+  background: var(--gold); color: var(--navy);
   border: none; border-radius: 30px;
   padding: 13px 20px;
   font-family: var(--font-body); font-size: 13px; font-weight: 600;
@@ -594,6 +625,713 @@ kbd, .btn-demo {
 <!-- ============================================================
      PAGE: FIX A TYPO  (Everyday Edits)
      ============================================================ -->
+<!-- ============================================================
+     PAGE: SET UP A BRAND-NEW WEBSITE  (Getting Started)
+     ============================================================ -->
+<section class="tut-page" id="page-setup-new-site">
+  <div class="container" style="padding-top:60px;">
+    <div class="tut-head">
+      <span class="eyebrow">Getting Started</span>
+      <h2>Set Up a Brand-New Website</h2>
+      <div class="tut-meta">
+        <span class="badge lv-beginner">Beginner</span>
+        <span class="badge time">30–45 min</span>
+      </div>
+      <p class="tut-lede">Starting from a fresh copy of the template, with nothing customized yet. By the end, you'll have your own site running with your business name on it — full branding and content come next.</p>
+    </div>
+
+    <div class="prereq">
+      <div class="panel-title">✅ Before you start</div>
+      <ul>
+        <li>You have your website folder — usually named something like <code>my-website</code> — containing <code>index.html</code>, <code>admin.html</code>, <code>config.js</code>, and an <code>images/</code> folder. If you don't have this yet, get it from whoever set up your template before continuing.</li>
+        <li>A modern browser (Chrome, Edge, Firefox, or Safari).</li>
+        <li>Your business name, tagline, and a logo image (if you have one) handy — you don't need everything, just what you have.</li>
+      </ul>
+    </div>
+
+    <h3>1. Confirm your folder</h3>
+    <p>Open your website folder in your file explorer and check it looks like this:</p>
+    <div class="panel">
+      <pre style="font-family:'DM Mono',monospace;font-size:12.5px;line-height:1.7;color:#4a453e;white-space:pre;overflow-x:auto;">my-website/
+├── index.html   ← the website (never edit)
+├── admin.html   ← the control panel (never edit)
+├── config.js    ← the content (this is what you'll replace)
+├── favicon.png  ← browser tab icon
+├── images/      ← logos, photos &amp; graphics go here
+└── files/       ← downloadable documents (PDFs, etc.)</pre>
+    </div>
+    <p>Nothing to build or install — every piece is already there. <code>index.html</code> and <code>admin.html</code> never need editing directly; everything you change goes through the admin.</p>
+
+    <h3>2. Open the admin for the first time</h3>
+    <ol class="steps">
+      <li><b>Double-click <code>admin.html</code>.</b> It opens in your browser — this is your private control panel. A fresh template starts with sensible placeholder content already in every field, so nothing looks broken or empty.</li>
+      <li><b>Find Business Details.</b> In the sidebar, under <em>Business Info</em>, click <span class="btn-demo ghost">🏛️ Business Details</span>. This opens the section where your name and tagline live.</li>
+      <li><b>Fill in the basics.</b> Open the <em>Business Identity</em> panel and set <b>Business Name</b> and <b>Tagline / Specialty</b> at minimum — enough to see your own site instead of placeholder text. The full branding pass (logo, footer bio, copyright) is its own tutorial, right after this one.</li>
+    </ol>
+
+    <h3>3. Preview, then publish</h3>
+    <ol class="steps">
+      <li><b>Click <span class="btn-demo gold">💾 Save &amp; Preview</span></b> in the top bar. Your site opens in a new tab with your business name in place. This preview only exists in your browser so far — nobody else can see it yet.</li>
+      <li><b>Click <span class="btn-demo gold">⬇ Export config.js</span>.</b> A fresh <code>config.js</code> lands in your Downloads folder.</li>
+      <li><b>Move it into your website folder</b>, replacing the old one — say <em>yes</em> when your file explorer asks about overwriting.</li>
+      <li><b>Open <code>index.html</code></b> directly (double-click it) to see your real, live site — the same file a visitor would open.</li>
+    </ol>
+
+    <div class="callout ok">
+      <b>Check your work</b>
+      <p>If <code>index.html</code> shows your business name instead of placeholder text, your site is live and reading your content correctly. From here, every future change follows the same rhythm — covered next in <a href="#first-session">Your First Editing Session</a>.</p>
+    </div>
+
+    <div class="callout">
+      <b>What's next</b>
+      <p>This tutorial got the lights on. For the full name/logo/footer/copyright pass, continue to <a href="#business-branding">Business Details &amp; Branding</a>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PAGE: YOUR FIRST EDITING SESSION  (Getting Started)
+     ============================================================ -->
+<section class="tut-page" id="page-first-session">
+  <div class="container" style="padding-top:60px;">
+    <div class="tut-head">
+      <span class="eyebrow">Getting Started</span>
+      <h2>Your First Editing Session</h2>
+      <div class="tut-meta">
+        <span class="badge lv-beginner">Beginner</span>
+        <span class="badge time">15 min</span>
+      </div>
+      <p class="tut-lede">One rhythm covers almost everything you'll ever do in the admin: bring your content in, make a change, preview it, then publish it. Learn this loop once and every other tutorial is just this loop applied to a specific field.</p>
+    </div>
+
+    <div class="prereq">
+      <div class="panel-title">✅ Before you start</div>
+      <ul>
+        <li>Your website folder, with <code>admin.html</code> in it.</li>
+        <li>If your site already has real content on it (you're not starting from scratch), know where your current <code>config.js</code> lives.</li>
+      </ul>
+    </div>
+
+    <h3>The loop, step by step</h3>
+    <ol class="steps">
+      <li><b>Open the admin.</b> Double-click <code>admin.html</code>. If this is the same browser you always edit in, it remembers your last session automatically — skip to step 3.</li>
+      <li><b>Import, if needed.</b> On a new computer, a new browser, or right after someone else has edited the site, drag your site folder's <code>config.js</code> onto the dashed <em>"Drag &amp; drop your config.js here"</em> zone at the top of the admin (or click it to browse for the file). A green confirmation toast means the admin now matches the live site exactly. This step is covered in more depth in <a href="#wrong-computer">"I Edited on the Wrong Computer."</a></li>
+      <li><b>Find your way around the sidebar.</b> It's grouped into three parts: <b>Content</b> (Search, Splash Screen, Home Page, About Us, and any custom pages you've added), <b>Business Info</b> (Business Details, Contact &amp; Hours), and <b>Design</b> (Colors &amp; Fonts, Navigation, SEO &amp; Meta, Members &amp; Access, Export). Click any item to jump to it.</li>
+      <li><b>Make a change.</b> Click into any field and edit it — text, a dropdown, a checkbox. Panels with a ▼ arrow expand when clicked, revealing the fields inside.</li>
+      <li><b>Watch it autosave.</b> A second or two after you stop typing, the status indicator in the top bar updates to <em>"Autosaved [time]."</em> This is saved inside your browser only — it's not live yet, and it isn't lost if you close the tab.</li>
+      <li><b>Preview it.</b> Click <span class="btn-demo gold">💾 Save &amp; Preview</span>. Your site opens in a new tab reflecting every change so far. Reload that tab any time to see further edits — no need to click the button again.</li>
+      <li><b>Publish it.</b> Happy with what you see? Click <span class="btn-demo gold">⬇ Export config.js</span>. A fresh <code>config.js</code> downloads — move it into your website folder, replacing the old one, and upload it to your host if your site lives online. That's the whole loop.</li>
+    </ol>
+
+    <div class="callout ok">
+      <b>Check your work</b>
+      <p>Every tutorial in this hub after this one assumes you know this rhythm — open (import if needed) → edit → autosave confirms → preview → export → replace. If you can do this loop confidently, you're ready for anything else here.</p>
+    </div>
+
+    <div class="callout">
+      <b>Good habit</b>
+      <p>Keep the same browser for editing whenever you can — it's one less step every session. If you must switch computers or browsers, the import step above is quick and takes seconds.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PAGE: BUSINESS DETAILS & BRANDING  (Getting Started)
+     ============================================================ -->
+<section class="tut-page" id="page-business-branding">
+  <div class="container" style="padding-top:60px;">
+    <div class="tut-head">
+      <span class="eyebrow">Getting Started</span>
+      <h2>Business Details &amp; Branding</h2>
+      <div class="tut-meta">
+        <span class="badge lv-beginner">Beginner</span>
+        <span class="badge time">20 min</span>
+      </div>
+      <p class="tut-lede">Your name, logos, footer text, and copyright — the details woven into the header, footer, and splash screen throughout the whole site. One pass here touches nearly every page.</p>
+    </div>
+
+    <div class="prereq">
+      <div class="panel-title">✅ Before you start</div>
+      <ul>
+        <li>Comfortable with the import → edit → preview → export loop — see <a href="#first-session">Your First Editing Session</a> if not.</li>
+        <li>Your logo file(s), if you have them, copied into your website's <code>images/</code> folder already (e.g. <code>images/logo.png</code>). If you don't have a logo yet, skip those fields for now — the site falls back to your business name as plain text.</li>
+      </ul>
+    </div>
+
+    <h3>1. Business Identity</h3>
+    <p>In the admin sidebar, under <em>Business Info</em>, open <span class="btn-demo ghost">🏛️ Business Details</span>, then expand the <b>Business Identity</b> panel.</p>
+    <ol class="steps">
+      <li><b>Business Name</b> — your business's full name, used throughout the site.</li>
+      <li><b>Tagline / Specialty</b> — a short phrase describing what you do, shown near your name in places like the header or hero.</li>
+      <li><b>Launch Screen Tagline</b> — text shown beneath your name on the splash/loading screen that greets visitors before the site appears.</li>
+      <li><b>Footer Bio</b> — one or two sentences describing the business, shown below your name in the footer. Keep it brief.</li>
+      <li><b>Copyright Text</b> — optional. Leave blank to use the automatic <em>"© [year] [Business Name]. All rights reserved."</em> line, or type your own to override it.</li>
+    </ol>
+
+    <h3>2. Branding &amp; Logo</h3>
+    <p>Still on the Business Details page, expand the <b>Branding &amp; Logo</b> panel below it.</p>
+    <ol class="steps">
+      <li><b>Primary Logo Path</b> and <b>Alternate Logo Path</b> — the location of your logo file inside your website folder, e.g. <code>images/logo.png</code>. The Alternate slot is optional — a good place for a light-colored version of your logo, for use on dark backgrounds.</li>
+      <li><b>Header Logo — Logo to Use.</b> Choose <em>None</em> to show your business name as text in the header instead, or pick <em>Primary</em> or <em>Alternate</em> to show that image.</li>
+      <li><b>Header Logo — Logo Height.</b> Sets how tall the header logo displays, in pixels (a reasonable starting point is 40).</li>
+      <li><b>Footer Logo</b> — the same two choices (which logo, and its height), applied to the footer instead of the header. You can use a different logo in each spot, or none at all.</li>
+    </ol>
+
+    <div class="callout">
+      <b>About image paths</b>
+      <p>Type the file's location relative to your website folder — lowercase, matching the real filename exactly, with no spaces (use dashes instead, like <code>logo-alt.png</code>). Copy the actual image file into <code>images/</code> using your file explorer first; the admin only stores the path, not the picture itself. See <a href="#swap-image">Swap or Add an Image</a> for the full walkthrough of that step.</p>
+    </div>
+
+    <h3>3. Preview and publish</h3>
+    <p>Click <span class="btn-demo gold">💾 Save &amp; Preview</span> to see your business name, tagline, and logos in place across the site. When it looks right, click <span class="btn-demo gold">⬇ Export config.js</span> and replace the file in your website folder — the full publish walkthrough is in <a href="#publish-changes">Publish Your Changes</a>.</p>
+
+    <div class="callout ok">
+      <b>Check your work</b>
+      <p>Open the live site and look at three spots: the header (your logo or name), the footer (bio, copyright, and footer logo if set), and the splash screen on first load (your name and launch tagline). If all three show your details instead of placeholders, this pass is complete.</p>
+    </div>
+
+    <div class="callout">
+      <b>Not covered here</b>
+      <p>Site-wide colors and fonts are their own tutorial — see <a href="#colors-fonts">Change Site Colors &amp; Fonts</a>. Phone, address, and hours live under Contact &amp; Hours — see <a href="#update-contact">Update Hours, Phone &amp; Contact Info</a>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PAGE: CHANGE SITE COLORS & FONTS  (Building)
+     ============================================================ -->
+<section class="tut-page" id="page-colors-fonts">
+  <div class="container" style="padding-top:60px;">
+    <div class="tut-head">
+      <span class="eyebrow">Building</span>
+      <h2>Change Site Colors &amp; Fonts</h2>
+      <div class="tut-meta">
+        <span class="badge lv-intermediate">Intermediate</span>
+        <span class="badge time">20 min</span>
+      </div>
+      <p class="tut-lede">One panel controls the palette and typography for the entire site at once — every page, every section, all in sync. Marked Intermediate only because a bad color pairing is easy to create and easy to miss until you preview it.</p>
+    </div>
+
+    <div class="prereq">
+      <div class="panel-title">✅ Before you start</div>
+      <ul>
+        <li>Comfortable with the import → edit → preview → export loop.</li>
+        <li>If you're not confident picking colors that work well together, have a target palette in mind first (your logo's colors are a good starting point).</li>
+      </ul>
+    </div>
+
+    <h3>1. Color Palette</h3>
+    <p>In the sidebar, under <em>Design</em>, open <span class="btn-demo ghost">🎨 Colors &amp; Fonts</span>, then expand the <b>Color Palette</b> panel. Colors are grouped by what they control:</p>
+    <ol class="steps">
+      <li><b>Section Backgrounds</b> — Light Background, Alt Background, Dark Background, and Dark Background (Light Variant). Every section on the site is set to one of Light, Alt, or Dark; changing these four colors changes what those settings actually look like, everywhere at once.</li>
+      <li><b>Accent Colors</b> — Accent, Accent (Hover), and Accent (Subtle). Used for buttons, section labels, and highlights throughout the site — this is usually your brand's signature color.</li>
+      <li><b>Text Colors</b> — Heading Text and Body Text, used across all sections.</li>
+      <li><b>Chrome — Header &amp; Footer Only</b> — a separate background color used <em>only</em> for the navigation header and page footer, not for section backgrounds.</li>
+    </ol>
+    <p>Each color has three ways to set it — click the swatch to open a color picker, use the picker for fine control, or type/paste a hex code directly (like <code>#0f2340</code>) if you already know the exact value.</p>
+
+    <div class="callout ok">
+      <b>Use the Live Preview</b>
+      <p>Below the color fields, a <b>Live Preview</b> panel shows Light, Alt, and Dark sections side by side, updating as you change colors — so you can check that text stays readable on every background before you ever leave this page.</p>
+    </div>
+
+    <h3>2. Typography</h3>
+    <p>Expand the <b>Typography</b> panel below Color Palette.</p>
+    <ol class="steps">
+      <li><b>Display Font (Headlines)</b> — a dropdown of ten paired options (Playfair Display, Lora, Josefin Sans, and others) used for headings site-wide.</li>
+      <li><b>Body Font</b> — a matching dropdown for paragraph and body text (DM Sans, Inter, Nunito, and others).</li>
+      <li><b>Custom Display Font</b> and <b>Custom Body Font</b> — optional text fields that override the dropdowns entirely. Type any font name from <a href="https://fonts.google.com" target="_blank">Google Fonts</a> exactly as it appears there, spelling and capitalization included.</li>
+    </ol>
+    <p>A preview box below the fields shows sample heading and body text updating live as you choose fonts, so you can judge the pairing before committing to it.</p>
+
+    <div class="callout">
+      <b>If a custom font doesn't show up</b>
+      <p>Double-check the spelling against the Google Fonts page exactly — a mismatched name (missing a space, wrong capitalization) is the most common cause. If it's still not applying after a Save &amp; Preview, the font may not exist on Google Fonts under that name.</p>
+    </div>
+
+    <h3>3. Preview and publish</h3>
+    <p>Click <span class="btn-demo gold">💾 Save &amp; Preview</span> and click through a few different pages — colors and fonts affect the whole site, so it's worth checking more than one page before you commit. When it looks right, <span class="btn-demo gold">⬇ Export config.js</span> and replace the file in your website folder (see <a href="#publish-changes">Publish Your Changes</a> for the full walkthrough).</p>
+
+    <div class="callout ok">
+      <b>Check your work</b>
+      <p>Look specifically at text on your darkest background and your lightest background — those are the two spots a bad pairing shows up first. If body text is still comfortably readable on both, the palette works.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PAGE: CREATE A NEW PAGE  (Building)
+     ============================================================ -->
+<section class="tut-page" id="page-create-page">
+  <div class="container" style="padding-top:60px;">
+    <div class="tut-head">
+      <span class="eyebrow">Building</span>
+      <h2>Create a New Page</h2>
+      <div class="tut-meta">
+        <span class="badge lv-beginner">Beginner</span>
+        <span class="badge time">15 min</span>
+      </div>
+      <p class="tut-lede">Beyond Home and About Us, you can add as many additional pages as your site needs — services, locations, a blog, anything. Each one gets its own address, its own spot in the menu, and its own sections.</p>
+    </div>
+
+    <div class="prereq">
+      <div class="panel-title">✅ Before you start</div>
+      <ul>
+        <li>Comfortable with the import → edit → preview → export loop.</li>
+        <li>Know what you want to name the page and roughly what will go on it.</li>
+      </ul>
+    </div>
+
+    <h3>1. Add the page</h3>
+    <ol class="steps">
+      <li><b>In the sidebar, under Content</b>, find the <b>+ Add Page</b> button (near the list of existing pages) and click it. A new, empty page appears and opens automatically.</li>
+      <li><b>Fill in Page Settings</b> — three fields appear together at the top: <b>Page Emoji</b> (the small icon shown next to the page's name in the menu), <b>Navigation Label</b> (what visitors see in the menu, e.g. <em>"Our Services"</em>), and <b>URL Slug</b> (the web address, e.g. <code>our-services</code> — the admin fills this in automatically from your label, shown with an <em>"auto"</em> tag, but you can type your own).</li>
+      <li><b>Leave "Show in navigation" on</b> for now — this toggle controls whether the page appears in the menu at all; turning it off hides the page and sends visitors to Home instead if they try to reach it directly.</li>
+    </ol>
+
+    <div class="callout warn">
+      <b>Careful with the URL Slug</b>
+      <p>Changing the slug after the page has been live for a while breaks any links that already point to the old address — bookmarks, links from other pages, links you've shared. Get it right early, or expect to update other links if you change it later.</p>
+    </div>
+
+    <h3>2. Add your first section</h3>
+    <p>Scroll down to the <b>Sections</b> area at the bottom of the page. Choose a section type from the dropdown and click <span class="btn-demo gold">+ Add Section</span> — a new, empty section appears, ready to fill in. The full walkthrough of what's in the library and how sections work is its own tutorial: <a href="#add-section">Add a Section to a Page</a>.</p>
+
+    <h3>3. Preview and publish</h3>
+    <p>Click <span class="btn-demo gold">💾 Save &amp; Preview</span> and check the new page appears in the menu, in the right spot, with the content you added. When it looks right, <span class="btn-demo gold">⬇ Export config.js</span> and replace the file in your website folder.</p>
+
+    <div class="callout ok">
+      <b>Check your work</b>
+      <p>Click the new item in the live site's menu and confirm it lands on the right page, at the address you expected. If it's not where you want it in the menu order, or you'd like it nested under another page as a dropdown item, see <a href="#reorder-nav">Reorder the Navigation</a>.</p>
+    </div>
+
+    <div class="callout">
+      <b>Not covered here</b>
+      <p>Deleting a page uses the <span class="btn-demo ghost">× Delete Page</span> button at the top of its editor — see <a href="#undo-delete">Undo an Accidental Deletion</a> if you remove one by mistake. Nesting a page as a dropdown under another is covered in <a href="#reorder-nav">Reorder the Navigation</a>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PAGE: ADD A SECTION TO A PAGE  (Building)
+     ============================================================ -->
+<section class="tut-page" id="page-add-section">
+  <div class="container" style="padding-top:60px;">
+    <div class="tut-head">
+      <span class="eyebrow">Building</span>
+      <h2>Add a Section to a Page</h2>
+      <div class="tut-meta">
+        <span class="badge lv-beginner">Beginner</span>
+        <span class="badge time">15 min</span>
+      </div>
+      <p class="tut-lede">Every page — Home, About Us, or one you've created — is built from sections stacked in order. This walks through picking one from the library, understanding the fields every section shares, and arranging it once it's in place.</p>
+    </div>
+
+    <div class="prereq">
+      <div class="panel-title">✅ Before you start</div>
+      <ul>
+        <li>Comfortable with the import → edit → preview → export loop.</li>
+        <li>Be on the page you want to add to — Home, About Us, or a custom page.</li>
+      </ul>
+    </div>
+
+    <h3>1. Choose a section type</h3>
+    <p>Scroll to the <b>Sections</b> area near the bottom of the page's editor. There's a dropdown listing every section type in the library, grouped by purpose:</p>
+    <div class="panel">
+      <ul style="margin:0;columns:2;column-gap:24px;">
+        <li><b>🗒️ Content &amp; Text</b> — Text Block, Hero Section, Two Column, Rich Text</li>
+        <li><b>🃏 Cards &amp; Grids</b> — Feature Cards, Services Grid, Flip Cards, Rotating Cards, Tier Cards</li>
+        <li><b>📋 Process &amp; Information</b> — Process Steps, Timeline, Document Checklist, Bullet List, Resources/Blog Cards</li>
+        <li><b>📊 Data &amp; Structure</b> — Stats Bar, Table, Data Table, Jurisdiction Notice</li>
+        <li><b>🎬 Media</b> — Image Gallery, Image/Before &amp; After, Video Embed, Logo/Partner Strip, Marquee/Ticker</li>
+        <li><b>👥 People &amp; Social Proof</b> — Team Block, Locations, Testimonials, Accordion, FAQ, Custom Form</li>
+        <li><b>📐 Page Structure</b> — CTA Banner, Button, Link</li>
+        <li><b>🔔 Overlays</b> — Popup</li>
+      </ul>
+    </div>
+    <p>Pick a type and click <span class="btn-demo gold">+ Add Section</span>. The new section appears at the bottom of the page, open and ready to fill in.</p>
+
+    <h3>2. Fields every section shares</h3>
+    <p>Whatever type you picked, most sections have three things in common at the top of the card:</p>
+    <ol class="steps">
+      <li><b>Section Label</b> — small gold text shown above the heading (e.g. <em>"Practice Area"</em>) — optional, and not present on every type.</li>
+      <li><b>Background</b> — Inherit, Light, Alt, or Dark. This decides which of the four palette colors from <a href="#colors-fonts">Colors &amp; Fonts</a> the section uses. <em>Inherit</em> makes the section transparent, showing whatever is behind it.</li>
+      <li><b># (Anchor ID)</b> — a short text field in the section's header, used to link or scroll directly to this section from a button, menu item, or popup trigger elsewhere on the site. Leave it blank unless something else needs to point at this exact spot.</li>
+    </ol>
+    <p>Below those, the fields specific to the type you chose appear — a Hero Section shows image and headline fields, a FAQ shows question/answer pairs, and so on.</p>
+
+    <h3>3. Arrange it</h3>
+    <p>Every section card has a row of small controls in its header:</p>
+    <ul>
+      <li><b>↑ / ↓</b> — move the section up or down the page.</li>
+      <li><b>⧉</b> — duplicate the section, placing the copy directly below.</li>
+      <li><b>↑📋</b> — export this section as text, for pasting into a different site (see <a href="#move-section">Move or Copy a Section Between Pages</a>).</li>
+      <li><b>→</b> — copy this exact section onto a different page on this same site (also covered in <a href="#move-section">Move or Copy a Section Between Pages</a>).</li>
+      <li><b>×</b> — remove the section.</li>
+    </ul>
+
+    <h3>4. Preview and publish</h3>
+    <p>Click <span class="btn-demo gold">💾 Save &amp; Preview</span> to see the section in place. When it looks right, <span class="btn-demo gold">⬇ Export config.js</span> and replace the file in your website folder.</p>
+
+    <div class="callout ok">
+      <b>Check your work</b>
+      <p>Confirm the section appears where you expect in the page order, its background reads clearly against neighboring sections, and any images or links inside it work. If it's the wrong section type entirely, delete it with × and add the correct one — there's no convert-in-place option.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PAGE: MOVE OR COPY A SECTION BETWEEN PAGES  (Building)
+     ============================================================ -->
+<section class="tut-page" id="page-move-section">
+  <div class="container" style="padding-top:60px;">
+    <div class="tut-head">
+      <span class="eyebrow">Building</span>
+      <h2>Move or Copy a Section Between Pages</h2>
+      <div class="tut-meta">
+        <span class="badge lv-intermediate">Intermediate</span>
+        <span class="badge time">10 min</span>
+      </div>
+      <p class="tut-lede">Built a section you like and want it somewhere else too — or instead? There are two ways to do this: a one-click copy for pages on this same site, and an export/import pair for pulling a section in from a different site entirely.</p>
+    </div>
+
+    <div class="prereq">
+      <div class="panel-title">✅ Before you start</div>
+      <ul>
+        <li>Comfortable with <a href="#add-section">Add a Section to a Page</a> — this tutorial assumes you know the section card controls.</li>
+        <li>Know which page the section should end up on.</li>
+      </ul>
+    </div>
+
+    <h3>1. Copy to another page on this site (the easy way)</h3>
+    <p>This is the method you'll use almost every time — it works for any page in your site, in one step.</p>
+    <ol class="steps">
+      <li><b>Find the section</b> you want to copy, on the page it currently lives on.</li>
+      <li><b>Click the → button</b> in its header (labeled "Copy to page"). A small picker drops down listing every other page on your site.</li>
+      <li><b>Choose the destination page</b> from the list, then click <span class="btn-demo gold">Copy</span>.</li>
+      <li>The section is added to the <b>bottom</b> of the destination page. Open that page and use the section's <b>↑</b> arrow to move it into the position you want.</li>
+    </ol>
+    <div class="callout ok">
+      <b>This is a copy, not a move</b>
+      <p>The original stays exactly where it was — you now have it in two places. If you actually wanted to relocate it rather than duplicate it, go back to the original and click its <b>×</b> to remove it once you've confirmed the copy looks right.</p>
+    </div>
+
+    <h3>2. Copy between two different sites (the export/import way)</h3>
+    <p>The → button only lists pages within the site you currently have open. If you're moving a section into a <em>different</em> SpiderWeb site — a different client's site, for example — use Export and Import instead.</p>
+    <ol class="steps">
+      <li><b>On the source site's admin</b>, find the section and click <b>↑📋</b> ("Export section JSON") in its header. A window opens showing the section's content as text, already selected and copied to your clipboard.</li>
+      <li><b>Open the destination site's admin</b> and go to the page you want to add it to.</li>
+      <li><b>Click <span class="btn-demo ghost">⊕ Import</span></b>, next to the <span class="btn-demo gold">+ Add Section</span> button at the bottom of that page's Sections list.</li>
+      <li><b>Paste the copied text</b> into the box and confirm. The section is added to the bottom of the page, just like the copy-to-page method.</li>
+    </ol>
+
+    <div class="callout">
+      <b>Why two methods?</b>
+      <p>Copy-to-page only knows about pages inside the file you currently have open in the admin — it has no way to reach a second, separate site. Export/Import works with plain text, so it can carry a section anywhere, including between two entirely different installations of the template.</p>
+    </div>
+
+    <h3>3. Preview and publish</h3>
+    <p>Click <span class="btn-demo gold">💾 Save &amp; Preview</span> and check the section looks right in its new spot — some section types (like Popup or Hero) depend on things elsewhere on the page and may need small adjustments after moving. When it looks right, <span class="btn-demo gold">⬇ Export config.js</span> and replace the file in your website folder.</p>
+
+    <div class="callout ok">
+      <b>Check your work</b>
+      <p>If you were doing a true "move," confirm the section now appears on the new page <em>and</em> no longer appears on the old one. If any links or images inside the copied section look broken, double-check paths that were specific to the original page (like an anchor link pointing to another section on that same page) — those don't automatically update to match the new page.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PAGE: ADD A POPUP ANNOUNCEMENT  (Building)
+     ============================================================ -->
+<section class="tut-page" id="page-add-popup">
+  <div class="container" style="padding-top:60px;">
+    <div class="tut-head">
+      <span class="eyebrow">Building</span>
+      <h2>Add a Popup Announcement</h2>
+      <div class="tut-meta">
+        <span class="badge lv-intermediate">Intermediate</span>
+        <span class="badge time">15–20 min</span>
+      </div>
+      <p class="tut-lede">A promotion, notice, or alert that floats over the page instead of sitting inline — as a centered modal or a small corner toast, appearing on page load or when a visitor scrolls to a specific section.</p>
+    </div>
+
+    <div class="prereq">
+      <div class="panel-title">✅ Before you start</div>
+      <ul>
+        <li>Comfortable with <a href="#add-section">Add a Section to a Page</a> — a popup is added the same way, as a section type.</li>
+        <li>Know what you want the popup to say, and whether it needs an image.</li>
+      </ul>
+    </div>
+
+    <h3>1. Add the Popup section</h3>
+    <p>On the page where you want it to appear, choose <b>🔔 Popup</b> from the section type dropdown and click <span class="btn-demo gold">+ Add Section</span>. Unlike other sections, a Popup doesn't sit inline in the page's content — it floats over the page instead, so its position in the section list doesn't affect where it appears on screen.</p>
+
+    <h3>2. Style and content</h3>
+    <ol class="steps">
+      <li><b>Popup Style</b> — <em>Centered Modal</em> (a box centered over the page) or <em>Corner Toast</em> (a small notice in the corner).</li>
+      <li><b>Heading</b> and <b>Body</b> — the popup's message.</li>
+      <li><b>Text Color</b> — White, Black, Chrome Background Color, Light Background Color, or Match Section Background (which follows the Background setting below, automatically flipping to white on Dark).</li>
+    </ol>
+
+    <h3>3. Add an image (optional)</h3>
+    <p>The <b>Image Layout</b> dropdown offers five ways to include a picture — Top Banner, Full Background (Faded), Image Left/Text Right, Image Right/Text Left, or Full Image (No Crop) for a pre-designed graphic that already has its own message on it. Corner Toast always shows a small thumbnail regardless of this setting; these layouts apply to Centered Modal.</p>
+    <p>Once you pick a layout other than None, an <b>Image Path</b> field appears (e.g. <code>images/popup.jpg</code>), along with focus-position controls for cropping and a separate mobile focus position for narrower screens. Full Background layout also adds <b>Overlay Color</b> and <b>Overlay Opacity</b> controls, and Full Image adds toggles for <b>Overlay Text on Image</b> (text over the picture vs. below it) and <b>Image Clickable</b> (the whole image links to the Primary Button's destination).</p>
+
+    <h3>4. Buttons</h3>
+    <p>Below the image settings, two button sections appear: <b>Primary Button</b> and <b>Secondary Button (optional)</b>. Each uses the same smart-link fields you'll see elsewhere on the site — link to an internal page, an external URL, or a file, or leave it set to none to hide that button.</p>
+
+    <h3>5. When it appears</h3>
+    <ol class="steps">
+      <li><b>Trigger</b> — <em>Immediately on Page Load</em> shows the popup shortly after the page finishes loading. Alternatively, choose any section that has an <b># Anchor ID</b> set (see <a href="#add-section">Add a Section to a Page</a>) to show the popup when a visitor scrolls that section into view.</li>
+      <li><b>Delay (seconds)</b> — extra wait time after the trigger condition is met, before the popup actually opens.</li>
+    </ol>
+    <div class="callout">
+      <b>Once per visit</b>
+      <p>However it's triggered, a popup shows once per browser session — a visitor won't see it again and again as they browse, and it won't reappear if they reload the same page shortly after dismissing it.</p>
+    </div>
+
+    <h3>6. Finish and publish</h3>
+    <p>The <b>Text Alignment</b>, <b>Rounded Corners</b>, and <b>Background</b> (Light/Alt/Dark) fields round out the appearance. Click <span class="btn-demo gold">💾 Save &amp; Preview</span> — reload the preview tab to see the popup trigger again, since it only shows once per session. When it looks right, <span class="btn-demo gold">⬇ Export config.js</span> and replace the file in your website folder.</p>
+
+    <div class="callout ok">
+      <b>Check your work</b>
+      <p>Confirm the popup appears at the right moment, the text stays readable against its background or image, and both buttons (if used) go where you expect. If you chose a scroll-trigger and it never appears, double-check the target section actually has an Anchor ID set — without one, there's nothing for the popup to watch for.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PAGE: BUILD A CUSTOM FORM  (Building)
+     ============================================================ -->
+<section class="tut-page" id="page-custom-form">
+  <div class="container" style="padding-top:60px;">
+    <div class="tut-head">
+      <span class="eyebrow">Building</span>
+      <h2>Build a Custom Form</h2>
+      <div class="tut-meta">
+        <span class="badge lv-intermediate">Intermediate</span>
+        <span class="badge time">20–30 min</span>
+      </div>
+      <p class="tut-lede">Beyond the site's main contact form, you can add a Form section to any page with its own fields — an inquiry form, an RSVP, a quote request, anything you design field by field.</p>
+    </div>
+
+    <div class="prereq">
+      <div class="panel-title">✅ Before you start</div>
+      <ul>
+        <li>Comfortable with <a href="#add-section">Add a Section to a Page</a>.</li>
+        <li>Know what questions you want to ask, in what order.</li>
+        <li>A form isn't useful until it's connected — plan to also read <a href="#setup-formspree">Connect Forms with Formspree</a> once this is built.</li>
+      </ul>
+    </div>
+
+    <h3>1. Add the Form section</h3>
+    <p>On the page where you want it, choose <b>👥 Custom Form</b> from the section type dropdown and click <span class="btn-demo gold">+ Add Section</span>. Fill in a <b>Form Heading</b> and an optional <b>Form Intro</b> sentence above the fields.</p>
+
+    <h3>2. Add and configure fields</h3>
+    <p>Click <span class="btn-demo gold">+ Add Field</span> to add a field, then repeat for each question you want to ask. Each field has:</p>
+    <ol class="steps">
+      <li><b>Field Type</b> — Text, Email, Phone, Textarea (multi-line), Select (dropdown), Radio (pick one), Checkbox (pick any), Date, or Stars (a rating).</li>
+      <li><b>Label</b> — the question shown to visitors, e.g. <em>"Full Name."</em></li>
+      <li><b>Placeholder</b> — grayed-out example text shown inside an empty field (not available for Date or Stars).</li>
+      <li><b>Required field</b> — a toggle; when on, visitors can't submit the form until this field is filled in.</li>
+      <li><b>Options</b> (Select, Radio, and Checkbox only) — type one choice per line in the box that appears, e.g. three lines reading <code>Consultation</code>, <code>Follow-Up</code>, <code>General Question</code>.</li>
+      <li><b>Half-width</b> — a layout toggle to pair this field side-by-side with the next one (handy for something like First Name / Last Name).</li>
+    </ol>
+    <p>Use each field's <b>↑ / ↓</b> arrows to reorder questions, or <b>×</b> to remove one.</p>
+
+    <h3>3. Finish the form</h3>
+    <ol class="steps">
+      <li><b>Submit Button Label</b> — defaults to "Send Message," but can be anything (e.g. <em>"Request a Quote"</em>).</li>
+      <li><b>Success Message</b> — shown to visitors after they submit, e.g. <em>"Thank you! We'll be in touch soon."</em></li>
+      <li><b>Form Endpoint</b> — where submissions actually go. Leave this blank for now if you haven't set one up yet — the form will still show the success message, it just won't deliver anywhere. The full walkthrough for getting and connecting an endpoint is in <a href="#setup-formspree">Connect Forms with Formspree</a>.</li>
+    </ol>
+
+    <h3>4. Preview and publish</h3>
+    <p>Click <span class="btn-demo gold">💾 Save &amp; Preview</span> and try filling out the form yourself — check the required fields actually block submission, and that every option shows up correctly for Select/Radio/Checkbox fields. When it looks right, <span class="btn-demo gold">⬇ Export config.js</span> and replace the file in your website folder.</p>
+
+    <div class="callout ok">
+      <b>Check your work</b>
+      <p>Submitting the preview with an empty required field should stop you and show which one needs filling in. If you've already connected an endpoint, submit a real test entry and confirm it arrives — see <a href="#setup-formspree">Connect Forms with Formspree</a> if it doesn't.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PAGE: CONNECT FORMS WITH FORMSPREE  (Building)
+     ============================================================ -->
+<section class="tut-page" id="page-setup-formspree">
+  <div class="container" style="padding-top:60px;">
+    <div class="tut-head">
+      <span class="eyebrow">Building</span>
+      <h2>Connect Forms with Formspree</h2>
+      <div class="tut-meta">
+        <span class="badge lv-intermediate">Intermediate</span>
+        <span class="badge time">15 min</span>
+      </div>
+      <p class="tut-lede">A form on your site can't deliver its own submissions anywhere — a plain HTML page has nowhere to send them. Formspree is a free service that sits in between: it receives what a visitor submits and forwards it to your email inbox.</p>
+    </div>
+
+    <div class="prereq">
+      <div class="panel-title">✅ Before you start</div>
+      <ul>
+        <li>An email address you check regularly — submissions land there.</li>
+        <li>A form already built on your site, either the site's main contact form or a <a href="#custom-form">Custom Form section</a> you've added yourself.</li>
+      </ul>
+    </div>
+
+    <h3>1. Create a Formspree endpoint</h3>
+    <ol class="steps">
+      <li><b>Go to <a href="https://formspree.io" target="_blank">formspree.io</a></b> and create a free account using the email address you want submissions sent to.</li>
+      <li><b>Create a new form</b> inside your Formspree account. Formspree generates a unique web address for it, shaped like <code>https://formspree.io/f/xxxxxxxx</code> — this address is what your site's form will send its data to.</li>
+      <li><b>Copy that address.</b> This is the one piece of information you need to bring back into the admin.</li>
+    </ol>
+
+    <h3>2. Paste it into your site</h3>
+    <p>Where you paste it depends on which form you're connecting:</p>
+    <ol class="steps">
+      <li><b>The site's built-in contact form</b> — in the sidebar, under <em>Business Info</em>, open <span class="btn-demo ghost">📞 Contact &amp; Hours</span>, find the <b>Formspree Endpoint</b> field, and paste the address there.</li>
+      <li><b>A Custom Form section you built yourself</b> — open that section on its page (see <a href="#custom-form">Build a Custom Form</a>) and paste the address into its own <b>Form Endpoint</b> field. Each Custom Form section has its own endpoint field, so different forms on your site can each go to a different Formspree form if you want them kept separate.</li>
+    </ol>
+
+    <h3>3. Preview, test, and publish</h3>
+    <ol class="steps">
+      <li><b>Click <span class="btn-demo gold">💾 Save &amp; Preview</span></b> and submit the form yourself with real test information.</li>
+      <li><b>Check your email.</b> Formspree sends a confirmation email the first time a form receives a submission — you'll need to click a verification link there before further submissions start arriving normally.</li>
+      <li><b>Once confirmed</b>, click <span class="btn-demo gold">⬇ Export config.js</span> and replace the file in your website folder to make the connection live.</li>
+    </ol>
+
+    <div class="callout ok">
+      <b>Check your work</b>
+      <p>Submit the live site's form (not just the preview) once it's published, and confirm the email actually arrives — some inboxes route the first Formspree message to spam or promotions, so check there if it doesn't show up in a minute or two.</p>
+    </div>
+
+    <div class="callout">
+      <b>If submissions still aren't arriving</b>
+      <p>Double check the endpoint was pasted in full and starts with <code>https://formspree.io/f/</code>, with no extra spaces before or after it. If you're using the free Formspree tier, also confirm you haven't exceeded its monthly submission limit — Formspree's own dashboard shows this.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PAGE: REORDER THE NAVIGATION  (Building)
+     ============================================================ -->
+<section class="tut-page" id="page-reorder-nav">
+  <div class="container" style="padding-top:60px;">
+    <div class="tut-head">
+      <span class="eyebrow">Building</span>
+      <h2>Reorder the Navigation</h2>
+      <div class="tut-meta">
+        <span class="badge lv-beginner">Beginner</span>
+        <span class="badge time">10 min</span>
+      </div>
+      <p class="tut-lede">Change the order pages appear in the menu, nest pages under one another as dropdowns, or hide a page from navigation without deleting it.</p>
+    </div>
+
+    <div class="prereq">
+      <div class="panel-title">✅ Before you start</div>
+      <ul>
+        <li>At least one custom page already created — see <a href="#create-page">Create a New Page</a> if you haven't yet.</li>
+      </ul>
+    </div>
+
+    <h3>1. Reorder pages</h3>
+    <p>In the sidebar, under <em>Content</em>, each page in the list has a drag handle (<b>⠿</b>) on the left and <b>↑ / ↓</b> arrows on the right.</p>
+    <ol class="steps">
+      <li><b>Drag by the ⠿ handle</b> to drop a page into a new position, or use the <b>↑ / ↓</b> arrows for the same result one step at a time.</li>
+      <li>If a page has sub-pages nested under it, moving it takes its whole group of children along together — you can't separate a parent from its children by reordering alone.</li>
+    </ol>
+
+    <h3>2. Nest a page as a dropdown</h3>
+    <p>There are two ways to create a dropdown relationship between pages:</p>
+    <ol class="steps">
+      <li><b>Starting fresh</b> — click the small <b>➕</b> button next to any top-level page in the sidebar list. This creates a brand-new page already nested underneath it.</li>
+      <li><b>Nesting an existing page</b> — open that page's editor and click <span class="btn-demo ghost">⚙️ Settings</span> at the top. In the modal, use the <b>Parent</b> dropdown to choose which top-level page it should nest under, or select none to make it a top-level page again.</li>
+    </ol>
+
+    <h3>3. Control visibility</h3>
+    <p>Still inside <span class="btn-demo ghost">⚙️ Settings</span>, three toggles control where a page shows up:</p>
+    <ul>
+      <li><b>Show in nav</b> — off entirely hides the page and redirects visitors to Home if they try to reach it directly.</li>
+      <li><b>Hide from main nav</b> — the page still exists and is still reachable by direct link, it just won't appear in the header menu.</li>
+      <li><b>Hide from footer</b> — the same idea, but for the footer menu specifically.</li>
+    </ul>
+    <p>If a page has its own sub-pages, a fourth option appears: <b>Organizer only — no landing page.</b> Turn this on when a top-level menu item exists purely to hold a dropdown of sub-pages — clicking its label in the nav just expands the dropdown instead of navigating anywhere, and any direct link to it redirects to Home.</p>
+
+    <div class="callout">
+      <b>Site-wide navigation settings</b>
+      <p>A few settings apply to the whole menu at once rather than one page at a time — in the sidebar, under <em>Design</em>, open <span class="btn-demo ghost">🧭 Navigation</span> for whether dropdowns default to open, whether the header stays solid instead of fading over a hero image, and the nav/footer call-to-action button.</p>
+    </div>
+
+    <h3>4. Preview and publish</h3>
+    <p>Click <span class="btn-demo gold">💾 Save &amp; Preview</span> and open the menu to confirm the order and any dropdowns look right. When it looks right, <span class="btn-demo gold">⬇ Export config.js</span> and replace the file in your website folder.</p>
+
+    <div class="callout ok">
+      <b>Check your work</b>
+      <p>Click through every item in the menu, including anything nested in a dropdown, and confirm each lands where you expect. If a page you meant to hide is still showing (or vice versa), re-check its ⚙️ Settings — "Show in nav," "Hide from main nav," and "Hide from footer" are three separate switches, and it's easy to toggle the wrong one.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PAGE: PASSWORD-PROTECT A PAGE  (Building)
+     ============================================================ -->
+<section class="tut-page" id="page-protect-page">
+  <div class="container" style="padding-top:60px;">
+    <div class="tut-head">
+      <span class="eyebrow">Building</span>
+      <h2>Password-Protect a Page</h2>
+      <div class="tut-meta">
+        <span class="badge lv-intermediate">Intermediate</span>
+        <span class="badge time">15 min</span>
+      </div>
+      <p class="tut-lede">Restrict one page to people you've given a PIN — useful for a members' area, a private resources page, or anything not meant for every visitor. The rest of the site stays open to the public.</p>
+    </div>
+
+    <div class="prereq">
+      <div class="panel-title">✅ Before you start</div>
+      <ul>
+        <li>Know who should have access, and be ready to hand each of them a short PIN.</li>
+      </ul>
+    </div>
+
+    <h3>1. Add a member</h3>
+    <p>In the sidebar, under <em>Design</em>, open <span class="btn-demo ghost">🔐 Members &amp; Access</span>, then expand the <b>Members</b> panel.</p>
+    <ol class="steps">
+      <li><b>Click <span class="btn-demo gold">+ Add Member</span></b> — a new member entry appears.</li>
+      <li><b>Name</b> — who this PIN belongs to.</li>
+      <li><b>PIN</b> — a short code they'll type in to get access (numbers or letters, up to 8 characters).</li>
+      <li><b>Emoji / Avatar</b> and, optionally, a <b>Profile Image Path</b> — shown once they're logged in; the image path overrides the emoji if both are set.</li>
+      <li><b>Role</b> — Member or Commissioner. Commissioner is a higher access level, for pages you want restricted even further than regular members.</li>
+    </ol>
+    <p>Repeat for anyone else who needs access — each person gets their own PIN, so you can tell at a glance who's logged in, and remove one person's access later without affecting anyone else's.</p>
+
+    <h3>2. Restrict the page</h3>
+    <p>Expand the <b>Page Access</b> panel below. Every page on your site is listed with a dropdown:</p>
+    <ul>
+      <li><b>🌐 Public</b> — anyone can view it (the default).</li>
+      <li><b>🔐 Members</b> — requires any valid member PIN.</li>
+      <li><b>👑 Commissioner</b> — requires a PIN belonging to someone with the Commissioner role specifically.</li>
+    </ul>
+    <p>Find the page you want to restrict and change its dropdown to <b>Members</b> or <b>Commissioner</b>.</p>
+
+    <div class="callout warn">
+      <b>Don't confuse this with Site Access</b>
+      <p>The <b>Site Access</b> panel above Members controls something much bigger — setting it to "PIN Required" locks your <em>entire site</em> behind a PIN, not just one page. For protecting a single page, leave Site Access set to <b>Public</b> and use the Page Access list instead.</p>
+    </div>
+
+    <h3>3. Optional: customize the PIN screen</h3>
+    <p>The <b>PIN Pad Appearance</b> panel lets you change the wording and look of the login screen a visitor sees when they hit a locked page — headline, theme (Dark/Gold/Light), the message shown on a wrong PIN, and a welcome message shown after logging in. None of this is required to get protection working; it's purely cosmetic.</p>
+
+    <h3>4. Preview and publish</h3>
+    <p>Click <span class="btn-demo gold">💾 Save &amp; Preview</span> and try visiting the restricted page — you should hit the PIN screen. Enter a member's PIN and confirm you get through. When it looks right, <span class="btn-demo gold">⬇ Export config.js</span> and replace the file in your website folder.</p>
+
+    <div class="callout ok">
+      <b>Check your work</b>
+      <p>Try the page both ways — with a valid PIN (you get in) and with a wrong one (you're turned away with the message you set). Also confirm the page shows a 🔒 icon in the nav for guests, so visitors know it's restricted before they click.</p>
+    </div>
+  </div>
+</section>
+
 <section class="tut-page" id="page-fix-a-typo">
   <div class="container" style="padding-top:60px;">
     <div class="tut-head">
@@ -636,6 +1374,418 @@ kbd, .btn-demo {
   </div>
 </section>
 
+<!-- ============================================================
+     PAGE: SWAP OR ADD AN IMAGE  (Everyday Edits)
+     ============================================================ -->
+<section class="tut-page" id="page-swap-image">
+  <div class="container" style="padding-top:60px;">
+    <div class="tut-head">
+      <span class="eyebrow">Everyday Edits</span>
+      <h2>Swap or Add an Image</h2>
+      <div class="tut-meta">
+        <span class="badge lv-beginner">Beginner</span>
+        <span class="badge time">10 min</span>
+      </div>
+      <p class="tut-lede">Every picture on the site — a hero photo, a team headshot, a gallery item, a logo — works the same way: the file lives in your <code>images/</code> folder, and a field in the admin points to it by name.</p>
+    </div>
+
+    <div class="prereq">
+      <div class="panel-title">✅ Before you start</div>
+      <ul>
+        <li>The new photo, saved somewhere you can find it (Downloads, Desktop, etc.).</li>
+        <li>Know which image on the site you're replacing, or where a new one should go.</li>
+      </ul>
+    </div>
+
+    <h3>1. Prepare the file</h3>
+    <ol class="steps">
+      <li><b>Rename it clearly</b> — lowercase letters, no spaces (use dashes instead), matching what it shows: <code>team-headshot-jane.jpg</code> rather than <code>IMG_4821.jpg</code>. This isn't required, but it saves confusion later when the folder has forty photos in it.</li>
+      <li><b>Check the file type</b> — <code>.jpg</code>, <code>.png</code>, and <code>.webp</code> all work. JPG is usually the smallest for photos; PNG is better for logos or graphics with transparent backgrounds.</li>
+      <li><b>Keep the file size reasonable</b> — a huge, uncompressed photo straight from a camera can slow the page down. Most photo editors and free online tools can shrink a large image without a visible quality loss.</li>
+    </ol>
+
+    <h3>2. Copy it into your website folder</h3>
+    <p>Using your file explorer, copy the image into your website's <code>images/</code> folder — the same folder your logo and other pictures already live in.</p>
+
+    <h3>3. Point the admin at it</h3>
+    <ol class="steps">
+      <li><b>Find the right field.</b> Every image field in the admin is labeled <b>Image Path</b>, and lives wherever that picture is used — a Hero Section, a Gallery item, a Team member, a Popup, and so on. See <a href="#add-section">Add a Section to a Page</a> if you're not sure which section holds the image you're after.</li>
+      <li><b>Type the path</b> exactly matching the file you copied in, e.g. <code>images/team-headshot-jane.jpg</code>. Most Image Path fields show a small preview once you type a valid path — a broken-image icon means the path or filename doesn't match exactly.</li>
+      <li><b>Update the Alt Text field</b> next to it, if there is one — a short plain description of the picture (e.g. <em>"Jane Smith smiling in the office"</em>). This helps screen readers and search engines, and costs nothing to fill in.</li>
+    </ol>
+
+    <div class="callout">
+      <b>Adding a new photo to a Gallery</b>
+      <p>Galleries work slightly differently, since they hold many images rather than one. Open the Gallery section and click its <span class="btn-demo gold">+ Add Image</span> button (or similar, depending on the type) to add a new item, then fill in its own Image Path and Alt Text — the existing images stay untouched.</p>
+    </div>
+
+    <h3>4. Preview and publish</h3>
+    <p>Click <span class="btn-demo gold">💾 Save &amp; Preview</span> and confirm the picture shows correctly — right image, right spot, no broken-image icon. When it looks right, <span class="btn-demo gold">⬇ Export config.js</span> and replace the file in your website folder (see <a href="#publish-changes">Publish Your Changes</a> for the full walkthrough).</p>
+
+    <div class="callout ok">
+      <b>Check your work</b>
+      <p>Reload the live site and look at the image directly — not just the preview tab. If you're replacing an image that's used in more than one place (like a logo), check each spot it appears.</p>
+    </div>
+
+    <div class="callout warn">
+      <b>Broken image after publishing?</b>
+      <p>This almost always means the file didn't actually make it into the <code>images/</code> folder on whatever you just published to, or the path in the admin doesn't match the filename exactly — including capitalization. File names are case-sensitive once a site is live online, even if your own computer doesn't care about the difference.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PAGE: UPDATE HOURS, PHONE & CONTACT INFO  (Everyday Edits)
+     ============================================================ -->
+<section class="tut-page" id="page-update-contact">
+  <div class="container" style="padding-top:60px;">
+    <div class="tut-head">
+      <span class="eyebrow">Everyday Edits</span>
+      <h2>Update Hours, Phone &amp; Contact Info</h2>
+      <div class="tut-meta">
+        <span class="badge lv-beginner">Beginner</span>
+        <span class="badge time">5–10 min</span>
+      </div>
+      <p class="tut-lede">Phone number changed? Hours different for the holidays? Opened a second location? All of it lives in one place, organized by location — so a business with more than one address keeps each one's details separate.</p>
+    </div>
+
+    <div class="prereq">
+      <div class="panel-title">✅ Before you start</div>
+      <ul>
+        <li>Comfortable with the import → edit → preview → export loop.</li>
+        <li>The updated phone number, hours, or address in hand.</li>
+      </ul>
+    </div>
+
+    <h3>1. Open Contact &amp; Hours</h3>
+    <p>In the sidebar, under <em>Business Info</em>, open <span class="btn-demo ghost">📞 Contact &amp; Hours</span>. Below the page header fields, you'll find one panel per physical location — if your business only has one address, there'll just be a single panel here.</p>
+
+    <h3>2. Update a location's details</h3>
+    <p>Click a location's panel to expand it. Every field is grouped clearly:</p>
+    <ol class="steps">
+      <li><b>Phone &amp; Email</b> — <b>Phone (Display)</b> is what visitors read on the page (e.g. <code>(555) 000-0000</code>); <b>Phone (Raw, for tel: link)</b> is the same number in the plain digit format phones use to actually dial it (e.g. <code>+15550000000</code>) when a visitor taps the number on their phone. Update both when the number changes. <b>Fax</b> and <b>Email Address</b> sit alongside.</li>
+      <li><b>Address</b> — Street Address, City, State, State Abbreviation, and ZIP Code, each in its own field.</li>
+      <li><b>Business Hours</b> — a list of day/time rows, e.g. <em>Days:</em> "Mon – Fri," <em>Hours:</em> "9:00am – 5:00pm." Click <span class="btn-demo gold">+ Add Hour Row</span> for an additional line (for a Saturday hours row, or a "Closed" note), or use each row's <b>×</b> to remove one.</li>
+    </ol>
+
+    <h3>3. Add a second location (if needed)</h3>
+    <p>Click <span class="btn-demo gold">+ Add Location</span> above the location panels to add another address entirely, with its own name, phone, hours, and address fields. Use the <b>↑ / ↓</b> arrows on a location's panel to reorder multiple locations, or its <b>×</b> to remove one (only available when there's more than one).</p>
+
+    <h3>4. Preview and publish</h3>
+    <p>Click <span class="btn-demo gold">💾 Save &amp; Preview</span> and check the updated details show correctly wherever they appear on the site — the Contact page, the footer, and anywhere else hours or a phone number is shown. When it looks right, <span class="btn-demo gold">⬇ Export config.js</span> and replace the file in your website folder.</p>
+
+    <div class="callout ok">
+      <b>Check your work</b>
+      <p>On a phone (or your browser's mobile preview), tap the phone number and confirm it actually dials the right number — this tests the Raw phone field specifically, which is easy to forget updating alongside the Display one.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PAGE: PUBLISH YOUR CHANGES  (Everyday Edits)
+     ============================================================ -->
+<section class="tut-page" id="page-publish-changes">
+  <div class="container" style="padding-top:60px;">
+    <div class="tut-head">
+      <span class="eyebrow">Everyday Edits</span>
+      <h2>Publish Your Changes</h2>
+      <div class="tut-meta">
+        <span class="badge lv-beginner">Beginner</span>
+        <span class="badge time">10 min</span>
+      </div>
+      <p class="tut-lede">You've made your edits in the admin and previewed them — this is the last step, turning them into what visitors actually see. The core of it is always the same: export a file, and put it where the live site can find it.</p>
+    </div>
+
+    <div class="prereq">
+      <div class="panel-title">✅ Before you start</div>
+      <ul>
+        <li>Your changes previewed and confirmed correct with <span class="btn-demo gold">💾 Save &amp; Preview</span>.</li>
+        <li>Know whether your site lives only on your own computer, or is hosted online somewhere.</li>
+      </ul>
+    </div>
+
+    <h3>1. Export the file</h3>
+    <p>In the admin, click <span class="btn-demo gold">⬇ Export config.js</span>. A fresh <code>config.js</code> downloads to your Downloads folder — this one file contains everything: every page, every section, every setting you've changed.</p>
+
+    <h3>2. If your site lives only on your computer</h3>
+    <ol class="steps">
+      <li><b>Move the downloaded <code>config.js</code></b> into your website folder, replacing the old one — say <em>yes</em> when your file explorer asks about overwriting.</li>
+      <li><b>Reload <code>index.html</code></b> (or hard-refresh it — see below) to see the update.</li>
+    </ol>
+
+    <h3>3. If your site is hosted online</h3>
+    <p>The new <code>config.js</code> needs to reach your host too, not just your own computer's copy of the folder. Exactly how depends on the host, but it's always some version of "replace one file":</p>
+    <ul>
+      <li><b>Hosting control panel (e.g. cPanel) File Manager</b> — navigate to your site's folder, delete or rename the old <code>config.js</code>, then upload the new one in its place.</li>
+      <li><b>FTP/SFTP client (e.g. FileZilla)</b> — connect to your host, navigate to the site folder, and drag the new <code>config.js</code> over, overwriting the old one.</li>
+      <li><b>GitHub Pages</b> — replace the file in your repository (via the GitHub website's upload feature, or a Git command if you're comfortable with one) and commit the change.</li>
+      <li><b>Drag-and-drop hosts (e.g. Netlify)</b> — typically expect the whole folder re-uploaded rather than a single swapped file; check your specific host's instructions.</li>
+    </ul>
+    <p>If you haven't set up hosting yet, <a href="#go-live-hosting">Put Your Site on the Web</a> covers choosing a host and getting the site there for the first time.</p>
+
+    <h3>4. Confirm it actually went live</h3>
+    <ol class="steps">
+      <li><b>Open the live site's real address</b> in your browser (not the Save &amp; Preview tab, which only ever reflects your own browser's local copy).</li>
+      <li><b>Hard-refresh the page</b> — <kbd class="btn-demo ghost">Ctrl+F5</kbd> on Windows, <kbd class="btn-demo ghost">Cmd+Shift+R</kbd> on Mac — to force your browser to download the new file instead of showing a cached copy of the old one.</li>
+      <li><b>Check for your specific change</b> — don't just glance at the homepage; go to the exact spot you edited and confirm it reads the way you intended.</li>
+    </ol>
+
+    <div class="callout ok">
+      <b>Check your work</b>
+      <p>Once confirmed live, copy that same exported <code>config.js</code> into a dated backup folder — see <a href="#make-backup">Make a Dated Backup</a>. Publishing and backing up are worth treating as one habit rather than two separate steps.</p>
+    </div>
+
+    <div class="callout">
+      <b>If changes still aren't showing after a hard refresh</b>
+      <p>Check the file's "date modified" wherever you uploaded it — this confirms whether the new file actually landed, or the upload silently failed or went to the wrong folder. Some hosts also cache pages briefly on their end (separate from your browser's cache) — if the date modified looks correct and it's still not showing, waiting a few minutes and checking again is often enough.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PAGE: MAKE A DATED BACKUP  (Safety & Recovery)
+     ============================================================ -->
+<section class="tut-page" id="page-make-backup">
+  <div class="container" style="padding-top:60px;">
+    <div class="tut-head">
+      <span class="eyebrow">Safety & Recovery</span>
+      <h2>Make a Dated Backup</h2>
+      <div class="tut-meta">
+        <span class="badge lv-beginner">Beginner</span>
+        <span class="badge time">5 min</span>
+      </div>
+      <p class="tut-lede">Everything on your site — every page, section, and setting — lives in one small file: <code>config.js</code>. Keeping dated copies of it as you go means almost any mistake is recoverable in minutes instead of being a crisis.</p>
+    </div>
+
+    <div class="prereq">
+      <div class="panel-title">✅ Before you start</div>
+      <ul>
+        <li>A folder somewhere on your computer set aside for backups — anywhere works, as long as it's not inside your live website folder.</li>
+      </ul>
+    </div>
+
+    <h3>1. Export the current config.js</h3>
+    <p>Open <code>admin.html</code> and click <span class="btn-demo gold">⬇ Export config.js</span>. A fresh copy downloads to your Downloads folder — this captures every page and setting exactly as they stand right now.</p>
+
+    <h3>2. Rename it with today's date</h3>
+    <p>Move the file into your backup folder and rename it so you can tell copies apart later, e.g. <code>config-2026-07-16.js</code>. Keep the <code>.js</code> at the end — you're renaming, not changing the file type.</p>
+
+    <div class="callout">
+      <b>Make this a habit, not an event</b>
+      <p>The best moment to back up is right after any session where you're happy with the result — right after publishing a batch of changes, right before trying something you're not sure about, or on whatever schedule feels right for how often your site changes. A five-minute habit beats remembering to do it only after something's gone wrong.</p>
+    </div>
+
+    <h3>3. Don't forget images and files</h3>
+    <p><code>config.js</code> only stores <em>paths</em> to your images and documents — like <code>images/team-photo.jpg</code> — not the actual picture or PDF. If you've added new files since your last backup, copy your whole <code>images/</code> and <code>files/</code> folders into your backup location too, so a restore has the pictures to go with the paths.</p>
+
+    <div class="callout ok">
+      <b>Check your work</b>
+      <p>Open the backup folder and confirm the dated file is actually there and named the way you expect — an export that never got moved out of Downloads isn't a backup, it's just clutter waiting to be lost. If you keep more than a handful of dated files, occasionally clearing out the oldest ones keeps the folder easy to search when you actually need one.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PAGE: RESTORE FROM A BACKUP  (Safety & Recovery)
+     ============================================================ -->
+<section class="tut-page" id="page-restore-backup">
+  <div class="container" style="padding-top:60px;">
+    <div class="tut-head">
+      <span class="eyebrow">Safety & Recovery</span>
+      <h2>Restore from a Backup</h2>
+      <div class="tut-meta">
+        <span class="badge lv-beginner">Beginner</span>
+        <span class="badge time">10 min</span>
+      </div>
+      <p class="tut-lede">Something went wrong and you need to roll the whole site back to an earlier state — a dated backup from <a href="#make-backup">Make a Dated Backup</a> makes this a straightforward, low-drama fix.</p>
+    </div>
+
+    <div class="prereq">
+      <div class="panel-title">✅ Before you start</div>
+      <ul>
+        <li>A dated backup file in hand — see <a href="#make-backup">Make a Dated Backup</a> if you don't have one.</li>
+      </ul>
+    </div>
+
+    <h3>1. Choose the right backup</h3>
+    <p>Look through your backup folder and decide which dated copy you want to go back to — ideally the most recent one from <em>before</em> whatever went wrong.</p>
+
+    <h3>2. Put it back in place</h3>
+    <ol class="steps">
+      <li><b>Copy the backup file</b> into your website folder.</li>
+      <li><b>Rename it to exactly <code>config.js</code></b> — remove the date from the filename. The live site only looks for a file with that exact name.</li>
+      <li><b>Confirm the overwrite</b> when your file explorer asks whether to replace the existing <code>config.js</code>.</li>
+      <li><b>If that backup included its own <code>images/</code> or <code>files/</code> folders</b> (see <a href="#make-backup">Make a Dated Backup</a>), restore those too, so anything referenced in the restored content is actually there.</li>
+    </ol>
+
+    <h3>3. Reload and re-sync the admin</h3>
+    <ol class="steps">
+      <li><b>Reload <code>index.html</code></b> (or hard-refresh — <kbd class="btn-demo ghost">Ctrl+F5</kbd> / <kbd class="btn-demo ghost">Cmd+Shift+R</kbd>) to confirm the site now shows the restored version.</li>
+      <li><b>Open <code>admin.html</code></b> and drag the restored <code>config.js</code> onto the import zone, so the admin's own memory matches the site again instead of still holding whatever it had before.</li>
+    </ol>
+
+    <div class="callout warn">
+      <b>Anything made after that backup is gone</b>
+      <p>Restoring an older backup replaces everything with that snapshot — any edits made between that backup's date and now are lost, not merged. If some of those later changes were good ones, you'll need to redo them by hand after restoring.</p>
+    </div>
+
+    <h3>4. Publish it</h3>
+    <p>If your site is hosted online, upload the restored <code>config.js</code> the same way you would any other update — see <a href="#publish-changes">Publish Your Changes</a>.</p>
+
+    <div class="callout ok">
+      <b>Check your work</b>
+      <p>Click through the site and confirm it matches what you remember from that earlier point — the problem you were trying to undo should be gone, and nothing else should look unexpectedly different.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PAGE: "I EDITED ON THE WRONG COMPUTER"  (Safety & Recovery)
+     ============================================================ -->
+<section class="tut-page" id="page-wrong-computer">
+  <div class="container" style="padding-top:60px;">
+    <div class="tut-head">
+      <span class="eyebrow">Safety & Recovery</span>
+      <h2>"I Edited on the Wrong Computer"</h2>
+      <div class="tut-meta">
+        <span class="badge lv-beginner">Beginner</span>
+        <span class="badge time">10 min</span>
+      </div>
+      <p class="tut-lede">The admin remembers your work by quietly saving it inside whatever browser you're using — which means a different computer, or even a different browser on the same computer, starts out not knowing about any of it.</p>
+    </div>
+
+    <h3>Why this happens</h3>
+    <p>Every edit autosaves into that specific browser's own private storage — it never travels anywhere on its own. Open the admin somewhere else, and it has no way to know what you did last time, because that information simply isn't there. This isn't a bug to fix; it's just how a tool with no server behind it has to work, and the fix is always the same: hand it the current <code>config.js</code> yourself.</p>
+
+    <h3>1. Recognize it</h3>
+    <p>Signs you've hit this: the admin shows old content that you know you already changed, or a page/section you added elsewhere is simply missing. Before assuming anything is lost, check whether you're on the same browser you used last time.</p>
+
+    <h3>2. Bring it up to date</h3>
+    <ol class="steps">
+      <li><b>Get your current <code>config.js</code></b> — from your website folder, or wherever your live site's file actually is.</li>
+      <li><b>Open <code>admin.html</code></b> on this computer/browser.</li>
+      <li><b>Drag that <code>config.js</code></b> onto the dashed <em>"Drag &amp; drop your config.js here"</em> zone at the top (or click it to browse for the file).</li>
+      <li>A confirmation toast means the admin now matches the live site — everything you were missing should reappear.</li>
+    </ol>
+
+    <div class="callout ok">
+      <b>Nothing was actually lost</b>
+      <p>Your real content lives in the <code>config.js</code> file itself, not inside any one browser. As long as you have an up-to-date copy of that file, any browser can pick up exactly where you left off.</p>
+    </div>
+
+    <div class="callout warn">
+      <b>The one real risk: two people editing at once</b>
+      <p>If you and someone else both open the admin and make changes before either of you exports, whoever exports and publishes <em>second</em> will overwrite the first person's changes entirely — the two sets of edits don't merge together. If more than one person maintains this site, it's worth agreeing on who's editing before a session starts, or always importing the very latest <code>config.js</code> first, every time.</p>
+    </div>
+
+    <div class="callout">
+      <b>Make this less likely</b>
+      <p>Editing from the same browser each time — see <a href="#first-session">Your First Editing Session</a> — means you'll rarely need this tutorial at all.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PAGE: UNDO AN ACCIDENTAL DELETION  (Safety & Recovery)
+     ============================================================ -->
+<section class="tut-page" id="page-undo-delete">
+  <div class="container" style="padding-top:60px;">
+    <div class="tut-head">
+      <span class="eyebrow">Safety & Recovery</span>
+      <h2>Undo an Accidental Deletion</h2>
+      <div class="tut-meta">
+        <span class="badge lv-beginner">Beginner</span>
+        <span class="badge time">10 min</span>
+      </div>
+      <p class="tut-lede">There's no undo button in the admin — once something's deleted and autosaved, it's genuinely gone from what the admin remembers. The good news: what happens next depends entirely on whether you'd already published that missing content, or whether it only ever lived on this one computer.</p>
+    </div>
+
+    <div class="callout warn">
+      <b>Know which deletions ask first</b>
+      <p>Deleting a whole <b>page</b> or a <b>location</b> shows a confirmation message before it happens. Deleting a <b>section</b>, or almost anything smaller — a form field, an FAQ item, a gallery image, a social link — does not; the <b>×</b> button removes it immediately, no confirmation at all. Slow down before clicking × on anything you're not fully sure about.</p>
+    </div>
+
+    <h3>If you haven't published this session yet</h3>
+    <p>If the live site (the <code>config.js</code> actually in your website folder, or on your host) still has the content you just deleted — because you haven't exported and replaced it since making the mistake — you can undo the deletion by simply discarding what's in the admin:</p>
+    <ol class="steps">
+      <li><b>Open <code>admin.html</code></b> (or just don't close it, if it's still open).</li>
+      <li><b>Drag your current, still-intact <code>config.js</code></b> onto the import zone at the top.</li>
+      <li>This overwrites everything the admin currently has in memory with what's actually still live — including the thing you deleted, since it was never actually removed from that file.</li>
+    </ol>
+
+    <h3>If you already published the deletion</h3>
+    <p>If the missing content is gone from the live site too, the admin's import can't help — there's nothing intact left to import. Your recovery options, in order:</p>
+    <ol class="steps">
+      <li><b>Restore a dated backup</b> from before the deletion — see <a href="#restore-backup">Restore from a Backup</a>. This is exactly the situation backups exist for.</li>
+      <li><b>If no backup exists</b>, the content will need to be rebuilt by hand — see <a href="#add-section">Add a Section to a Page</a>, <a href="#create-page">Create a New Page</a>, or whichever tutorial matches what was lost.</li>
+    </ol>
+
+    <div class="callout ok">
+      <b>Prevent the next one</b>
+      <p>Since sections and sub-items delete without asking, the real safety net is <a href="#make-backup">Make a Dated Backup</a> done regularly — with that habit in place, the worst a slipped click costs you is redoing a little work back to your last backup, not losing something for good.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PAGE: PUT YOUR SITE ON THE WEB  (Publishing the Site)
+     ============================================================ -->
+<section class="tut-page" id="page-go-live-hosting">
+  <div class="container" style="padding-top:60px;">
+    <div class="tut-head">
+      <span class="eyebrow">Publishing the Site</span>
+      <h2>Put Your Site on the Web</h2>
+      <div class="tut-meta">
+        <span class="badge lv-advanced">Advanced</span>
+        <span class="badge time">60+ min</span>
+      </div>
+      <p class="tut-lede">Everything so far has likely been on your own computer. This is the one-time setup that puts it on the actual internet, at a real address anyone can visit — after this, routine updates go back to the much shorter <a href="#publish-changes">Publish Your Changes</a>.</p>
+    </div>
+
+    <div class="prereq">
+      <div class="panel-title">✅ Before you start</div>
+      <ul>
+        <li>Your site built out and looking the way you want on your own computer.</li>
+        <li>Patience — parts of this (especially domain setup) can take anywhere from minutes to about a day to fully take effect, and that waiting is normal, not a sign something's broken.</li>
+      </ul>
+    </div>
+
+    <h3>1. Choose a host</h3>
+    <p>Since this site is plain HTML/CSS/JS with no database or server-side code, it qualifies for almost any hosting option — you have real flexibility here rather than one required path:</p>
+    <ul>
+      <li><b>Free static hosts</b> (e.g. GitHub Pages, Netlify, Vercel, Cloudflare Pages) — no cost to start, usually give you a working address immediately on a shared domain (like <code>yoursite.github.io</code>), and support a custom domain later.</li>
+      <li><b>Traditional web hosting</b> (e.g. Bluehost, HostGator, and similar, usually with cPanel) — a paid monthly plan, often bundled with a domain, and a File Manager or FTP access for uploading your files.</li>
+    </ul>
+    <p>If you're not sure, a free static host is the lowest-risk way to get started and see the site live before committing to anything paid.</p>
+
+    <h3>2. Get a domain (optional, but common)</h3>
+    <p>A domain (like <code>yourbusiness.com</code>) is bought separately, through a domain registrar or sometimes bundled with your hosting plan. You can launch first on whatever free address your host provides, and add a custom domain later — this isn't something that has to happen on day one.</p>
+
+    <h3>3. Upload everything</h3>
+    <p>Unlike a routine update — which only ever replaces <code>config.js</code> — this first deployment needs your <b>entire</b> website folder: <code>index.html</code>, <code>admin.html</code>, <code>config.js</code>, <code>favicon.png</code>, and the whole <code>images/</code> and <code>files/</code> folders. How you upload depends on the host — a File Manager or FTP client for traditional hosting, or a drag-and-drop/Git-based flow for most static hosts. Follow your specific host's own instructions for "uploading a static site" or "uploading HTML files."</p>
+
+    <div class="callout">
+      <b>Is it a problem that admin.html is public too?</b>
+      <p>Not in any way that lets a stranger change your live site. The admin only edits a private copy inside whoever's browser has it open — actually changing the live site still requires exporting <code>config.js</code> and uploading it, which needs access to your hosting account, not just the ability to open a web page. At most, a visitor who finds it can look at an empty control panel; they can't publish anything through it.</p>
+    </div>
+
+    <h3>4. Point your domain at your host</h3>
+    <p>If you bought a domain, your registrar needs to know where to send visitors — this is usually either changing its <b>nameservers</b> to ones your host gives you, or adding specific DNS records (commonly an <b>A record</b> or <b>CNAME</b>) that your host's own setup instructions will spell out exactly. This step varies the most between hosts, so lean on their documentation for the precise values to enter.</p>
+
+    <h3>5. Wait, then verify</h3>
+    <ol class="steps">
+      <li><b>Give it time.</b> Domain changes ("DNS propagation") can take effect in minutes or take most of a day, depending on the registrar and host.</li>
+      <li><b>Visit your domain</b> once some time has passed, and confirm the actual site loads — not a placeholder or "coming soon" page from the host.</li>
+      <li><b>Click through several pages</b>, not just the homepage, to confirm images and internal links all work correctly from the real, live address.</li>
+    </ol>
+
+    <div class="callout ok">
+      <b>Check your work</b>
+      <p>Open the site on your phone using its real address (not a preview link) and confirm it looks right there too. From here on, any further changes follow the routine loop in <a href="#publish-changes">Publish Your Changes</a> — this heavier setup was a one-time cost to get the site onto the internet in the first place.</p>
+    </div>
+  </div>
+</section>
+
 <script src="config.js"></script>
 <script>
 /* =============================================
@@ -650,39 +1800,39 @@ kbd, .btn-demo {
    ============================================= */
 const TUTORIALS = [
   // 🌱 Getting Started
-  { id:'setup-new-site',   cat:'Getting Started', emoji:'🌱', title:'Set Up a Brand-New Website', desc:'Unpack the template, name your site, and see it running for the first time.', level:'Beginner', time:'30–45 min', keywords:['new site','install','template','unzip','start','first time','setup','folder'], ready:false },
-  { id:'first-session',    cat:'Getting Started', emoji:'🧭', title:'Your First Editing Session', desc:'The import → edit → preview rhythm you\u2019ll use every time you open the admin.', level:'Beginner', time:'15 min', keywords:['import','workflow','routine','basics','session','autosave','drag and drop'], ready:false },
-  { id:'business-branding',cat:'Getting Started', emoji:'🏛️', title:'Business Details & Branding', desc:'Your name, logos, contact info, and the details every page draws from.', level:'Beginner', time:'20 min', keywords:['logo','business name','company','brand','identity','tagline','details'], ready:false },
+  { id:'setup-new-site',   cat:'Getting Started', emoji:'🌱', title:'Set Up a Brand-New Website', desc:'Unpack the template, name your site, and see it running for the first time.', level:'Beginner', time:'30–45 min', keywords:['new site','install','template','unzip','start','first time','setup','folder'], ready:true },
+  { id:'first-session',    cat:'Getting Started', emoji:'🧭', title:'Your First Editing Session', desc:'The import → edit → preview rhythm you\u2019ll use every time you open the admin.', level:'Beginner', time:'15 min', keywords:['import','workflow','routine','basics','session','autosave','drag and drop'], ready:true },
+  { id:'business-branding',cat:'Getting Started', emoji:'🏛️', title:'Business Details & Branding', desc:'Your name, logos, contact info, and the details every page draws from.', level:'Beginner', time:'20 min', keywords:['logo','business name','company','brand','identity','tagline','details'], ready:true },
+  // 🧱 Building
+  { id:'colors-fonts',     cat:'Building', emoji:'🎨', title:'Change Site Colors & Fonts', desc:'Adjust the palette and typography across the whole site at once.', level:'Intermediate', time:'20 min', keywords:['color','colour','font','typography','palette','theme','design','style'], ready:true },
+  { id:'create-page',      cat:'Building', emoji:'📄', title:'Create a New Page', desc:'Add a page, set its name and address, and place it in the menu.', level:'Beginner', time:'15 min', keywords:['new page','add page','menu','navigation','nav','page name','slug'], ready:true },
+  { id:'add-section',      cat:'Building', emoji:'🧱', title:'Add a Section to a Page', desc:'Choose from the section library and fill in your content.', level:'Beginner', time:'15 min', keywords:['section','add section','library','content block','block','insert'], ready:true },
+  { id:'move-section',     cat:'Building', emoji:'📦', title:'Move or Copy a Section Between Pages', desc:'Export a finished section from one page and import it into another.', level:'Intermediate', time:'10 min', keywords:['move','copy','duplicate','transfer','between pages','export section','import section'], ready:true },
+  { id:'add-popup',        cat:'Building', emoji:'🔔', title:'Add a Popup Announcement', desc:'A notice, offer, or alert that appears over the page — on arrival or on scroll.', level:'Intermediate', time:'15–20 min', keywords:['popup','pop-up','announcement','modal','toast','notice','alert','banner','offer'], ready:true },
+  { id:'custom-form',      cat:'Building', emoji:'📝', title:'Build a Custom Form', desc:'Design your own form fields and choose where submissions go.', level:'Intermediate', time:'20–30 min', keywords:['form','fields','survey','questions','submissions','inputs'], ready:true },
+  { id:'setup-formspree',  cat:'Building', emoji:'📬', title:'Connect Forms with Formspree', desc:'The free service that delivers form submissions to your email inbox.', level:'Intermediate', time:'15 min', keywords:['formspree','form email','submissions','inbox','contact form','endpoint'], ready:true },
+  { id:'reorder-nav',      cat:'Building', emoji:'🧭', title:'Reorder the Navigation', desc:'Change the order of menu items and nest pages under dropdowns.', level:'Beginner', time:'10 min', keywords:['menu order','navigation','nav','reorder','dropdown','rearrange','header links'], ready:true },
+  { id:'protect-page',     cat:'Building', emoji:'🔐', title:'Password-Protect a Page', desc:'Restrict a page to members with a shared access code.', level:'Intermediate', time:'15 min', keywords:['password','private','members','lock','access code','restricted'], ready:true },
+  // 🛟 Safety & Recovery
+  { id:'make-backup',      cat:'Safety & Recovery', emoji:'🗄️', title:'Make a Dated Backup', desc:'The 60-second habit that makes every other mistake recoverable.', level:'Beginner', time:'5 min', keywords:['backup','back up','save copy','archive','dated copy','protect'], ready:true },
+  { id:'restore-backup',   cat:'Safety & Recovery', emoji:'⏪', title:'Restore from a Backup', desc:'Roll the whole site back to any dated config.js you\u2019ve kept.', level:'Beginner', time:'10 min', keywords:['restore','recover','roll back','rollback','revert','previous version'], ready:true },
+  { id:'wrong-computer',   cat:'Safety & Recovery', emoji:'💻', title:'\u201CI Edited on the Wrong Computer\u201D', desc:'Why the admin looks out of date on another machine, and how to sync it.', level:'Beginner', time:'10 min', keywords:['different computer','another computer','laptop','sync','out of date','missing changes','new browser'], ready:true },
+  { id:'undo-delete',      cat:'Safety & Recovery', emoji:'🩹', title:'Undo an Accidental Deletion', desc:'Deleted a section, item, or page? Here\u2019s the way back.', level:'Beginner', time:'10 min', keywords:['undo','deleted','accident','mistake','lost','removed','recover section','oops'], ready:true },
+  // 🚀 Publishing the Site
+  { id:'go-live-hosting',  cat:'Publishing the Site', emoji:'🌐', title:'Put Your Site on the Web', desc:'Choose a host, upload your folder, and point a domain at it.', level:'Advanced', time:'60+ min', keywords:['hosting','host','domain','online','github pages','launch','www','internet','live'], ready:true },
   // ✏️ Everyday Edits
   { id:'fix-a-typo',       cat:'Everyday Edits', emoji:'✏️', title:'Fix a Typo or Change Text', desc:'Find any piece of text on the site, correct it, and push the fix live.', level:'Beginner', time:'5–10 min', keywords:['typo','text','spelling','wording','change words','headline','paragraph','misspelled'], ready:true },
-  { id:'swap-image',       cat:'Everyday Edits', emoji:'🖼️', title:'Swap or Add an Image', desc:'Put a new photo in the images folder and point a section at it.', level:'Beginner', time:'10 min', keywords:['image','photo','picture','replace image','upload','images folder','jpg','png'], ready:false },
-  { id:'update-contact',   cat:'Everyday Edits', emoji:'📞', title:'Update Hours, Phone & Contact Info', desc:'Change the details that appear in the header, footer, and contact areas.', level:'Beginner', time:'5–10 min', keywords:['phone','hours','address','email','contact info','footer','details'], ready:false },
-  { id:'publish-changes',  cat:'Everyday Edits', emoji:'🚀', title:'Publish Your Changes', desc:'The full export → replace → upload walkthrough, for local folders and web hosts.', level:'Beginner', time:'10 min', keywords:['publish','export','upload','go live','replace','ftp','deploy','not showing'], ready:false },
-  // 🧱 Building
-  { id:'create-page',      cat:'Building', emoji:'📄', title:'Create a New Page', desc:'Add a page, set its name and address, and place it in the menu.', level:'Beginner', time:'15 min', keywords:['new page','add page','menu','navigation','nav','page name','slug'], ready:false },
-  { id:'add-section',      cat:'Building', emoji:'🧱', title:'Add a Section to a Page', desc:'Choose from the section library and fill in your content.', level:'Beginner', time:'15 min', keywords:['section','add section','library','content block','block','insert'], ready:false },
-  { id:'move-section',     cat:'Building', emoji:'📦', title:'Move or Copy a Section Between Pages', desc:'Export a finished section from one page and import it into another.', level:'Intermediate', time:'10 min', keywords:['move','copy','duplicate','transfer','between pages','export section','import section'], ready:false },
-  { id:'add-popup',        cat:'Building', emoji:'🔔', title:'Add a Popup Announcement', desc:'A notice, offer, or alert that appears over the page — on arrival or on scroll.', level:'Intermediate', time:'15–20 min', keywords:['popup','pop-up','announcement','modal','toast','notice','alert','banner','offer'], ready:false },
-  { id:'custom-form',      cat:'Building', emoji:'📝', title:'Build a Custom Form', desc:'Design your own form fields and choose where submissions go.', level:'Intermediate', time:'20–30 min', keywords:['form','fields','survey','questions','submissions','inputs'], ready:false },
-  { id:'setup-formspree',  cat:'Building', emoji:'📬', title:'Connect Forms with Formspree', desc:'The free service that delivers form submissions to your email inbox.', level:'Intermediate', time:'15 min', keywords:['formspree','form email','submissions','inbox','contact form','endpoint'], ready:false },
-  // 🛟 Safety & Recovery
-  { id:'make-backup',      cat:'Safety & Recovery', emoji:'🗄️', title:'Make a Dated Backup', desc:'The 60-second habit that makes every other mistake recoverable.', level:'Beginner', time:'5 min', keywords:['backup','back up','save copy','archive','dated copy','protect'], ready:false },
-  { id:'restore-backup',   cat:'Safety & Recovery', emoji:'⏪', title:'Restore from a Backup', desc:'Roll the whole site back to any dated config.js you\u2019ve kept.', level:'Beginner', time:'10 min', keywords:['restore','recover','roll back','rollback','revert','previous version'], ready:false },
-  { id:'wrong-computer',   cat:'Safety & Recovery', emoji:'💻', title:'\u201CI Edited on the Wrong Computer\u201D', desc:'Why the admin looks out of date on another machine, and how to sync it.', level:'Beginner', time:'10 min', keywords:['different computer','another computer','laptop','sync','out of date','missing changes','new browser'], ready:false },
-  { id:'undo-delete',      cat:'Safety & Recovery', emoji:'🩹', title:'Undo an Accidental Deletion', desc:'Deleted a section, item, or page? Here\u2019s the way back.', level:'Beginner', time:'10 min', keywords:['undo','deleted','accident','mistake','lost','removed','recover section','oops'], ready:false },
-  // 🎛️ Occasional
-  { id:'colors-fonts',     cat:'Occasional', emoji:'🎨', title:'Change Site Colors & Fonts', desc:'Adjust the palette and typography across the whole site at once.', level:'Intermediate', time:'20 min', keywords:['color','colour','font','typography','palette','theme','design','style'], ready:false },
-  { id:'reorder-nav',      cat:'Occasional', emoji:'🧭', title:'Reorder the Navigation', desc:'Change the order of menu items and nest pages under dropdowns.', level:'Beginner', time:'10 min', keywords:['menu order','navigation','nav','reorder','dropdown','rearrange','header links'], ready:false },
-  { id:'protect-page',     cat:'Occasional', emoji:'🔐', title:'Password-Protect a Page', desc:'Restrict a page to members with a shared access code.', level:'Intermediate', time:'15 min', keywords:['password','private','members','lock','access code','restricted'], ready:false },
-  { id:'go-live-hosting',  cat:'Occasional', emoji:'🌐', title:'Put Your Site on the Web', desc:'Choose a host, upload your folder, and point a domain at it.', level:'Advanced', time:'60+ min', keywords:['hosting','host','domain','online','github pages','launch','www','internet','live'], ready:false },
+  { id:'swap-image',       cat:'Everyday Edits', emoji:'🖼️', title:'Swap or Add an Image', desc:'Put a new photo in the images folder and point a section at it.', level:'Beginner', time:'10 min', keywords:['image','photo','picture','replace image','upload','images folder','jpg','png'], ready:true },
+  { id:'update-contact',   cat:'Everyday Edits', emoji:'📞', title:'Update Hours, Phone & Contact Info', desc:'Change the details that appear in the header, footer, and contact areas.', level:'Beginner', time:'5–10 min', keywords:['phone','hours','address','email','contact info','footer','details'], ready:true },
+  { id:'publish-changes',  cat:'Everyday Edits', emoji:'🚀', title:'Publish Your Changes', desc:'The full export → replace → upload walkthrough, for local folders and web hosts.', level:'Beginner', time:'10 min', keywords:['publish','export','upload','go live','replace','ftp','deploy','not showing'], ready:true },
 ];
 
 const CATEGORIES = [
-  { name:'Getting Started',   emoji:'🌱', intro:'Brand new to the template, or setting up a fresh site? Start here, in order.' },
-  { name:'Everyday Edits',    emoji:'✏️', intro:'The routine jobs — the ones you\u2019ll do again and again. Each takes minutes.' },
-  { name:'Building',          emoji:'🧱', intro:'Growing the site: new pages, new sections, popups, and forms.' },
-  { name:'Safety & Recovery', emoji:'🛟', intro:'Backups, restores, and getting out of trouble. Read these before you need them.' },
-  { name:'Occasional',        emoji:'🎛️', intro:'Bigger, rarer jobs — design changes, navigation, access, and going live.' },
+  { name:'Getting Started',    emoji:'🌱', intro:'Brand new to the template, or setting up a fresh site? Start here, in order.' },
+  { name:'Building',           emoji:'🧱', intro:'Growing and shaping the site: design, new pages, sections, popups, forms, navigation, and access.' },
+  { name:'Everyday Edits',     emoji:'✏️', intro:'The routine jobs — the ones you\u2019ll do again and again. Each takes minutes.' },
+  { name:'Safety & Recovery',  emoji:'🛟', intro:'Backups, restores, and getting out of trouble. Read these before you need them.' },
+  { name:'Publishing the Site',emoji:'🚀', intro:'Taking the site from your computer to the wider web.' },
 ];
 
 /* =============================================
@@ -848,7 +1998,14 @@ function buildTutIndex() {
     let body = '';
     const page = document.getElementById('page-' + t.id);
     if (t.ready && page) {
-      body = page.textContent.replace(/\s+/g, ' ').trim();
+      // Clone and strip the Prev/Next/All-Tutorials footer before reading
+      // text — it's navigation chrome, not content, and by the time a
+      // page has been visited it's already injected into the DOM, so
+      // its neighboring tutorial titles would otherwise get indexed as
+      // if they were part of this tutorial's own text.
+      const clone = page.cloneNode(true);
+      clone.querySelectorAll('.tut-footer-nav').forEach(function(el) { el.remove(); });
+      body = clone.textContent.replace(/\s+/g, ' ').trim();
     }
     const kw = (t.keywords || []).join(' ');
     return {
