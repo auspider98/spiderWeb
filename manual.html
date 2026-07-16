@@ -111,6 +111,105 @@ body {
 .hero p { color: rgba(255,255,255,0.75); max-width: 560px; font-size: 16px; }
 .hero .hero-meta { margin-top: 28px; display: flex; gap: 26px; flex-wrap: wrap; }
 .hero .hero-meta span { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.45); }
+
+/* ============ HERO SEARCH ============ */
+.hero-search { position: relative; max-width: 640px; margin-top: 30px; }
+.hs-input-wrap { position: relative; }
+.hs-icon {
+  position: absolute; left: 18px; top: 50%; transform: translateY(-50%);
+  font-size: 16px; opacity: 0.6; pointer-events: none;
+}
+#manualSearch {
+  width: 100%;
+  padding: 15px 46px 15px 48px;
+  font-family: var(--font-body); font-size: 15px;
+  border: 1px solid rgba(255,255,255,0.28);
+  border-radius: 10px;
+  background: rgba(255,255,255,0.10);
+  color: #fff;
+  outline: none;
+  transition: background 0.18s, border-color 0.18s, box-shadow 0.18s;
+}
+#manualSearch::placeholder { color: rgba(255,255,255,0.55); }
+#manualSearch:focus,
+#manualSearch:not(:placeholder-shown) {
+  background: #fff;
+  color: var(--text);
+  border-color: var(--gold);
+  box-shadow: 0 10px 30px rgba(6,15,29,0.35);
+}
+#manualSearch:focus::placeholder { color: #a9a49d; }
+.hs-clear {
+  position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+  border: none; background: none; cursor: pointer;
+  font-size: 14px; padding: 8px 10px;
+  color: var(--muted);
+}
+#manualSearch:placeholder-shown + .hs-clear { display: none; }
+.hs-results {
+  display: none;
+  margin-top: 10px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 16px 44px rgba(6,15,29,0.32);
+  overflow: hidden;
+  text-align: left;
+  max-height: 420px;
+  overflow-y: auto;
+}
+.hs-results.visible { display: block; }
+.hs-result {
+  display: flex; gap: 14px; align-items: flex-start;
+  padding: 14px 18px;
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.12s;
+  cursor: pointer;
+}
+.hs-result:last-child { border-bottom: none; }
+a.hs-result:hover, a.hs-result.kb-active { background: var(--gold-pale); }
+.hs-result .hr-emoji { font-size: 20px; line-height: 1.4; flex-shrink: 0; }
+.hs-result .hr-main { display: block; min-width: 0; flex: 1; }
+.hs-result .hr-title {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  font-family: var(--font-display); font-weight: 700; font-size: 14.5px;
+  color: var(--navy); line-height: 1.35;
+}
+.hs-result .hr-crumb {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--gold); background: var(--gold-pale);
+  border-radius: 20px; padding: 2px 9px;
+}
+.hs-result .hr-snippet {
+  display: block;
+  font-size: 12.5px; color: var(--muted); line-height: 1.55;
+  margin-top: 3px;
+}
+.hs-result .hr-snippet mark { background: var(--gold-pale); color: var(--navy); font-weight: 600; }
+.hs-no-results {
+  padding: 24px 22px;
+  font-size: 13.5px; color: var(--muted);
+  text-align: center; line-height: 1.7;
+}
+.hs-no-results a { color: var(--gold); font-weight: 600; }
+
+/* ============ TUTORIALS BRIDGE ============
+   Every element here starts hidden. A background fetch probes for
+   tutorials.html; only if that succeeds does JS reveal these — so if
+   the tutorials page doesn't exist yet (or the probe can't run, e.g.
+   under a plain file:// open), nothing shows up and nothing links
+   anywhere broken. ============================================= */
+.hero-tut-link {
+  display: none;
+  margin-top: 16px;
+  font-size: 13px; font-weight: 600;
+  color: var(--gold-light);
+  text-decoration: none;
+}
+.hero-tut-link:hover { text-decoration: underline; }
+#sbTutorialsHeading, #sbTutorialsLink { display: none; }
+#footerTutCallout { display: none; }
 .hero .hero-meta b { color: var(--gold-light); font-weight: 600; }
 
 /* ============ TYPOGRAPHY ============ */
@@ -209,7 +308,10 @@ code {
 }
 .steps li b { color: var(--navy); }
 
-table { width: 100%; border-collapse: collapse; margin: 16px 0 22px; font-size: 13.5px; }
+table {
+  width: 100%; border-collapse: collapse; margin: 16px 0 22px; font-size: 13.5px;
+  table-layout: fixed;
+}
 th {
   text-align: left; font-size: 11px; font-weight: 700;
   letter-spacing: 0.1em; text-transform: uppercase;
@@ -218,7 +320,8 @@ th {
   border-bottom: 2px solid var(--navy);
 }
 td { padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
-td:first-child { font-weight: 600; color: var(--navy); white-space: nowrap; }
+td:first-child, th:first-child { width: 32%; }
+td:first-child { font-weight: 600; color: var(--navy); word-wrap: break-word; }
 tr:nth-child(even) td { background: var(--cream); }
 
 kbd, .btn-demo {
@@ -454,6 +557,8 @@ ul.flist b { color: var(--navy); font-weight: 600; font-size: 13px; }
   <div class="sb-heading">Going Live</div>
   <a class="sb-link" href="#publishing">🚀 Publishing Changes</a>
   <a class="sb-link" href="#troubleshooting">🛠️ Troubleshooting</a>
+  <div class="sb-heading" id="sbTutorialsHeading">More Help</div>
+  <a class="sb-link" href="tutorials.html" id="sbTutorialsLink">🎓 Step-by-Step Tutorials</a>
 </nav>
 
 <div class="main">
@@ -463,11 +568,20 @@ ul.flist b { color: var(--navy); font-weight: 600; font-size: 13px; }
     <span class="eyebrow">Owner's Manual</span>
     <h1>Your Website,<br/>In Your Hands.</h1>
     <p>Everything you need to keep your site fresh — no coding, no special software. If you can browse the web and move a file between folders, you can manage this website.</p>
+    <div class="hero-search">
+      <div class="hs-input-wrap">
+        <span class="hs-icon">🔍</span>
+        <input type="text" id="manualSearch" placeholder="Search the manual… try &quot;popup&quot; or &quot;backup&quot;" autocomplete="off"/>
+        <button class="hs-clear" id="hsClear" title="Clear search" onclick="clearManualSearch(); document.getElementById('manualSearch').focus();">✕</button>
+      </div>
+      <div class="hs-results" id="hsResults"></div>
+    </div>
     <div class="hero-meta">
       <span>Template <b>SpiderWeb v1</b></span>
       <span>Audience <b>Site Owners &amp; Editors</b></span>
       <span>Skill Needed <b>Basic Browser + Files</b></span>
     </div>
+    <a class="hero-tut-link" href="tutorials.html" id="heroTutLink">🎓 Prefer hands-on steps? Try the Tutorials →</a>
   </div>
 </div>
 
@@ -1111,6 +1225,11 @@ ul.flist b { color: var(--navy); font-weight: 600; font-size: 13px; }
     <p>When in doubt: import the live <code>config.js</code> into the admin, make your change, preview, export, replace. That loop recovers from almost any confusion — because the file in your website folder is always the single source of truth.</p>
   </div>
 
+  <div class="callout" id="footerTutCallout">
+    <b>Prefer learning by doing?</b>
+    <p>The <a href="tutorials.html">Step-by-Step Tutorials</a> hub walks common tasks click by click, start to finish — a good companion to this reference if you'd rather follow along than look something up.</p>
+  </div>
+
   <p style="margin-top:60px;text-align:center;color:var(--muted);font-size:12px;letter-spacing:0.12em;text-transform:uppercase;">SpiderWeb v1 · Site Admin Manual</p>
 </section>
 
@@ -1142,6 +1261,290 @@ function closeMobileNav() {
 document.querySelectorAll('.sidebar a').forEach(function(a) {
   a.addEventListener('click', closeMobileNav);
 });
+</script>
+
+<!-- ============================================================
+     HERO SEARCH
+     ---------------------------------------------
+     Same engine as the companion tutorials hub (tokenized
+     AND-matching + light stemming + highlighted snippets), built
+     from the manual's own DOM rather than a hardcoded data list —
+     every top-level chapter, every "Sidebar Tour" sub-topic, every
+     Section Library group, and every one of the 33 individual
+     section-type cards is indexed automatically, so this stays in
+     sync as the manual's content changes without needing its own
+     maintenance.
+     ============================================================ -->
+<script>
+let _manualIndex = null;
+let _hsActive = -1;
+let _tutorialsAvailable = false;
+
+/* Bridge to the companion tutorials hub. A background fetch checks whether
+   tutorials.html actually exists alongside this manual; only on success do
+   we reveal any of the four tutorials links (hero badge, sidebar entry,
+   footer callout, search no-results suggestion). If the file is missing,
+   the fetch fails, or fetch itself can't run (e.g. a plain file:// open,
+   same caveat as the config.js theming), everything just stays hidden —
+   no dead links, no visible gap. */
+(function probeTutorials() {
+  fetch('tutorials.html', { method: 'GET', cache: 'no-store' })
+    .then(function(res) {
+      if (res && res.ok) revealTutorialsLinks();
+    })
+    .catch(function() { /* not available — leave everything hidden */ });
+})();
+function revealTutorialsLinks() {
+  _tutorialsAvailable = true;
+  ['sbTutorialsHeading', 'sbTutorialsLink', 'heroTutLink', 'footerTutCallout'].forEach(function(id) {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'block';
+  });
+}
+
+function msSlugify(s) {
+  return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+}
+function msStripEmoji(s) {
+  return s.replace(/^[^\w("]+/, '').trim();
+}
+function msLeadEmoji(s) {
+  const m = s.match(/^([^\w("]+)/);
+  return m ? m[1].trim() : '📄';
+}
+
+function buildManualIndex() {
+  if (_manualIndex) return _manualIndex;
+  const idx = [];
+
+  // Every individual section-type card ("Hero Section", "Popup", "FAQ", etc.)
+  // Auto-assigns each one a stable id (e.g. #type-hero-section) if it doesn't
+  // already have one, so results can deep-link straight to that card.
+  document.querySelectorAll('.stype').forEach(function(card) {
+    const nameEl = card.querySelector('.stype-name');
+    if (!nameEl) return;
+    const raw = nameEl.textContent.trim();
+    const label = msStripEmoji(raw);
+    if (!card.id) card.id = 'type-' + msSlugify(label);
+    let sib = card.previousElementSibling;
+    let crumb = 'Section Library';
+    while (sib) {
+      if (sib.classList.contains('group-head')) {
+        const h3 = sib.querySelector('h3');
+        crumb = h3 ? msStripEmoji(h3.textContent.trim()) : crumb;
+        break;
+      }
+      sib = sib.previousElementSibling;
+    }
+    idx.push({
+      id: card.id,
+      title: label,
+      emoji: msLeadEmoji(raw),
+      crumb: crumb,
+      body: card.textContent.replace(/\s+/g, ' ').trim()
+    });
+  });
+
+  // Every sidebar link: top-level chapters, "Sidebar Tour" sub-topics, and
+  // Section Library group headers. Body text is scoped to what that specific
+  // anchor actually covers — a whole <section> for chapters, the run of
+  // content up to the next heading for a sub-topic, or the group's intro
+  // paragraph for a Section Library group (its individual cards are already
+  // indexed above, so their content isn't duplicated here).
+  let currentHeading = '';
+  document.querySelectorAll('.sidebar > *').forEach(function(el) {
+    if (el.classList.contains('sb-heading')) { currentHeading = el.textContent.trim(); return; }
+    if (!el.classList.contains('sb-link')) return;
+    const href = el.getAttribute('href');
+    if (!href || href.charAt(0) !== '#') return;
+    const id = href.slice(1);
+    const target = document.getElementById(id);
+    if (!target) return;
+    const raw = el.textContent.trim();
+    const label = msStripEmoji(raw);
+    let body = '';
+    if (target.tagName === 'SECTION') {
+      body = target.textContent;
+    } else if (target.classList.contains('group-head')) {
+      const intro = target.nextElementSibling;
+      body = intro && intro.classList.contains('group-intro') ? intro.textContent : '';
+    } else {
+      let node = target.nextElementSibling;
+      const chunks = [];
+      let guard = 0;
+      while (node && node.tagName !== 'H2' && node.tagName !== 'H3' && guard < 40) {
+        chunks.push(node.textContent);
+        node = node.nextElementSibling;
+        guard++;
+      }
+      body = chunks.join(' ');
+    }
+    idx.push({
+      id: id,
+      title: label,
+      emoji: msLeadEmoji(raw),
+      crumb: currentHeading,
+      body: body.replace(/\s+/g, ' ').trim()
+    });
+  });
+
+  _manualIndex = idx;
+  return idx;
+}
+
+function msEscTxt(s) {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+const MS_STOPWORDS = new Set(['a','an','the','to','of','in','on','at','for','and','or','is','it',
+  'my','how','do','does','i','can','you','your','me','this','that','with','from','into']);
+function msSearchTokens(raw) {
+  const all = raw.toLowerCase().trim().split(/\s+/).filter(Boolean);
+  const meaningful = all.filter(function(t) { return !MS_STOPWORDS.has(t); });
+  return meaningful.length ? meaningful : all;
+}
+function msStemToken(tok) {
+  if (tok.length > 5 && tok.endsWith('ies')) return tok.slice(0, -3) + 'y';
+  if (tok.length > 5 && tok.endsWith('ing')) return tok.slice(0, -3);
+  if (tok.length > 4 && tok.endsWith('es'))  return tok.slice(0, -2);
+  if (tok.length > 4 && tok.endsWith('ed'))  return tok.slice(0, -2);
+  if (tok.length > 3 && tok.endsWith('s') && !tok.endsWith('ss')) return tok.slice(0, -1);
+  return tok;
+}
+function msSearchQuery(raw) {
+  const idx = buildManualIndex();
+  const tokens = msSearchTokens(raw);
+  if (!tokens.length) return { tokens: [], hits: [] };
+  const forms = tokens.map(function(tok) {
+    const stem = msStemToken(tok);
+    return stem === tok ? [tok] : [tok, stem];
+  });
+  const hits = [];
+  idx.forEach(function(item) {
+    const titleLower = item.title.toLowerCase();
+    const bodyLower = item.body.toLowerCase();
+    let score = 0;
+    let allMatch = true;
+    forms.forEach(function(tokForms) {
+      let s = 0;
+      tokForms.forEach(function(f) {
+        if (titleLower.includes(f)) s = Math.max(s, 5);
+        if (bodyLower.includes(f)) s = Math.max(s, 1);
+      });
+      if (s === 0) allMatch = false;
+      score += s;
+    });
+    if (allMatch) hits.push({ item: item, score: score, forms: forms, bodyLower: bodyLower });
+  });
+  hits.sort(function(a, b) { return b.score - a.score; });
+  return { tokens: tokens, hits: hits.slice(0, 12) };
+}
+
+function msSnippetFor(hit) {
+  const flat = [];
+  hit.forms.forEach(function(tokForms) { tokForms.forEach(function(f) { flat.push(f); }); });
+  const body = hit.item.body;
+  const bodyLower = hit.bodyLower;
+  const positions = flat
+    .map(function(f) { return bodyLower.indexOf(f); })
+    .filter(function(p) { return p >= 0; })
+    .sort(function(a, b) { return a - b; });
+  if (!positions.length || !body) return '';
+  const start = Math.max(0, positions[0] - 60);
+  let snippet = (start > 0 ? '…' : '') + body.slice(start, start + 190) + '…';
+  snippet = msEscTxt(snippet);
+  flat.forEach(function(f) {
+    if (f.length < 2) return;
+    const re = new RegExp('(' + f.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'ig');
+    snippet = snippet.replace(re, '<mark>$1</mark>');
+  });
+  return snippet;
+}
+
+function renderManualSearch() {
+  const inp = document.getElementById('manualSearch');
+  const panel = document.getElementById('hsResults');
+  const q = inp.value;
+  _hsActive = -1;
+  if (!q.trim()) {
+    panel.classList.remove('visible');
+    panel.innerHTML = '';
+    return;
+  }
+  const res = msSearchQuery(q);
+  let html = '';
+  if (!res.hits.length) {
+    const tutSuggestion = _tutorialsAvailable ? ' Or check the <a href="tutorials.html">Step-by-Step Tutorials</a>.' : '';
+    html = '<div class="hs-no-results">No matches for “<b>' + msEscTxt(q.trim()) + '</b>” yet.<br/>Try different words, or browse the Section Library in the sidebar.' + tutSuggestion + '</div>';
+  } else {
+    res.hits.forEach(function(h) {
+      const t = h.item;
+      const snip = msSnippetFor(h);
+      html += '<a class="hs-result" href="#' + t.id + '">' +
+              '<span class="hr-emoji">' + t.emoji + '</span>' +
+              '<span class="hr-main"><span class="hr-title">' + msEscTxt(t.title) +
+              (t.crumb ? '<span class="hr-crumb">' + msEscTxt(t.crumb) + '</span>' : '') + '</span>' +
+              (snip ? '<span class="hr-snippet">' + snip + '</span>' : '') +
+              '</span></a>';
+    });
+  }
+  panel.innerHTML = html;
+  panel.classList.add('visible');
+}
+
+function clearManualSearch() {
+  const inp = document.getElementById('manualSearch');
+  if (!inp) return;
+  inp.value = '';
+  const panel = document.getElementById('hsResults');
+  panel.classList.remove('visible');
+  panel.innerHTML = '';
+  _hsActive = -1;
+}
+
+function hsSetKbActive(links) {
+  links.forEach(function(a, i) {
+    if (i === _hsActive) {
+      a.classList.add('kb-active');
+      a.scrollIntoView({ block: 'nearest' });
+    } else {
+      a.classList.remove('kb-active');
+    }
+  });
+}
+
+(function initManualSearch() {
+  const inp = document.getElementById('manualSearch');
+  const panel = document.getElementById('hsResults');
+  if (!inp || !panel) return;
+  inp.addEventListener('input', renderManualSearch);
+  inp.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') { clearManualSearch(); return; }
+    const links = panel.querySelectorAll('a.hs-result');
+    if (!links.length) return;
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      _hsActive = Math.min(_hsActive + 1, links.length - 1);
+      hsSetKbActive(links);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      _hsActive = Math.max(_hsActive - 1, 0);
+      hsSetKbActive(links);
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      const idx = _hsActive >= 0 ? _hsActive : 0;
+      links[idx].click();
+    }
+  });
+  panel.addEventListener('click', function(e) {
+    if (e.target.closest('a.hs-result')) {
+      setTimeout(clearManualSearch, 50);
+    }
+  });
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.hero-search')) clearManualSearch();
+  });
+})();
 </script>
 
 <!-- ============================================================

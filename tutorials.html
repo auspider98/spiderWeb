@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SpiderWeb v1 — Tutorials</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --navy: #0f2340;
+  --navy-mid: #162840;
+  --navy-light: #1a3560;
+  --gold: #c9a84c;
+  --gold-light: #e8c97a;
+  --gold-pale: #faf6ec;
+  --warm-white: #fffdf9;
+  --cream: #f9f6f0;
+  --chrome: #060f1d;
+  --border: #e2ddd6;
+  --text: #2a2520;
+  --muted: #7a7570;
+  --danger: #c0392b;
+  --success: #2d7a5f;
+  --sidebar-w: 264px;
+  --font-display: 'Raleway', sans-serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; scroll-padding-top: 24px; overflow-x: hidden; }
+body {
+  font-family: var(--font-body);
+  background: var(--warm-white);
+  color: var(--text);
+  font-size: 15px;
+  overflow-x: hidden;
+  line-height: 1.7;
+}
+
+/* ============ SIDEBAR ============ */
+.sidebar {
+  position: fixed; top: 0; left: 0; bottom: 0;
+  width: var(--sidebar-w);
+  background: var(--chrome);
+  overflow-y: auto;
+  padding: 26px 0 40px;
+  z-index: 50;
+}
+.sidebar-brand {
+  color: #fff; font-weight: 700; font-size: 15px;
+  padding: 24px 22px 20px;
+  display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  margin-bottom: 18px;
+}
+.sidebar-brand-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
+.sidebar-brand-text { width: 100%; }
+.sidebar-brand small { display:block; font-weight: 400; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-top: 4px; }
+.sb-home {
+  display: block;
+  margin: 0 14px 14px;
+  padding: 9px 12px;
+  text-align: center;
+  color: var(--gold-light);
+  text-decoration: none;
+  font-size: 13px; font-weight: 600;
+  border: 1px solid rgba(201,168,76,0.45);
+  border-radius: 6px;
+  transition: all 0.15s;
+}
+.sb-home:hover { background: rgba(201,168,76,0.12); color: #fff; }
+.sb-home.active { background: var(--gold); color: var(--navy); border-color: var(--gold); }
+.sb-cat {
+  width: 100%;
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  background: none; border: none; cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+  padding: 12px 22px 8px;
+  text-align: left;
+  transition: color 0.15s;
+}
+.sb-cat:hover { color: var(--gold-light); }
+.sb-cat .sb-caret {
+  font-size: 10px;
+  color: rgba(255,255,255,0.35);
+  transition: transform 0.18s;
+  flex-shrink: 0;
+}
+.sb-cat.open .sb-caret { transform: rotate(90deg); color: var(--gold); }
+.sb-cat-body {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.22s ease;
+}
+.sb-cat.open + .sb-cat-body { max-height: 600px; }
+.sb-link {
+  display: block;
+  padding: 6px 22px 6px 30px;
+  color: rgba(255,255,255,0.66);
+  text-decoration: none;
+  font-size: 12.5px;
+  border-left: 3px solid transparent;
+  transition: all 0.15s;
+}
+.sb-link:hover { color: #fff; background: rgba(255,255,255,0.05); }
+.sb-link.active {
+  color: var(--gold-light);
+  border-left-color: var(--gold);
+  background: rgba(201,168,76,0.08);
+}
+.sb-link .soon-dot {
+  font-size: 9px;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-left: 6px;
+}
+.sb-link.soon { color: rgba(255,255,255,0.32); cursor: default; }
+.sb-link.soon:hover { background: none; color: rgba(255,255,255,0.32); }
+
+/* ============ MAIN ============ */
+.main { margin-left: var(--sidebar-w); }
+.container { max-width: 860px; margin: 0 auto; padding: 0 40px 120px; }
+
+/* ============ HERO (hub only) ============ */
+.hero {
+  background: linear-gradient(160deg, var(--navy) 0%, var(--chrome) 100%);
+  color: #fff;
+  padding: 90px 40px 70px;
+  margin-bottom: 60px;
+  position: relative;
+}
+.hero-inner { max-width: 860px; margin: 0 auto; }
+.hero-logo {
+  display: none;
+  position: absolute;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  height: var(--hero-logo-h, 40px);
+  width: auto;
+  max-width: 300px;
+  object-fit: contain;
+}
+@media (max-width: 960px) {
+  .hero-logo { display: block; max-width: 200px; }
+}
+.hero .eyebrow { color: var(--gold); }
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(34px, 5vw, 52px);
+  font-weight: 800; line-height: 1.1; letter-spacing: -0.01em;
+  margin: 14px 0 18px;
+}
+.hero p { color: rgba(255,255,255,0.75); max-width: 560px; font-size: 16px; }
+.hero .hero-meta { margin-top: 28px; display: flex; gap: 26px; flex-wrap: wrap; }
+.hero .hero-meta span { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.45); }
+.hero .hero-meta b { color: var(--gold-light); font-weight: 600; }
+
+/* ============ HERO SEARCH ============ */
+.hero-search { position: relative; max-width: 640px; margin-top: 30px; }
+.hs-input-wrap { position: relative; }
+.hs-icon {
+  position: absolute; left: 18px; top: 50%; transform: translateY(-50%);
+  font-size: 16px; opacity: 0.6; pointer-events: none;
+}
+#tutSearch {
+  width: 100%;
+  padding: 15px 46px 15px 48px;
+  font-family: var(--font-body); font-size: 15px;
+  border: 1px solid rgba(255,255,255,0.28);
+  border-radius: 10px;
+  background: rgba(255,255,255,0.10);
+  color: #fff;
+  outline: none;
+  transition: background 0.18s, border-color 0.18s, box-shadow 0.18s;
+}
+#tutSearch::placeholder { color: rgba(255,255,255,0.55); }
+#tutSearch:focus,
+#tutSearch:not(:placeholder-shown) {
+  background: #fff;
+  color: var(--text);
+  border-color: var(--gold);
+  box-shadow: 0 10px 30px rgba(6,15,29,0.35);
+}
+#tutSearch:focus::placeholder { color: #a9a49d; }
+.hs-clear {
+  position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+  border: none; background: none; cursor: pointer;
+  font-size: 14px; padding: 8px 10px;
+  color: var(--muted);
+}
+#tutSearch:placeholder-shown + .hs-clear { display: none; }
+.hs-results {
+  display: none;
+  margin-top: 10px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 16px 44px rgba(6,15,29,0.32);
+  overflow: hidden;
+  text-align: left;
+}
+.hs-results.visible { display: block; }
+.hs-result {
+  display: flex; gap: 14px; align-items: flex-start;
+  padding: 14px 18px;
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.12s;
+}
+.hs-result:last-child { border-bottom: none; }
+a.hs-result:hover, a.hs-result.kb-active { background: var(--gold-pale); }
+.hs-result .hr-emoji { font-size: 20px; line-height: 1.4; flex-shrink: 0; }
+.hs-result .hr-main { display: block; min-width: 0; flex: 1; }
+.hs-result .hr-title {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  font-family: var(--font-display); font-weight: 700; font-size: 14.5px;
+  color: var(--navy); line-height: 1.35;
+}
+.hs-result .hr-snippet {
+  display: block;
+  font-size: 12.5px; color: var(--muted); line-height: 1.55;
+  margin-top: 3px;
+}
+.hs-result.soon { opacity: 0.55; cursor: default; }
+.hs-result .tc-soon-tag { position: static; flex-shrink: 0; }
+.hs-no-results {
+  padding: 24px 22px;
+  font-size: 13.5px; color: var(--muted);
+  text-align: center; line-height: 1.7;
+}
+.hs-no-results a { color: var(--gold); font-weight: 600; }
+
+/* ============ TYPOGRAPHY ============ */
+.eyebrow {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--gold);
+}
+h2 {
+  font-family: var(--font-display);
+  font-size: 36px; font-weight: 700; letter-spacing: -0.005em;
+  color: var(--navy);
+  margin: 8px 0 16px;
+  scroll-margin-top: 30px;
+}
+h3 {
+  font-family: var(--font-display);
+  font-size: 21px; font-weight: 600;
+  color: var(--navy);
+  margin: 34px 0 10px;
+  scroll-margin-top: 30px;
+}
+h4 { font-size: 14px; font-weight: 700; color: var(--navy); margin: 20px 0 6px; letter-spacing: 0.02em; }
+p { margin-bottom: 14px; }
+p, li { color: #4a453e; }
+strong { color: var(--text); }
+ul, ol { margin: 0 0 16px 22px; }
+li { margin-bottom: 7px; }
+a { color: var(--gold); }
+code {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.86em;
+  background: var(--cream);
+  border: 1px solid var(--border);
+  padding: 1px 6px;
+  border-radius: 4px;
+  color: var(--navy);
+  white-space: nowrap;
+}
+
+/* ============ COMPONENTS (shared with manual) ============ */
+.panel {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 22px 24px;
+  margin: 18px 0;
+}
+.panel-title {
+  font-weight: 700; font-size: 14px; color: var(--navy);
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 10px;
+}
+.callout {
+  border-left: 4px solid var(--gold);
+  background: var(--gold-pale);
+  border-radius: 0 8px 8px 0;
+  padding: 14px 18px;
+  margin: 18px 0;
+  font-size: 14px;
+}
+.callout.warn { border-left-color: var(--danger); background: #fbf0ee; }
+.callout.ok { border-left-color: var(--success); background: #eef6f2; }
+.callout b:first-child { display: block; margin-bottom: 3px; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
+.callout p:last-child { margin-bottom: 0; }
+
+.steps { counter-reset: step; margin: 20px 0; list-style: none; margin-left: 0; }
+.steps li {
+  counter-increment: step;
+  position: relative;
+  padding: 0 0 18px 52px;
+  margin: 0;
+}
+.steps li::before {
+  content: counter(step, decimal-leading-zero);
+  position: absolute; left: 0; top: 1px;
+  font-family: 'DM Mono', monospace;
+  font-size: 13px; font-weight: 500;
+  color: var(--gold);
+  width: 34px; height: 34px;
+  border: 1.5px solid var(--gold);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: #fff;
+}
+.steps li:not(:last-child)::after {
+  content: '';
+  position: absolute; left: 17px; top: 38px; bottom: 2px;
+  width: 1px; background: var(--border);
+}
+.steps li b { color: var(--navy); }
+
+kbd, .btn-demo {
+  display: inline-block;
+  font-size: 12px; font-weight: 600;
+  padding: 3px 12px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.btn-demo.gold { background: var(--gold); color: var(--navy); }
+.btn-demo.ghost { background: transparent; color: var(--navy); border: 1px solid var(--border); }
+.btn-demo.dark { background: var(--navy); color: #fff; }
+
+/* ============ ROUTER PAGES ============ */
+.tut-page { display: none; }
+.tut-page.visible { display: block; animation: pageIn 0.25s ease; }
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============ HUB ============ */
+.hub-group { margin-bottom: 54px; }
+.hub-group-head {
+  display: flex; align-items: baseline; gap: 12px;
+  padding-top: 22px;
+  border-top: 3px solid var(--gold);
+  margin-bottom: 6px;
+}
+.hub-group-head h3 { margin: 0; font-size: 24px; }
+.hub-group-head .count { font-size: 12px; color: var(--muted); }
+.hub-group-intro { font-size: 13.5px; color: #4a453e; margin: 6px 0 20px; max-width: 700px; }
+.hub-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 14px;
+}
+.tut-card {
+  display: flex; flex-direction: column; gap: 8px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 18px 18px 16px;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.16s;
+  position: relative;
+}
+.tut-card:hover {
+  border-color: var(--gold);
+  box-shadow: 0 4px 16px rgba(15,35,64,0.08);
+  transform: translateY(-2px);
+}
+.tut-card .tc-emoji { font-size: 24px; line-height: 1; }
+.tut-card .tc-title {
+  font-family: var(--font-display);
+  font-weight: 700; font-size: 15.5px;
+  color: var(--navy);
+  line-height: 1.3;
+}
+.tut-card .tc-desc { font-size: 12.5px; color: var(--muted); line-height: 1.55; flex-grow: 1; }
+.tut-card .tc-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 2px; }
+.tut-card.soon {
+  opacity: 0.55;
+  cursor: default;
+  background: var(--cream);
+}
+.tut-card.soon:hover { border-color: var(--border); box-shadow: none; transform: none; }
+.tc-soon-tag {
+  position: absolute; top: 14px; right: 14px;
+  font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  background: #fff;
+  border-radius: 20px;
+  padding: 2px 9px;
+}
+
+/* ============ BADGES ============ */
+.badge {
+  display: inline-block;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 2px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+.badge.lv-beginner     { background: #eef6f2; color: var(--success); border: 1px solid #cbe4d8; }
+.badge.lv-intermediate { background: var(--gold-pale); color: #9a7c2e; border: 1px solid #ecdfc0; }
+.badge.lv-advanced     { background: #eef1f7; color: var(--navy); border: 1px solid #ccd5e4; }
+.badge.time {
+  background: none; border: none;
+  color: var(--muted);
+  font-family: 'DM Mono', monospace;
+  font-weight: 500; text-transform: none; letter-spacing: 0.02em;
+  padding-left: 0;
+}
+.badge.time::before { content: '⏱ '; }
+
+/* ============ TUTORIAL PAGE ============ */
+.tut-head { margin-bottom: 30px; }
+.tut-head .tut-meta {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  margin-top: 4px;
+}
+.tut-lede { font-size: 16px; color: #4a453e; max-width: 680px; margin-top: 14px; }
+.prereq {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 18px 22px;
+  margin: 24px 0;
+}
+.prereq .panel-title { margin-bottom: 8px; }
+.prereq ul { list-style: none; margin: 0; }
+.prereq li {
+  padding: 4px 0 4px 26px;
+  position: relative;
+  font-size: 13.5px;
+  margin: 0;
+}
+.prereq li::before {
+  content: '☐';
+  position: absolute; left: 2px; top: 3px;
+  color: var(--gold);
+  font-size: 15px;
+}
+.tut-footer-nav {
+  display: flex; align-items: stretch; gap: 12px;
+  margin-top: 60px;
+  padding-top: 26px;
+  border-top: 1px solid var(--border);
+}
+.tfn-btn {
+  flex: 1;
+  display: flex; flex-direction: column; gap: 3px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+  padding: 13px 16px;
+  text-decoration: none;
+  transition: all 0.15s;
+  min-width: 0;
+}
+.tfn-btn:hover { border-color: var(--gold); background: var(--gold-pale); }
+.tfn-btn small {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--muted);
+}
+.tfn-btn span {
+  font-size: 13.5px; font-weight: 600; color: var(--navy);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.tfn-btn.next { text-align: right; align-items: flex-end; }
+.tfn-btn.all { flex: 0 0 auto; align-items: center; justify-content: center; text-align: center; }
+.tfn-btn.hidden { visibility: hidden; }
+
+/* ============ RESPONSIVE + PRINT ============ */
+.sidebar-backdrop {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(6,15,29,0.55);
+  z-index: 200;
+}
+.sidebar-backdrop.visible { display: block; }
+.nav-fab {
+  display: none;
+  position: fixed; bottom: 22px; right: 22px;
+  z-index: 220;
+  align-items: center; gap: 8px;
+  background: var(--navy); color: #fff;
+  border: none; border-radius: 30px;
+  padding: 13px 20px;
+  font-family: var(--font-body); font-size: 13px; font-weight: 600;
+  box-shadow: 0 6px 20px rgba(6,15,29,0.35);
+  cursor: pointer;
+}
+.nav-fab-icon { font-size: 16px; line-height: 1; }
+@media (max-width: 960px) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 210;
+  }
+  .sidebar.open { transform: translateX(0); }
+  .main { margin-left: 0; }
+  .container, .hero { padding-left: 22px; padding-right: 22px; }
+  .nav-fab { display: flex; }
+  .tut-footer-nav { flex-direction: column; }
+  .tfn-btn.next { align-items: flex-start; text-align: left; }
+}
+@media print {
+  .sidebar, .nav-fab { display: none; }
+  .main { margin-left: 0; }
+  .hero { padding: 40px; }
+  .tut-page { display: block !important; page-break-before: always; }
+}
+</style>
+</head>
+<body>
+
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <div class="sidebar-brand-dot"></div>
+    <div class="sidebar-brand-text">Tutorials<small>SpiderWeb v1</small></div>
+  </div>
+  <a class="sb-home" href="#home" id="sbHome">🏠 All Tutorials</a>
+  <div id="sbCats"><!-- built by JS from the TUTORIALS registry --></div>
+</nav>
+<div class="sidebar-backdrop" id="sidebarBackdrop" onclick="closeMobileNav()"></div>
+<button class="nav-fab" onclick="toggleMobileNav()">
+  <span class="nav-fab-icon" id="navFabIcon">☰</span>
+  <span id="navFabLabel">Menu</span>
+</button>
+
+<div class="main">
+
+<!-- ============================================================
+     PAGE: HUB (home)
+     ============================================================ -->
+<section class="tut-page" id="page-home">
+  <div class="hero">
+    <div class="hero-inner">
+      <span class="eyebrow">Step-by-Step Tutorials</span>
+      <h1>Pick a Task.<br/>Follow the Steps.</h1>
+      <p>Every tutorial here walks one job from start to finish — click by click. No coding, no jargon. If you can browse the web and move a file between folders, you can do all of it.</p>
+      <div class="hero-search">
+        <div class="hs-input-wrap">
+          <span class="hs-icon">🔍</span>
+          <input type="text" id="tutSearch" placeholder="What do you need to do? Try &quot;change a photo&quot; or &quot;password&quot;…" autocomplete="off"/>
+          <button class="hs-clear" id="hsClear" title="Clear search" onclick="clearTutSearch(); document.getElementById('tutSearch').focus();">✕</button>
+        </div>
+        <div class="hs-results" id="hsResults"></div>
+      </div>
+      <div class="hero-meta">
+        <span>Template <b>SpiderWeb v1</b></span>
+        <span>Companion to <b>the Site Admin Manual</b></span>
+        <span>Skill Needed <b>Basic Browser + Files</b></span>
+      </div>
+    </div>
+  </div>
+  <div class="container" id="hubGroups"><!-- built by JS from the TUTORIALS registry --></div>
+</section>
+
+<!-- ============================================================
+     PAGE: FIX A TYPO  (Everyday Edits)
+     ============================================================ -->
+<section class="tut-page" id="page-fix-a-typo">
+  <div class="container" style="padding-top:60px;">
+    <div class="tut-head">
+      <span class="eyebrow">Everyday Edits</span>
+      <h2>Fix a Typo or Change Text</h2>
+      <div class="tut-meta">
+        <span class="badge lv-beginner">Beginner</span>
+        <span class="badge time">5–10 min</span>
+      </div>
+      <p class="tut-lede">The most common job there is: a word is wrong on the live site, and you want it fixed. This works for any text anywhere — headlines, paragraphs, button labels, footer lines.</p>
+    </div>
+
+    <div class="prereq">
+      <div class="panel-title">✅ Before you start</div>
+      <ul>
+        <li>You know which page the text is on (look at the live site if unsure).</li>
+        <li>You can open your website folder in your file explorer.</li>
+        <li>If you're on a <strong>different computer or browser</strong> than your last editing session: have your live <code>config.js</code> handy — step 2 needs it.</li>
+      </ul>
+    </div>
+
+    <ol class="steps">
+      <li><b>Open the admin.</b> In your website folder, double-click <code>admin.html</code>. It opens in your browser — this is your private control panel; nothing here touches the live site yet.</li>
+      <li><b>Make sure the admin is up to date.</b> If this is the same browser you always edit in, the admin remembers your last session — skip ahead. If it's a new computer or browser, drag your site folder's <code>config.js</code> onto the dashed <em>"Drag &amp; drop your config.js here"</em> zone at the top. The admin now matches the live site exactly.</li>
+      <li><b>Find the text.</b> Use the admin's sidebar to open the page the text lives on — <em>Home Page</em>, <em>About Us</em>, or one of your custom pages. Click a section's title bar to expand it, and look through its fields until you spot the sentence you're after. Fields hold exactly what the site shows, so the wording will look familiar.</li>
+      <li><b>Make the edit.</b> Click into the field and fix the text, just like editing any form. Watch the top bar: within a couple of seconds it will show an <em>"Autosaved"</em> message — that's the admin confirming it caught your change.</li>
+      <li><b>Preview it.</b> Click <span class="btn-demo gold">💾 Save &amp; Preview</span> in the top bar. The site opens in a new tab — go to the page and read your corrected text in place. This preview is visible only to you.</li>
+      <li><b>Publish it.</b> Click <span class="btn-demo gold">⬇ Export config.js</span> — a fresh <code>config.js</code> lands in your Downloads folder. Move it into your website folder, replacing the old one (choose <em>yes</em> when asked about overwriting). If your site is hosted online, upload that same file to your host. Reload the live site: fixed.</li>
+    </ol>
+
+    <div class="callout ok">
+      <b>Check your work</b>
+      <p>Open the live site (not the preview tab) and reload the page — on most computers <kbd class="btn-demo ghost">Ctrl+F5</kbd> / <kbd class="btn-demo ghost">Cmd+Shift+R</kbd> forces a fresh copy. If the new wording shows, you're done. While the export is still in hand, copy it into your backup folder with today's date — publishing and backing up make one habit.</p>
+    </div>
+
+    <div class="callout">
+      <b>If the change isn't showing</b>
+      <p>Nine times out of ten the new <code>config.js</code> didn't actually replace the old one — check the file's "date modified" in your website folder. The Publishing Changes tutorial covers this step in richer detail.</p>
+    </div>
+  </div>
+</section>
+
+<script src="config.js"></script>
+<script>
+/* =============================================
+   TUTORIAL REGISTRY
+   ---------------------------------------------
+   One entry per tutorial. To add a tutorial:
+     1) Write its <section class="tut-page" id="page-YOUR-ID"> above
+     2) Add an entry here with ready: true
+   The sidebar, hub cards, and Prev/Next footer
+   are all generated from this list — nothing
+   else to keep in sync.
+   ============================================= */
+const TUTORIALS = [
+  // 🌱 Getting Started
+  { id:'setup-new-site',   cat:'Getting Started', emoji:'🌱', title:'Set Up a Brand-New Website', desc:'Unpack the template, name your site, and see it running for the first time.', level:'Beginner', time:'30–45 min', keywords:['new site','install','template','unzip','start','first time','setup','folder'], ready:false },
+  { id:'first-session',    cat:'Getting Started', emoji:'🧭', title:'Your First Editing Session', desc:'The import → edit → preview rhythm you\u2019ll use every time you open the admin.', level:'Beginner', time:'15 min', keywords:['import','workflow','routine','basics','session','autosave','drag and drop'], ready:false },
+  { id:'business-branding',cat:'Getting Started', emoji:'🏛️', title:'Business Details & Branding', desc:'Your name, logos, contact info, and the details every page draws from.', level:'Beginner', time:'20 min', keywords:['logo','business name','company','brand','identity','tagline','details'], ready:false },
+  // ✏️ Everyday Edits
+  { id:'fix-a-typo',       cat:'Everyday Edits', emoji:'✏️', title:'Fix a Typo or Change Text', desc:'Find any piece of text on the site, correct it, and push the fix live.', level:'Beginner', time:'5–10 min', keywords:['typo','text','spelling','wording','change words','headline','paragraph','misspelled'], ready:true },
+  { id:'swap-image',       cat:'Everyday Edits', emoji:'🖼️', title:'Swap or Add an Image', desc:'Put a new photo in the images folder and point a section at it.', level:'Beginner', time:'10 min', keywords:['image','photo','picture','replace image','upload','images folder','jpg','png'], ready:false },
+  { id:'update-contact',   cat:'Everyday Edits', emoji:'📞', title:'Update Hours, Phone & Contact Info', desc:'Change the details that appear in the header, footer, and contact areas.', level:'Beginner', time:'5–10 min', keywords:['phone','hours','address','email','contact info','footer','details'], ready:false },
+  { id:'publish-changes',  cat:'Everyday Edits', emoji:'🚀', title:'Publish Your Changes', desc:'The full export → replace → upload walkthrough, for local folders and web hosts.', level:'Beginner', time:'10 min', keywords:['publish','export','upload','go live','replace','ftp','deploy','not showing'], ready:false },
+  // 🧱 Building
+  { id:'create-page',      cat:'Building', emoji:'📄', title:'Create a New Page', desc:'Add a page, set its name and address, and place it in the menu.', level:'Beginner', time:'15 min', keywords:['new page','add page','menu','navigation','nav','page name','slug'], ready:false },
+  { id:'add-section',      cat:'Building', emoji:'🧱', title:'Add a Section to a Page', desc:'Choose from the section library and fill in your content.', level:'Beginner', time:'15 min', keywords:['section','add section','library','content block','block','insert'], ready:false },
+  { id:'move-section',     cat:'Building', emoji:'📦', title:'Move or Copy a Section Between Pages', desc:'Export a finished section from one page and import it into another.', level:'Intermediate', time:'10 min', keywords:['move','copy','duplicate','transfer','between pages','export section','import section'], ready:false },
+  { id:'add-popup',        cat:'Building', emoji:'🔔', title:'Add a Popup Announcement', desc:'A notice, offer, or alert that appears over the page — on arrival or on scroll.', level:'Intermediate', time:'15–20 min', keywords:['popup','pop-up','announcement','modal','toast','notice','alert','banner','offer'], ready:false },
+  { id:'custom-form',      cat:'Building', emoji:'📝', title:'Build a Custom Form', desc:'Design your own form fields and choose where submissions go.', level:'Intermediate', time:'20–30 min', keywords:['form','fields','survey','questions','submissions','inputs'], ready:false },
+  { id:'setup-formspree',  cat:'Building', emoji:'📬', title:'Connect Forms with Formspree', desc:'The free service that delivers form submissions to your email inbox.', level:'Intermediate', time:'15 min', keywords:['formspree','form email','submissions','inbox','contact form','endpoint'], ready:false },
+  // 🛟 Safety & Recovery
+  { id:'make-backup',      cat:'Safety & Recovery', emoji:'🗄️', title:'Make a Dated Backup', desc:'The 60-second habit that makes every other mistake recoverable.', level:'Beginner', time:'5 min', keywords:['backup','back up','save copy','archive','dated copy','protect'], ready:false },
+  { id:'restore-backup',   cat:'Safety & Recovery', emoji:'⏪', title:'Restore from a Backup', desc:'Roll the whole site back to any dated config.js you\u2019ve kept.', level:'Beginner', time:'10 min', keywords:['restore','recover','roll back','rollback','revert','previous version'], ready:false },
+  { id:'wrong-computer',   cat:'Safety & Recovery', emoji:'💻', title:'\u201CI Edited on the Wrong Computer\u201D', desc:'Why the admin looks out of date on another machine, and how to sync it.', level:'Beginner', time:'10 min', keywords:['different computer','another computer','laptop','sync','out of date','missing changes','new browser'], ready:false },
+  { id:'undo-delete',      cat:'Safety & Recovery', emoji:'🩹', title:'Undo an Accidental Deletion', desc:'Deleted a section, item, or page? Here\u2019s the way back.', level:'Beginner', time:'10 min', keywords:['undo','deleted','accident','mistake','lost','removed','recover section','oops'], ready:false },
+  // 🎛️ Occasional
+  { id:'colors-fonts',     cat:'Occasional', emoji:'🎨', title:'Change Site Colors & Fonts', desc:'Adjust the palette and typography across the whole site at once.', level:'Intermediate', time:'20 min', keywords:['color','colour','font','typography','palette','theme','design','style'], ready:false },
+  { id:'reorder-nav',      cat:'Occasional', emoji:'🧭', title:'Reorder the Navigation', desc:'Change the order of menu items and nest pages under dropdowns.', level:'Beginner', time:'10 min', keywords:['menu order','navigation','nav','reorder','dropdown','rearrange','header links'], ready:false },
+  { id:'protect-page',     cat:'Occasional', emoji:'🔐', title:'Password-Protect a Page', desc:'Restrict a page to members with a shared access code.', level:'Intermediate', time:'15 min', keywords:['password','private','members','lock','access code','restricted'], ready:false },
+  { id:'go-live-hosting',  cat:'Occasional', emoji:'🌐', title:'Put Your Site on the Web', desc:'Choose a host, upload your folder, and point a domain at it.', level:'Advanced', time:'60+ min', keywords:['hosting','host','domain','online','github pages','launch','www','internet','live'], ready:false },
+];
+
+const CATEGORIES = [
+  { name:'Getting Started',   emoji:'🌱', intro:'Brand new to the template, or setting up a fresh site? Start here, in order.' },
+  { name:'Everyday Edits',    emoji:'✏️', intro:'The routine jobs — the ones you\u2019ll do again and again. Each takes minutes.' },
+  { name:'Building',          emoji:'🧱', intro:'Growing the site: new pages, new sections, popups, and forms.' },
+  { name:'Safety & Recovery', emoji:'🛟', intro:'Backups, restores, and getting out of trouble. Read these before you need them.' },
+  { name:'Occasional',        emoji:'🎛️', intro:'Bigger, rarer jobs — design changes, navigation, access, and going live.' },
+];
+
+/* =============================================
+   BUILDERS — sidebar + hub from the registry
+   ============================================= */
+function buildSidebar() {
+  const wrap = document.getElementById('sbCats');
+  let html = '';
+  CATEGORIES.forEach(function(cat, ci) {
+    const tuts = TUTORIALS.filter(function(t) { return t.cat === cat.name; });
+    html += '<button class="sb-cat" data-ci="' + ci + '" onclick="toggleCat(this)">' +
+            '<span>' + cat.emoji + ' ' + cat.name + '</span><span class="sb-caret">▸</span></button>';
+    html += '<div class="sb-cat-body">';
+    tuts.forEach(function(t) {
+      if (t.ready) {
+        html += '<a class="sb-link" href="#' + t.id + '" data-tid="' + t.id + '">' + t.emoji + ' ' + t.title + '</a>';
+      } else {
+        html += '<span class="sb-link soon">' + t.emoji + ' ' + t.title + '<span class="soon-dot">soon</span></span>';
+      }
+    });
+    html += '</div>';
+  });
+  wrap.innerHTML = html;
+  wrap.querySelectorAll('a.sb-link').forEach(function(a) {
+    a.addEventListener('click', closeMobileNav);
+  });
+}
+
+function buildHub() {
+  const wrap = document.getElementById('hubGroups');
+  let html = '';
+  CATEGORIES.forEach(function(cat) {
+    const tuts = TUTORIALS.filter(function(t) { return t.cat === cat.name; });
+    const readyCount = tuts.filter(function(t) { return t.ready; }).length;
+    html += '<div class="hub-group">';
+    html += '<div class="hub-group-head"><h3>' + cat.emoji + ' ' + cat.name + '</h3>' +
+            '<span class="count">' + readyCount + ' of ' + tuts.length + ' available</span></div>';
+    html += '<p class="hub-group-intro">' + cat.intro + '</p>';
+    html += '<div class="hub-grid">';
+    tuts.forEach(function(t) {
+      const levelClass = 'lv-' + t.level.toLowerCase();
+      const metaHtml = '<div class="tc-meta"><span class="badge ' + levelClass + '">' + t.level + '</span>' +
+                       '<span class="badge time">' + t.time + '</span></div>';
+      if (t.ready) {
+        html += '<a class="tut-card" href="#' + t.id + '">' +
+                '<span class="tc-emoji">' + t.emoji + '</span>' +
+                '<span class="tc-title">' + t.title + '</span>' +
+                '<span class="tc-desc">' + t.desc + '</span>' + metaHtml + '</a>';
+      } else {
+        html += '<div class="tut-card soon">' +
+                '<span class="tc-soon-tag">Coming soon</span>' +
+                '<span class="tc-emoji">' + t.emoji + '</span>' +
+                '<span class="tc-title">' + t.title + '</span>' +
+                '<span class="tc-desc">' + t.desc + '</span>' + metaHtml + '</div>';
+      }
+    });
+    html += '</div></div>';
+  });
+  wrap.innerHTML = html;
+}
+
+function toggleCat(btn) {
+  btn.classList.toggle('open');
+}
+
+/* =============================================
+   ROUTER — hash-based page switching
+   ============================================= */
+function currentTutId() {
+  const hash = (location.hash || '').replace(/^#/, '');
+  if (!hash || hash === 'home') return 'home';
+  const known = TUTORIALS.some(function(t) { return t.id === hash && t.ready; });
+  if (known) return hash;
+  return 'home';
+}
+
+function showPage(tid) {
+  clearTutSearch(); // navigating away resets the hub search
+  document.querySelectorAll('.tut-page').forEach(function(pg) {
+    pg.classList.remove('visible');
+  });
+  const target = document.getElementById('page-' + tid);
+  if (target) target.classList.add('visible');
+  window.scrollTo(0, 0);
+
+  // Sidebar active states
+  const homeLink = document.getElementById('sbHome');
+  if (tid === 'home') { homeLink.classList.add('active'); }
+  else { homeLink.classList.remove('active'); }
+  document.querySelectorAll('.sb-link[data-tid]').forEach(function(a) {
+    if (a.dataset.tid === tid) { a.classList.add('active'); }
+    else { a.classList.remove('active'); }
+  });
+
+  // Auto-expand the active tutorial's category
+  if (tid !== 'home') {
+    const tut = TUTORIALS.find(function(t) { return t.id === tid; });
+    if (tut) {
+      const ci = CATEGORIES.findIndex(function(c) { return c.name === tut.cat; });
+      const btn = document.querySelector('.sb-cat[data-ci="' + ci + '"]');
+      if (btn && !btn.classList.contains('open')) btn.classList.add('open');
+    }
+    injectFooterNav(tid);
+  }
+
+  // Page title
+  const tut2 = TUTORIALS.find(function(t) { return t.id === tid; });
+  if (tut2) { document.title = 'SpiderWeb v1 — Tutorial: ' + tut2.title; }
+  else { document.title = 'SpiderWeb v1 — Tutorials'; }
+}
+
+/* Prev/Next footer, generated per-visit so it always reflects
+   the registry order and skips not-yet-ready tutorials */
+function injectFooterNav(tid) {
+  const page = document.getElementById('page-' + tid);
+  if (!page) return;
+  const container = page.querySelector('.container');
+  if (!container) return;
+  const existing = container.querySelector('.tut-footer-nav');
+  if (existing) existing.remove();
+
+  const ready = TUTORIALS.filter(function(t) { return t.ready; });
+  const idx = ready.findIndex(function(t) { return t.id === tid; });
+  const prev = idx > 0 ? ready[idx - 1] : null;
+  const next = idx < ready.length - 1 ? ready[idx + 1] : null;
+
+  let html = '<div class="tut-footer-nav">';
+  if (prev) {
+    html += '<a class="tfn-btn" href="#' + prev.id + '"><small>← Previous</small><span>' + prev.emoji + ' ' + prev.title + '</span></a>';
+  } else {
+    html += '<a class="tfn-btn hidden"><small></small><span></span></a>';
+  }
+  html += '<a class="tfn-btn all" href="#home"><small>🏠</small><span>All Tutorials</span></a>';
+  if (next) {
+    html += '<a class="tfn-btn next" href="#' + next.id + '"><small>Next →</small><span>' + next.emoji + ' ' + next.title + '</span></a>';
+  } else {
+    html += '<a class="tfn-btn hidden"><small></small><span></span></a>';
+  }
+  html += '</div>';
+  container.insertAdjacentHTML('beforeend', html);
+}
+
+window.addEventListener('hashchange', function() { showPage(currentTutId()); });
+
+/* =============================================
+   HERO SEARCH
+   ---------------------------------------------
+   Same engine as the site's search (tokenized
+   AND-matching + highlighted snippets), presented
+   inline under the hub's search bar. Two layers:
+   registry (title / keywords / description,
+   weighted high) and the full text of every
+   written tutorial page (weighted low) — so a
+   search for a word that only appears deep in
+   the steps still finds its tutorial.
+   ============================================= */
+let _tutIndex = null;
+let _hsActive = -1;
+
+function buildTutIndex() {
+  if (_tutIndex) return;
+  _tutIndex = TUTORIALS.map(function(t) {
+    let body = '';
+    const page = document.getElementById('page-' + t.id);
+    if (t.ready && page) {
+      body = page.textContent.replace(/\s+/g, ' ').trim();
+    }
+    const kw = (t.keywords || []).join(' ');
+    return {
+      t: t,
+      title: t.title.toLowerCase(),
+      kw: kw.toLowerCase(),
+      desc: t.desc.toLowerCase(),
+      body: body,
+      bodyLower: body.toLowerCase()
+    };
+  });
+}
+
+function escTxt(s) {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+/* Common filler words carry no search value and, being short, tend to
+   appear as standalone words inside unrelated text ("to a Page", "point
+   a section at it") — matching them just adds noise. Strip them out
+   before searching; if a query is ALL stopwords (rare — e.g. someone
+   just typed "the"), fall back to the raw words rather than searching
+   on nothing. */
+const STOPWORDS = new Set(['a','an','the','to','of','in','on','at','for','and','or','is','it',
+  'my','how','do','does','i','can','you','your','me','this','that','with','from','into']);
+function tutSearchTokens(raw) {
+  const all = raw.toLowerCase().trim().split(/\s+/).filter(Boolean);
+  const meaningful = all.filter(function(t) { return !STOPWORDS.has(t); });
+  return meaningful.length ? meaningful : all;
+}
+
+/* Lightweight suffix stripping so plurals and -ing/-ed forms still find
+   their root word in the indexed text (typing "sections" finds "section",
+   "spacing" finds "space"). Not a real stemmer — just enough for a small,
+   plain-English tutorial glossary. Longer/more specific suffixes are
+   checked first, and a minimum length guards against mangling short
+   words that only coincidentally end that way. */
+function stemToken(tok) {
+  if (tok.length > 5 && tok.endsWith('ies')) return tok.slice(0, -3) + 'y';   // categories -> category
+  if (tok.length > 5 && tok.endsWith('ing')) return tok.slice(0, -3);        // spacing -> spac (matches "space")
+  if (tok.length > 4 && tok.endsWith('es'))  return tok.slice(0, -2);        // boxes -> box
+  if (tok.length > 4 && tok.endsWith('ed'))  return tok.slice(0, -2);        // updated -> updat (matches "update")
+  if (tok.length > 3 && tok.endsWith('s') && !tok.endsWith('ss')) return tok.slice(0, -1); // sections -> section
+  return tok;
+}
+
+/* Every typed word must match somewhere, checking both its exact form and
+   its stem; where it matches sets its weight: title 5, keyword 4,
+   description 2, page text 1. Results sort by score. */
+function tutSearchQuery(raw) {
+  buildTutIndex();
+  const tokens = tutSearchTokens(raw);
+  if (!tokens.length) return { tokens: [], hits: [] };
+  const forms = tokens.map(function(tok) {
+    const stem = stemToken(tok);
+    return stem === tok ? [tok] : [tok, stem];
+  });
+  const hits = [];
+  _tutIndex.forEach(function(item) {
+    let score = 0;
+    let allMatch = true;
+    forms.forEach(function(tokForms) {
+      let s = 0;
+      tokForms.forEach(function(f) {
+        if (item.title.includes(f)) s = Math.max(s, 5);
+        if (item.kw.includes(f)) s = Math.max(s, 4);
+        if (item.desc.includes(f)) s = Math.max(s, 2);
+        if (item.bodyLower.includes(f)) s = Math.max(s, 1);
+      });
+      if (s === 0) allMatch = false;
+      score += s;
+    });
+    if (allMatch) hits.push({ item: item, score: score, forms: forms });
+  });
+  hits.sort(function(a, b) { return b.score - a.score; });
+  return { tokens: tokens, forms: forms, hits: hits };
+}
+
+/* Snippet: a plain-text window of page content around the first hit
+   (checking each token's stemmed form too), falling back to the card
+   description when the match came only from the title or keywords. */
+function snippetFor(item, forms) {
+  const flat = [];
+  forms.forEach(function(tokForms) { tokForms.forEach(function(f) { flat.push(f); }); });
+  if (item.body) {
+    const positions = flat
+      .map(function(f) { return item.bodyLower.indexOf(f); })
+      .filter(function(p) { return p >= 0; })
+      .sort(function(a, b) { return a - b; });
+    if (positions.length) {
+      const start = Math.max(0, positions[0] - 60);
+      let prefix = '';
+      if (start > 0) prefix = '…';
+      return escTxt(prefix + item.body.slice(start, start + 190) + '…');
+    }
+  }
+  return escTxt(item.t.desc);
+}
+
+function renderTutSearch() {
+  const inp = document.getElementById('tutSearch');
+  const panel = document.getElementById('hsResults');
+  const q = inp.value;
+  _hsActive = -1;
+  if (!q.trim()) {
+    panel.classList.remove('visible');
+    panel.innerHTML = '';
+    return;
+  }
+  const res = tutSearchQuery(q);
+  let html = '';
+  if (!res.hits.length) {
+    html = '<div class="hs-no-results">No tutorial matches “<b>' + escTxt(q.trim()) + '</b>” yet.<br/>' +
+           'Try different words — or check the <a href="manual.html">Site Admin Manual</a>, which covers every screen and setting.</div>';
+  } else {
+    res.hits.forEach(function(h) {
+      const t = h.item.t;
+      const titleHtml = escTxt(t.title);
+      const snipHtml = snippetFor(h.item, h.forms);
+      const levelClass = 'lv-' + t.level.toLowerCase();
+      if (t.ready) {
+        html += '<a class="hs-result" href="#' + t.id + '">' +
+                '<span class="hr-emoji">' + t.emoji + '</span>' +
+                '<span class="hr-main"><span class="hr-title">' + titleHtml +
+                '<span class="badge ' + levelClass + '">' + t.level + '</span></span>' +
+                '<span class="hr-snippet">' + snipHtml + '</span></span></a>';
+      } else {
+        html += '<div class="hs-result soon">' +
+                '<span class="hr-emoji">' + t.emoji + '</span>' +
+                '<span class="hr-main"><span class="hr-title">' + titleHtml +
+                '<span class="tc-soon-tag">Coming soon</span></span>' +
+                '<span class="hr-snippet">' + snipHtml + '</span></span></div>';
+      }
+    });
+  }
+  panel.innerHTML = html;
+  panel.classList.add('visible');
+}
+
+function clearTutSearch() {
+  const inp = document.getElementById('tutSearch');
+  if (!inp) return;
+  inp.value = '';
+  const panel = document.getElementById('hsResults');
+  panel.classList.remove('visible');
+  panel.innerHTML = '';
+  _hsActive = -1;
+}
+
+function hsSetKbActive(links) {
+  links.forEach(function(a, i) {
+    if (i === _hsActive) {
+      a.classList.add('kb-active');
+      a.scrollIntoView({ block: 'nearest' });
+    } else {
+      a.classList.remove('kb-active');
+    }
+  });
+}
+
+(function initTutSearch() {
+  const inp = document.getElementById('tutSearch');
+  const panel = document.getElementById('hsResults');
+  inp.addEventListener('input', renderTutSearch);
+  inp.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') { clearTutSearch(); return; }
+    const links = panel.querySelectorAll('a.hs-result');
+    if (!links.length) return;
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      _hsActive = Math.min(_hsActive + 1, links.length - 1);
+      hsSetKbActive(links);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      _hsActive = Math.max(_hsActive - 1, 0);
+      hsSetKbActive(links);
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      const idx = _hsActive >= 0 ? _hsActive : 0;
+      links[idx].click();
+    }
+  });
+})();
+
+/* =============================================
+   MOBILE NAV
+   ============================================= */
+function toggleMobileNav() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarBackdrop').classList.toggle('visible');
+  var open = document.getElementById('sidebar').classList.contains('open');
+  document.getElementById('navFabIcon').textContent = open ? '✕' : '☰';
+  document.getElementById('navFabLabel').textContent = open ? 'Close' : 'Menu';
+}
+function closeMobileNav() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarBackdrop').classList.remove('visible');
+  document.getElementById('navFabIcon').textContent = '☰';
+  document.getElementById('navFabLabel').textContent = 'Menu';
+}
+document.getElementById('sbHome').addEventListener('click', closeMobileNav);
+
+/* =============================================
+   INIT
+   ============================================= */
+buildSidebar();
+buildHub();
+showPage(currentTutId());
+
+/* =============================================
+   SITE THEMING — reads config.js when present
+   (same block as manual.html; fails silently
+   when opened without a config.js beside it)
+   ============================================= */
+(function() {
+  try {
+    if (typeof SITE_CONFIG === 'undefined' || !SITE_CONFIG) return;
+    var cfg = SITE_CONFIG;
+    var root = document.documentElement;
+    var applied = false;
+
+    // --- Palette ---
+    var c = cfg.colors || {};
+    var colorMap = {
+      navy: '--navy', navyLight: '--navy-light', gold: '--gold',
+      goldLight: '--gold-light', goldPale: '--gold-pale',
+      warmWhite: '--warm-white', cream: '--cream', chrome: '--chrome'
+    };
+    Object.keys(colorMap).forEach(function(key) {
+      if (c[key]) { root.style.setProperty(colorMap[key], c[key]); applied = true; }
+    });
+    var fc = cfg.fontColors || {};
+    if (fc.heading) root.style.setProperty('--text', fc.heading);
+
+    // --- Typography ---
+    var displayFont = (cfg.fontDisplayCustom || cfg.fontDisplay || '').trim();
+    var bodyFont    = (cfg.fontBodyCustom    || cfg.fontBody    || '').trim();
+    if (displayFont || bodyFont) {
+      var families = [];
+      if (displayFont) families.push(displayFont.replace(/ /g, '+') + ':wght@500;600;700;800');
+      if (bodyFont && bodyFont !== displayFont) families.push(bodyFont.replace(/ /g, '+') + ':wght@300;400;500;600;700');
+      if (families.length) {
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'https://fonts.googleapis.com/css2?family=' + families.join('&family=') + '&display=swap';
+        document.head.appendChild(link);
+      }
+      if (displayFont) root.style.setProperty('--font-display', "'" + displayFont + "', sans-serif");
+      if (bodyFont)    root.style.setProperty('--font-body', "'" + bodyFont + "', sans-serif");
+      applied = true;
+    }
+
+    // --- Business name ---
+    // Set now; the logo block below removes it if a logo image loads successfully,
+    // so it only ever shows as a fallback when there's no logo to speak for the brand.
+    if (cfg.firmName) {
+      var sub = document.querySelector('.sidebar-brand small');
+      if (sub) sub.textContent = cfg.firmName;
+    }
+
+    // --- Sidebar logo (prefers the alternate logo). Visible on desktop; the
+    // sidebar itself is an off-canvas drawer on mobile, so this logo is hidden
+    // there by default — the hero logo below takes over as the visible brand
+    // mark on mobile instead. ---
+    var logoPath = cfg.logoAlternate || cfg.logoPrimary || '';
+    if (logoPath) {
+      var probe = new Image();
+      probe.onload = function() {
+        var dot = document.querySelector('.sidebar-brand-dot');
+        if (!dot) return;
+        var img = document.createElement('img');
+        img.src = logoPath;
+        img.alt = cfg.firmName || 'Logo';
+        img.style.cssText = 'width:65%;max-width:160px;height:auto;object-fit:contain;';
+        dot.replaceWith(img);
+        var sub2 = document.querySelector('.sidebar-brand small');
+        if (sub2) sub2.remove();
+      };
+      probe.src = logoPath;
+    }
+
+    // --- Hero logo (same source as the sidebar logo — prefers alternate).
+    // Hidden on desktop via CSS; only shows on mobile, where the sidebar is
+    // tucked away in its off-canvas drawer. Sized off logoHeaderHeight
+    // (default 40px) to match the site's real header logo height. ---
+    var heroLogoPath = cfg.logoAlternate || cfg.logoPrimary || '';
+    if (heroLogoPath) {
+      var heroProbe = new Image();
+      heroProbe.onload = function() {
+        var heroEl = document.querySelector('.hero');
+        if (!heroEl) return;
+        document.documentElement.style.setProperty('--hero-logo-h', (cfg.logoHeaderHeight || 40) + 'px');
+        var himg = document.createElement('img');
+        himg.src = heroLogoPath;
+        himg.alt = cfg.firmName || 'Logo';
+        himg.className = 'hero-logo';
+        heroEl.appendChild(himg);
+      };
+      heroProbe.src = heroLogoPath;
+    }
+
+    // --- Quiet confirmation, only shown when theming actually applied ---
+    if (applied) {
+      var note = document.createElement('div');
+      note.textContent = '✓ Styled to match your site';
+      note.style.cssText = 'font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.32);padding:12px 22px 0;';
+      var brand = document.querySelector('.sidebar-brand');
+      if (brand) brand.insertAdjacentElement('afterend', note);
+    }
+  } catch (e) {
+    /* config.js missing, blocked, or malformed — keep default styling */
+  }
+})();
+</script>
+</body>
+</html>
