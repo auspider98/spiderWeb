@@ -497,6 +497,61 @@ kbd, .btn-demo {
   color: var(--gold);
   font-size: 15px;
 }
+
+/* ============ TROUBLESHOOTING / FAQ ============
+   Native <details>/<summary> — no JS needed for expand/collapse,
+   accessible, and prints cleanly. */
+.faq-group { margin-bottom: 40px; }
+.faq-group-head {
+  display: flex; align-items: baseline; gap: 10px;
+  padding-top: 18px;
+  border-top: 3px solid var(--gold);
+  margin-bottom: 14px;
+}
+.faq-group-head h3 { margin: 0; font-size: 20px; }
+.faq-item {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 10px;
+  overflow: hidden;
+  transition: background 0.6s ease, border-color 0.6s ease;
+}
+.faq-item.js-highlight {
+  background: var(--gold-pale);
+  border-color: var(--gold);
+}
+.faq-item summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 14px 18px;
+  font-weight: 600;
+  color: var(--navy);
+  font-size: 14.5px;
+  display: flex; align-items: center; gap: 10px;
+  transition: background 0.12s;
+}
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::before {
+  content: '+';
+  flex-shrink: 0;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  border: 1.5px solid var(--gold);
+  color: var(--gold);
+  font-size: 14px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform 0.15s;
+}
+.faq-item[open] summary::before { content: '−'; }
+.faq-item summary:hover { background: var(--gold-pale); }
+.faq-item .faq-body {
+  padding: 0 18px 16px 48px;
+  font-size: 13.5px;
+  color: #4a453e;
+  line-height: 1.65;
+}
+.faq-item .faq-body p:last-child { margin-bottom: 0; }
 .tut-footer-nav {
   display: flex; align-items: stretch; gap: 12px;
   margin-top: 60px;
@@ -577,6 +632,7 @@ kbd, .btn-demo {
     <div class="sidebar-brand-text">Tutorials<small>SpiderWeb v1</small></div>
   </div>
   <a class="sb-home" href="#home" id="sbHome">🏠 All Tutorials</a>
+  <a class="sb-home" href="#troubleshooting" id="sbTroubleshooting">🆘 Troubleshooting & FAQ</a>
   <div id="sbCats"><!-- built by JS from the TUTORIALS registry --></div>
   <div class="sb-heading" id="sbManualHeading">More Help</div>
   <a class="sb-link flat" href="manual.html" id="sbManualLink">📖 Site Admin Manual</a>
@@ -1332,6 +1388,219 @@ kbd, .btn-demo {
   </div>
 </section>
 
+<!-- ============================================================
+     PAGE: SETTING UP THE HOME PAGE  (Building)
+     ============================================================ -->
+<section class="tut-page" id="page-home-hero">
+  <div class="container" style="padding-top:60px;">
+    <div class="tut-head">
+      <span class="eyebrow">Building</span>
+      <h2>Setting Up the Home Page</h2>
+      <div class="tut-meta">
+        <span class="badge lv-intermediate">Intermediate</span>
+        <span class="badge time">25 min</span>
+      </div>
+      <p class="tut-lede">The Home Page is the one page with a section no other page has: the Hero — the large full-screen banner every visitor sees first. This walks through its headline, its four different background options, and the stats bar beneath it.</p>
+    </div>
+
+    <div class="prereq">
+      <div class="panel-title">✅ Before you start</div>
+      <ul>
+        <li>Comfortable with <a href="#add-section">Add a Section to a Page</a> — everything below the Hero on the Home Page uses those same tools.</li>
+        <li>Know which background style you want: a solid color, one photo, several rotating photos, or video.</li>
+      </ul>
+    </div>
+
+    <h3>1. Headline &amp; Text</h3>
+    <p>In the sidebar, under <em>Content</em>, open <span class="btn-demo ghost">🏠 Home Page</span>, then expand <b>Headline &amp; Text</b>.</p>
+    <ol class="steps">
+      <li><b>Hero Headline</b> — separate multiple lines with commas to animate between them, one after another.</li>
+      <li><b>Hero Subline</b> — a sentence or two beneath the headline.</li>
+      <li><b>Trust Bullets</b> — short reassurances, one per line (e.g. <em>"Free Initial Consultation," "20+ Years Experience"</em>).</li>
+      <li><b>Primary Button</b> and <b>Secondary Button</b> — each with a Label and Link Type (internal page, external URL, or file), same smart-link pattern used elsewhere on the site.</li>
+    </ol>
+
+    <h3>2. Choose a background</h3>
+    <p>Expand the <b>Background</b> panel. Four tabs sit at the top — pick one:</p>
+    <ul>
+      <li><b>Solid Color</b> — the simplest option: one flat background color.</li>
+      <li><b>Single Image</b> — one photo, with an <b>Image Position</b> dropdown (e.g. center center, center top) controlling which part of the photo stays visible as the browser window resizes.</li>
+      <li><b>Slideshow</b> — several photos that rotate automatically. Click <span class="btn-demo gold">+ Add Slide</span> for each one, then set <b>Transition</b> (Crossfade or Slide), <b>Transition Speed</b>, <b>Slide Duration</b>, and whether it <b>Autoplay</b>s.</li>
+      <li><b>Video</b> — a full playlist of video clips. Click <span class="btn-demo gold">+ Add Clip</span> to build the playlist, set a <b>Shared Fallback Image</b> (shown on mobile, or for any clip with no fallback of its own), and a <b>Transition Speed</b> for the crossfade between clips. The <b>Hold on fallback between loops</b> toggle shows the fallback image for a few seconds after the last clip, before the playlist repeats.</li>
+    </ul>
+
+    <div class="callout">
+      <b>Overlay Color &amp; Opacity</b>
+      <p>Whichever background you choose (other than Solid Color), the <b>Overlay Color</b> and <b>Overlay Opacity</b> fields darken or tint the image or video slightly so your white headline text stays readable on top of it. Higher opacity means a stronger, darker overlay.</p>
+    </div>
+
+    <h3>3. Stats Bar</h3>
+    <p>Expand the <b>Stats Bar</b> panel, just below the Hero. Click <span class="btn-demo gold">+ Add Stat</span> for each figure you want to show (e.g. <em>"500+ Cases Won"</em>), and turn on <b>Animate</b> if you'd like the numbers to count up as visitors scroll to them. Leave the list empty to hide the stats bar entirely.</p>
+
+    <h3>4. Everything below the Hero</h3>
+    <p>The <b>Page Sections</b> area below Stats Bar works exactly like any custom page — choose a type from the library and click <span class="btn-demo gold">+ Add Section</span>. See <a href="#add-section">Add a Section to a Page</a> for the full walkthrough of what's available there.</p>
+
+    <h3>5. Preview and publish</h3>
+    <p>Click <span class="btn-demo gold">💾 Save &amp; Preview</span> — for a Slideshow or Video background, watch it through at least one full cycle to confirm the timing and transitions feel right. When it looks right, <span class="btn-demo gold">⬇ Export config.js</span> and replace the file in your website folder.</p>
+
+    <div class="callout ok">
+      <b>Check your work</b>
+      <p>Confirm your headline text stays readable against the background at every point in a Slideshow or Video cycle, not just the first frame — a bright patch in a later photo or clip can wash out light text even if the first one looked fine.</p>
+    </div>
+
+    <div class="callout warn">
+      <b>Video and page load speed</b>
+      <p>Video backgrounds are the heaviest option for how fast your page loads, especially on mobile connections — this is exactly why a fallback image is required. If your site feels slow after switching to video, a Slideshow of a few well-chosen photos often reads almost as impressively with a fraction of the load.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PAGE: CONFIGURE THE SPLASH SCREEN  (Building)
+     ============================================================ -->
+<section class="tut-page" id="page-splash-screen">
+  <div class="container" style="padding-top:60px;">
+    <div class="tut-head">
+      <span class="eyebrow">Building</span>
+      <h2>Configure the Splash Screen</h2>
+      <div class="tut-meta">
+        <span class="badge lv-beginner">Beginner</span>
+        <span class="badge time">10 min</span>
+      </div>
+      <p class="tut-lede">The brief loading screen a visitor sees for a moment before the site itself appears — your logo, name, and a simple background, set once and rarely touched again.</p>
+    </div>
+
+    <div class="prereq">
+      <div class="panel-title">✅ Before you start</div>
+      <ul>
+        <li>Your logo already set up — see <a href="#business-branding">Business Details &amp; Branding</a> if you haven't yet.</li>
+      </ul>
+    </div>
+
+    <h3>1. Logo and display mode</h3>
+    <p>In the sidebar, under <em>Content</em>, open <span class="btn-demo ghost">🌅 Splash Screen</span>.</p>
+    <ol class="steps">
+      <li><b>Logo to Use</b> — None (shows your business name as text instead), Primary Logo, or Alternate Logo.</li>
+      <li><b>Logo Height</b> — in pixels.</li>
+      <li><b>Splash Display Mode</b> — <em>Logo + name / line / tagline</em> shows everything; <em>Logo + line / tagline</em> hides the business name text; <em>Logo only</em> hides everything except the logo itself.</li>
+    </ol>
+
+    <h3>2. Background style</h3>
+    <p>Four options under <b>Splash Background</b>:</p>
+    <ul>
+      <li><b>None</b> — the original plain solid color, no extra styling.</li>
+      <li><b>Gradient / Texture</b> — a subtle built-in background treatment, no further setup needed.</li>
+      <li><b>Watermark</b> — a large, faint version of your logo behind the splash content. Choose Primary Logo, Alternate Logo, or <b>Custom Image</b> (a separate image just for this watermark), then adjust its Size and Opacity.</li>
+      <li><b>Background Image</b> — a full photo behind the splash content, similar to a Hero background.</li>
+    </ul>
+
+    <h3>3. Preview and publish</h3>
+    <p>Click <span class="btn-demo gold">💾 Save &amp; Preview</span> — the splash screen only shows briefly on load, so you may need to reload the preview tab a few times to see it clearly. When it looks right, <span class="btn-demo gold">⬇ Export config.js</span> and replace the file in your website folder.</p>
+
+    <div class="callout ok">
+      <b>Check your work</b>
+      <p>Reload the live site a couple of times and confirm the splash screen looks intentional rather than accidental — a watermark or background image set too strong can make logo and text hard to read for that brief moment before the site loads.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PAGE: LOCK THE WHOLE SITE WITH A PIN  (Building)
+     ============================================================ -->
+<section class="tut-page" id="page-site-lock">
+  <div class="container" style="padding-top:60px;">
+    <div class="tut-head">
+      <span class="eyebrow">Building</span>
+      <h2>Lock the Whole Site with a PIN</h2>
+      <div class="tut-meta">
+        <span class="badge lv-intermediate">Intermediate</span>
+        <span class="badge time">15 min</span>
+      </div>
+      <p class="tut-lede">For restricting one page, see <a href="#protect-page">Password-Protect a Page</a>. This is the bigger switch — locking the <em>entire</em> site behind a PIN, useful for a site still under construction or a fully private client portal.</p>
+    </div>
+
+    <div class="prereq">
+      <div class="panel-title">✅ Before you start</div>
+      <ul>
+        <li>At least one member set up with a PIN — see <a href="#protect-page">Password-Protect a Page</a> for adding members.</li>
+        <li>Be certain the whole site should be restricted, not just one page — this is a bigger switch than it might sound.</li>
+      </ul>
+    </div>
+
+    <h3>1. Turn on the site-wide lock</h3>
+    <p>In the sidebar, under <em>Design</em>, open <span class="btn-demo ghost">🔐 Members &amp; Access</span>, expand <b>Site Access</b>, and set <b>Site Lock Mode</b> to <b>PIN Required</b>. The PIN screen will now appear whenever a visitor opens the menu or scrolls down on any page.</p>
+    <p><b>Session Duration (days)</b> controls how long a visitor stays logged in before needing to enter their PIN again — set it to 0 to require it fresh every browser session instead.</p>
+
+    <h3>2. Customize the PIN screen (optional)</h3>
+    <p>Expand <b>PIN Pad Appearance</b> for the wording and look of the lock screen itself — Headline, Subtext, Theme (Dark/Gold/Light), and the message shown after a wrong PIN.</p>
+    <ol class="steps">
+      <li><b>Welcome Screen</b> — shown briefly right after a correct PIN. <b>Welcome Message</b> supports <code>{name}</code> to greet the member by name, with its own <b>Commissioner Message</b> for that higher access role, and a <b>Welcome Duration</b>.</li>
+      <li><b>Imposter Screen</b> — an optional screen shown after a failed attempt, with its own <b>Headline</b> and <b>Message</b> — a firmer "access denied" moment rather than just a quiet error.</li>
+    </ol>
+
+    <h3>3. Preview and publish</h3>
+    <p>Click <span class="btn-demo gold">💾 Save &amp; Preview</span> and confirm the PIN screen actually appears when you open the menu or scroll. Test both a correct and incorrect PIN. When it looks right, <span class="btn-demo gold">⬇ Export config.js</span> and replace the file in your website folder.</p>
+
+    <div class="callout warn">
+      <b>Don't lock yourself out</b>
+      <p>Once this is live, <em>you</em> need a member PIN to browse your own site too — there's no separate owner bypass. Keep at least one member's PIN written down somewhere safe before turning this on.</p>
+    </div>
+
+    <div class="callout ok">
+      <b>Check your work</b>
+      <p>Open the live site in a private/incognito browser window (so it behaves like a brand-new visitor) and confirm the PIN screen appears and a valid PIN gets you through.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PAGE: SEO & META BASICS  (Building)
+     ============================================================ -->
+<section class="tut-page" id="page-seo-meta">
+  <div class="container" style="padding-top:60px;">
+    <div class="tut-head">
+      <span class="eyebrow">Building</span>
+      <h2>SEO &amp; Meta Basics</h2>
+      <div class="tut-meta">
+        <span class="badge lv-intermediate">Intermediate</span>
+        <span class="badge time">15 min</span>
+      </div>
+      <p class="tut-lede">A handful of settings that help search engines describe your site correctly, plus the tab titles browsers show — small fields that make a real difference in how your site shows up in search results.</p>
+    </div>
+
+    <div class="prereq">
+      <div class="panel-title">✅ Before you start</div>
+      <ul>
+        <li>Know a short, honest sentence describing your business — that becomes your Meta Description.</li>
+      </ul>
+    </div>
+
+    <h3>1. Meta Tags</h3>
+    <p>In the sidebar, under <em>Design</em>, open <span class="btn-demo ghost">🔍 SEO &amp; Meta</span>, then expand <b>Meta Tags</b>.</p>
+    <ol class="steps">
+      <li><b>Meta Description</b> — the sentence or two shown under your site's title in search results. Aim for roughly 150–160 characters — long enough to be useful, short enough that search engines don't cut it off mid-sentence.</li>
+      <li><b>Meta Keywords</b> — a comma-separated list of terms related to your business. Search engines today give this little weight, but it costs nothing to fill in.</li>
+      <li><b>Google Analytics ID</b> — if you use Google Analytics, paste your tracking ID here (looks like <code>G-XXXXXXXXXX</code>) to connect it. Leave blank if you don't use Analytics.</li>
+    </ol>
+
+    <h3>2. Page Titles</h3>
+    <p>Expand <b>Page Titles</b> — this sets the text shown in a visitor's browser tab, and often what search engines display as the clickable headline for each page: Home Page Title, About Page Title, Contact Page Title, and Privacy Page Title.</p>
+
+    <div class="callout">
+      <b>A good page title pattern</b>
+      <p>Something like <em>"Home | Your Business Name"</em> or <em>"Contact Us | Your Business Name"</em> reads clearly both in a browser tab and in search results — specific to the page, with your business name for recognition.</p>
+    </div>
+
+    <h3>3. Preview and publish</h3>
+    <p>Click <span class="btn-demo gold">💾 Save &amp; Preview</span> and check your browser tab's title updates as you move between pages. When it looks right, <span class="btn-demo gold">⬇ Export config.js</span> and replace the file in your website folder.</p>
+
+    <div class="callout ok">
+      <b>Check your work</b>
+      <p>Search engines can take days to weeks to notice and reflect changes like these in actual search results — publishing them is the whole job on your end; the rest happens on its own timeline.</p>
+    </div>
+  </div>
+</section>
+
 <section class="tut-page" id="page-fix-a-typo">
   <div class="container" style="padding-top:60px;">
     <div class="tut-head">
@@ -1471,12 +1740,15 @@ kbd, .btn-demo {
     <h3>3. Add a second location (if needed)</h3>
     <p>Click <span class="btn-demo gold">+ Add Location</span> above the location panels to add another address entirely, with its own name, phone, hours, and address fields. Use the <b>↑ / ↓</b> arrows on a location's panel to reorder multiple locations, or its <b>×</b> to remove one (only available when there's more than one).</p>
 
-    <h3>4. Preview and publish</h3>
+    <h3>4. Social media links</h3>
+    <p>Below the locations, expand the <b>Social Media</b> panel. Click <span class="btn-demo gold">+ Add Social Link</span>, choose a <b>Platform</b> from the dropdown (Facebook, Instagram, LinkedIn, X/Twitter, YouTube, TikTok, or Custom), and paste the profile's <b>URL</b>. Repeat for each platform you're on — the icons shown in the site's footer update to match.</p>
+
+    <h3>5. Preview and publish</h3>
     <p>Click <span class="btn-demo gold">💾 Save &amp; Preview</span> and check the updated details show correctly wherever they appear on the site — the Contact page, the footer, and anywhere else hours or a phone number is shown. When it looks right, <span class="btn-demo gold">⬇ Export config.js</span> and replace the file in your website folder.</p>
 
     <div class="callout ok">
       <b>Check your work</b>
-      <p>On a phone (or your browser's mobile preview), tap the phone number and confirm it actually dials the right number — this tests the Raw phone field specifically, which is easy to forget updating alongside the Display one.</p>
+      <p>On a phone (or your browser's mobile preview), tap the phone number and confirm it actually dials the right number — this tests the Raw phone field specifically, which is easy to forget updating alongside the Display one. Click each social icon too, and confirm it opens the right profile.</p>
     </div>
   </div>
 </section>
@@ -1786,6 +2058,155 @@ kbd, .btn-demo {
   </div>
 </section>
 
+<!-- ============================================================
+     PAGE: TROUBLESHOOTING & FAQ  (reference — not part of the
+     tutorial flow: no category, no Prev/Next, reached via its own
+     sidebar link and searchable via EXTRA_PAGES below)
+     ============================================================ -->
+<section class="tut-page" id="page-troubleshooting">
+  <div class="container" style="padding-top:60px;">
+    <div class="tut-head">
+      <span class="eyebrow">Reference</span>
+      <h2>Troubleshooting &amp; FAQ</h2>
+      <p class="tut-lede">Something looks broken, or you just have a quick question — this page is for scanning, not following step by step. Click any question to expand it; each links back to the full tutorial if you need more detail.</p>
+    </div>
+
+    <div class="faq-group">
+      <div class="faq-group-head"><h3>📝 Content &amp; Editing</h3></div>
+      <details class="faq-item" id="faq-changes-not-showing">
+        <summary>My changes aren't showing on the live site</summary>
+        <div class="faq-body">
+          <p>Almost always, the new <code>config.js</code> didn't actually replace the old one where the live site reads it from. Check the file's "date modified" wherever you uploaded or saved it, then hard-refresh your browser (<kbd class="btn-demo ghost">Ctrl+F5</kbd> / <kbd class="btn-demo ghost">Cmd+Shift+R</kbd>) so you're not just looking at a cached copy. See <a href="#publish-changes">Publish Your Changes</a> for the full walkthrough.</p>
+        </div>
+      </details>
+      <details class="faq-item" id="faq-admin-out-of-date">
+        <summary>The admin looks out of date, or is missing something I added</summary>
+        <div class="faq-body">
+          <p>You're most likely on a different computer or browser than last time — the admin only remembers what's been done in that specific browser. Drag your current <code>config.js</code> onto the import zone to bring it up to date. See <a href="#wrong-computer">"I Edited on the Wrong Computer."</a></p>
+        </div>
+      </details>
+      <details class="faq-item" id="faq-deleted-accident">
+        <summary>I deleted something by accident</summary>
+        <div class="faq-body">
+          <p>If you haven't published since the deletion, re-importing your still-good live <code>config.js</code> undoes it. If you already published the deletion, a dated backup from before it happened is the way back. See <a href="#undo-delete">Undo an Accidental Deletion</a>.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="faq-group">
+      <div class="faq-group-head"><h3>🖼️ Images</h3></div>
+      <details class="faq-item" id="faq-broken-image">
+        <summary>An image shows a broken picture icon instead of the photo</summary>
+        <div class="faq-body">
+          <p>The Image Path field doesn't match the actual filename in your <code>images/</code> folder — including capitalization, which matters once a site is live online even if your own computer ignores the difference. See <a href="#swap-image">Swap or Add an Image</a>.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="faq-group">
+      <div class="faq-group-head"><h3>📬 Forms &amp; Submissions</h3></div>
+      <details class="faq-item" id="faq-form-not-arriving">
+        <summary>Form submissions aren't arriving in my email</summary>
+        <div class="faq-body">
+          <p>Double-check the Formspree endpoint was pasted in full with no extra spaces, confirm you clicked the verification link Formspree emails on the very first submission, and check your spam or promotions folder. See <a href="#setup-formspree">Connect Forms with Formspree</a>.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="faq-group">
+      <div class="faq-group-head"><h3>🔔 Popups</h3></div>
+      <details class="faq-item" id="faq-popup-not-appearing">
+        <summary>My popup never appears</summary>
+        <div class="faq-body">
+          <p>If it's set to trigger on scroll, confirm the target section actually has an Anchor ID set — without one, the popup has nothing to watch for. Also remember a popup only shows once per browser session, so reloading the same tab repeatedly won't trigger it again. See <a href="#add-popup">Add a Popup Announcement</a>.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="faq-group">
+      <div class="faq-group-head"><h3>🔍 Navigation &amp; Search</h3></div>
+      <details class="faq-item" id="faq-page-not-in-menu">
+        <summary>A page isn't showing up in the menu</summary>
+        <div class="faq-body">
+          <p>Check its ⚙️ Settings — "Show in nav," "Hide from main nav," and "Hide from footer" are three separate switches, and it's easy to have toggled the wrong one. See <a href="#reorder-nav">Reorder the Navigation</a>.</p>
+        </div>
+      </details>
+      <details class="faq-item" id="faq-search-not-finding">
+        <summary>My site's own search isn't finding a page I know exists</summary>
+        <div class="faq-body">
+          <p>In the sidebar, under <em>Content</em>, open Search and check the Excluded Pages panel — that page may have been toggled off from search results intentionally or by accident.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="faq-group">
+      <div class="faq-group-head"><h3>🔐 Access &amp; Security</h3></div>
+      <details class="faq-item" id="faq-member-cant-login">
+        <summary>A member can't log in with their PIN</summary>
+        <div class="faq-body">
+          <p>Confirm the PIN is being typed exactly as entered in the admin (PINs can include letters, not just numbers) and that the page's Page Access dropdown is actually set to Members or Commissioner rather than Public. See <a href="#protect-page">Password-Protect a Page</a>.</p>
+        </div>
+      </details>
+      <details class="faq-item" id="faq-locked-out">
+        <summary>I locked myself out of my own site</summary>
+        <div class="faq-body">
+          <p>Once whole-site PIN lock is on, there's no separate owner bypass — you need a valid member PIN like anyone else. Keep at least one PIN written down somewhere safe before enabling it. See <a href="#site-lock">Lock the Whole Site with a PIN</a>.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="faq-group">
+      <div class="faq-group-head"><h3>🌐 Publishing &amp; Hosting</h3></div>
+      <details class="faq-item" id="faq-site-broken-after-update">
+        <summary>The site looks broken right after I updated it online</summary>
+        <div class="faq-body">
+          <p>Check the uploaded file's "date modified" to confirm it actually landed, and rule out your host briefly caching the old version — waiting a few minutes and reloading often resolves it on its own. See <a href="#publish-changes">Publish Your Changes</a>.</p>
+        </div>
+      </details>
+      <details class="faq-item" id="faq-domain-not-working">
+        <summary>My custom domain isn't working yet</summary>
+        <div class="faq-body">
+          <p>Domain changes can take anywhere from minutes to about a day to fully take effect — this is normal, not a sign something's wrong. See <a href="#go-live-hosting">Put Your Site on the Web</a>.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="faq-group">
+      <div class="faq-group-head"><h3>💬 General Questions</h3></div>
+      <details class="faq-item" id="faq-need-to-code">
+        <summary>Do I need to know how to code to use this?</summary>
+        <div class="faq-body">
+          <p>No. Every setting is a form field, dropdown, or toggle in the admin — nothing here requires writing or editing code.</p>
+        </div>
+      </details>
+      <details class="faq-item" id="faq-edit-from-phone">
+        <summary>Can I edit my site from my phone?</summary>
+        <div class="faq-body">
+          <p>The admin works in a mobile browser, but the fiddliest parts — especially moving downloaded files between folders — are much easier on a computer. It's usable in a pinch, not the recommended everyday setup.</p>
+        </div>
+      </details>
+      <details class="faq-item" id="faq-two-people-editing">
+        <summary>Can two people edit the site at the same time?</summary>
+        <div class="faq-body">
+          <p>Not at once safely — whoever exports and publishes second overwrites the first person's changes entirely, since the two sets of edits don't merge. See <a href="#wrong-computer">"I Edited on the Wrong Computer."</a></p>
+        </div>
+      </details>
+      <details class="faq-item" id="faq-lose-config">
+        <summary>What happens if I lose config.js entirely?</summary>
+        <div class="faq-body">
+          <p>Without a backup, you'd need to rebuild your content from scratch — which is exactly why dated backups matter. See <a href="#make-backup">Make a Dated Backup</a> and <a href="#restore-backup">Restore from a Backup</a>.</p>
+        </div>
+      </details>
+      <details class="faq-item" id="faq-move-hosts">
+        <summary>Can I move my site to a different host later?</summary>
+        <div class="faq-body">
+          <p>Yes — since the whole site is just files (no database), moving hosts is a matter of uploading the same folder to the new host and pointing your domain there instead. See <a href="#go-live-hosting">Put Your Site on the Web</a>.</p>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
 <script src="config.js"></script>
 <script>
 /* =============================================
@@ -1807,12 +2228,21 @@ const TUTORIALS = [
   { id:'colors-fonts',     cat:'Building', emoji:'🎨', title:'Change Site Colors & Fonts', desc:'Adjust the palette and typography across the whole site at once.', level:'Intermediate', time:'20 min', keywords:['color','colour','font','typography','palette','theme','design','style'], ready:true },
   { id:'create-page',      cat:'Building', emoji:'📄', title:'Create a New Page', desc:'Add a page, set its name and address, and place it in the menu.', level:'Beginner', time:'15 min', keywords:['new page','add page','menu','navigation','nav','page name','slug'], ready:true },
   { id:'add-section',      cat:'Building', emoji:'🧱', title:'Add a Section to a Page', desc:'Choose from the section library and fill in your content.', level:'Beginner', time:'15 min', keywords:['section','add section','library','content block','block','insert'], ready:true },
+  { id:'home-hero',        cat:'Building', emoji:'🖼️', title:'Setting Up the Home Page', desc:'The Hero banner\u2019s four background options, plus the stats bar beneath it.', level:'Intermediate', time:'25 min', keywords:['hero','home page','background','slideshow','video background','stats bar','banner'], ready:true },
   { id:'move-section',     cat:'Building', emoji:'📦', title:'Move or Copy a Section Between Pages', desc:'Export a finished section from one page and import it into another.', level:'Intermediate', time:'10 min', keywords:['move','copy','duplicate','transfer','between pages','export section','import section'], ready:true },
   { id:'add-popup',        cat:'Building', emoji:'🔔', title:'Add a Popup Announcement', desc:'A notice, offer, or alert that appears over the page — on arrival or on scroll.', level:'Intermediate', time:'15–20 min', keywords:['popup','pop-up','announcement','modal','toast','notice','alert','banner','offer'], ready:true },
   { id:'custom-form',      cat:'Building', emoji:'📝', title:'Build a Custom Form', desc:'Design your own form fields and choose where submissions go.', level:'Intermediate', time:'20–30 min', keywords:['form','fields','survey','questions','submissions','inputs'], ready:true },
   { id:'setup-formspree',  cat:'Building', emoji:'📬', title:'Connect Forms with Formspree', desc:'The free service that delivers form submissions to your email inbox.', level:'Intermediate', time:'15 min', keywords:['formspree','form email','submissions','inbox','contact form','endpoint'], ready:true },
   { id:'reorder-nav',      cat:'Building', emoji:'🧭', title:'Reorder the Navigation', desc:'Change the order of menu items and nest pages under dropdowns.', level:'Beginner', time:'10 min', keywords:['menu order','navigation','nav','reorder','dropdown','rearrange','header links'], ready:true },
   { id:'protect-page',     cat:'Building', emoji:'🔐', title:'Password-Protect a Page', desc:'Restrict a page to members with a shared access code.', level:'Intermediate', time:'15 min', keywords:['password','private','members','lock','access code','restricted'], ready:true },
+  { id:'site-lock',        cat:'Building', emoji:'🔒', title:'Lock the Whole Site with a PIN', desc:'Restrict every page at once — for a site under construction or a private portal.', level:'Intermediate', time:'15 min', keywords:['pin required','site access','lock whole site','under construction','private site','members only'], ready:true },
+  { id:'splash-screen',    cat:'Building', emoji:'🌅', title:'Configure the Splash Screen', desc:'The logo, tagline, and background shown briefly while the site loads.', level:'Beginner', time:'10 min', keywords:['splash','loading screen','launch screen','watermark','gradient'], ready:true },
+  { id:'seo-meta',         cat:'Building', emoji:'🔍', title:'SEO & Meta Basics', desc:'Meta description, page titles, and the basics of getting found in search.', level:'Intermediate', time:'15 min', keywords:['seo','meta description','google analytics','page title','search engine','keywords'], ready:true },
+  // ✏️ Everyday Edits
+  { id:'fix-a-typo',       cat:'Everyday Edits', emoji:'✏️', title:'Fix a Typo or Change Text', desc:'Find any piece of text on the site, correct it, and push the fix live.', level:'Beginner', time:'5–10 min', keywords:['typo','text','spelling','wording','change words','headline','paragraph','misspelled'], ready:true },
+  { id:'swap-image',       cat:'Everyday Edits', emoji:'🖼️', title:'Swap or Add an Image', desc:'Put a new photo in the images folder and point a section at it.', level:'Beginner', time:'10 min', keywords:['image','photo','picture','replace image','upload','images folder','jpg','png'], ready:true },
+  { id:'update-contact',   cat:'Everyday Edits', emoji:'📞', title:'Update Hours, Phone & Contact Info', desc:'Change the details that appear in the header, footer, and contact areas.', level:'Beginner', time:'5–10 min', keywords:['phone','hours','address','email','contact info','footer','details'], ready:true },
+  { id:'publish-changes',  cat:'Everyday Edits', emoji:'🚀', title:'Publish Your Changes', desc:'The full export → replace → upload walkthrough, for local folders and web hosts.', level:'Beginner', time:'10 min', keywords:['publish','export','upload','go live','replace','ftp','deploy','not showing'], ready:true },
   // 🛟 Safety & Recovery
   { id:'make-backup',      cat:'Safety & Recovery', emoji:'🗄️', title:'Make a Dated Backup', desc:'The 60-second habit that makes every other mistake recoverable.', level:'Beginner', time:'5 min', keywords:['backup','back up','save copy','archive','dated copy','protect'], ready:true },
   { id:'restore-backup',   cat:'Safety & Recovery', emoji:'⏪', title:'Restore from a Backup', desc:'Roll the whole site back to any dated config.js you\u2019ve kept.', level:'Beginner', time:'10 min', keywords:['restore','recover','roll back','rollback','revert','previous version'], ready:true },
@@ -1820,11 +2250,6 @@ const TUTORIALS = [
   { id:'undo-delete',      cat:'Safety & Recovery', emoji:'🩹', title:'Undo an Accidental Deletion', desc:'Deleted a section, item, or page? Here\u2019s the way back.', level:'Beginner', time:'10 min', keywords:['undo','deleted','accident','mistake','lost','removed','recover section','oops'], ready:true },
   // 🚀 Publishing the Site
   { id:'go-live-hosting',  cat:'Publishing the Site', emoji:'🌐', title:'Put Your Site on the Web', desc:'Choose a host, upload your folder, and point a domain at it.', level:'Advanced', time:'60+ min', keywords:['hosting','host','domain','online','github pages','launch','www','internet','live'], ready:true },
-  // ✏️ Everyday Edits
-  { id:'fix-a-typo',       cat:'Everyday Edits', emoji:'✏️', title:'Fix a Typo or Change Text', desc:'Find any piece of text on the site, correct it, and push the fix live.', level:'Beginner', time:'5–10 min', keywords:['typo','text','spelling','wording','change words','headline','paragraph','misspelled'], ready:true },
-  { id:'swap-image',       cat:'Everyday Edits', emoji:'🖼️', title:'Swap or Add an Image', desc:'Put a new photo in the images folder and point a section at it.', level:'Beginner', time:'10 min', keywords:['image','photo','picture','replace image','upload','images folder','jpg','png'], ready:true },
-  { id:'update-contact',   cat:'Everyday Edits', emoji:'📞', title:'Update Hours, Phone & Contact Info', desc:'Change the details that appear in the header, footer, and contact areas.', level:'Beginner', time:'5–10 min', keywords:['phone','hours','address','email','contact info','footer','details'], ready:true },
-  { id:'publish-changes',  cat:'Everyday Edits', emoji:'🚀', title:'Publish Your Changes', desc:'The full export → replace → upload walkthrough, for local folders and web hosts.', level:'Beginner', time:'10 min', keywords:['publish','export','upload','go live','replace','ftp','deploy','not showing'], ready:true },
 ];
 
 const CATEGORIES = [
@@ -1833,6 +2258,19 @@ const CATEGORIES = [
   { name:'Everyday Edits',     emoji:'✏️', intro:'The routine jobs — the ones you\u2019ll do again and again. Each takes minutes.' },
   { name:'Safety & Recovery',  emoji:'🛟', intro:'Backups, restores, and getting out of trouble. Read these before you need them.' },
   { name:'Publishing the Site',emoji:'🚀', intro:'Taking the site from your computer to the wider web.' },
+];
+
+/* =============================================
+   EXTRA PAGES
+   ---------------------------------------------
+   Reference content that isn't a step-by-step tutorial — no category,
+   no hub card, no Prev/Next chain — but still reachable by its own
+   sidebar link and included in hero search (see buildTutIndex below).
+   ============================================= */
+const EXTRA_PAGES = [
+  { id:'troubleshooting', title:'Troubleshooting & FAQ', emoji:'🆘',
+    desc:'Quick answers when something looks broken, plus common questions.',
+    keywords:['help','problem','broken','not working','error','issue','question','faq','why','wrong'] },
 ];
 
 /* =============================================
@@ -1901,12 +2339,45 @@ function toggleCat(btn) {
 /* =============================================
    ROUTER — hash-based page switching
    ============================================= */
+/* Hashes can now be composite: "pageId" alone, or "pageId/anchorId" for
+   deep-linking to one FAQ item on the Troubleshooting page. Splitting
+   this out keeps the page-routing logic (currentTutId/showPage)
+   unaware of anchors entirely — they only ever see the pageId. */
+function parseHash() {
+  const raw = (location.hash || '').replace(/^#/, '');
+  const slashIdx = raw.indexOf('/');
+  if (slashIdx === -1) return { pageId: raw, anchorId: null };
+  return { pageId: raw.slice(0, slashIdx), anchorId: raw.slice(slashIdx + 1) };
+}
+
 function currentTutId() {
-  const hash = (location.hash || '').replace(/^#/, '');
-  if (!hash || hash === 'home') return 'home';
-  const known = TUTORIALS.some(function(t) { return t.id === hash && t.ready; });
-  if (known) return hash;
+  const pageId = parseHash().pageId;
+  if (!pageId || pageId === 'home') return 'home';
+  const knownTutorial = TUTORIALS.some(function(t) { return t.id === pageId && t.ready; });
+  const knownExtra = EXTRA_PAGES.some(function(p) { return p.id === pageId; });
+  if (knownTutorial || knownExtra) return pageId;
   return 'home';
+}
+
+/* After showPage() has made the target page visible, open and scroll to
+   a specific FAQ item if the hash named one. Double rAF: the first
+   waits for the page-visibility change to lay out, the second waits for
+   the <details> element's own open-state to lay out before measuring
+   its scroll position — without it, scrollIntoView can undershoot
+   since it measures the (still-collapsed) height. */
+function scrollToFaqAnchor() {
+  const anchorId = parseHash().anchorId;
+  if (!anchorId) return;
+  requestAnimationFrame(function() {
+    const el = document.getElementById(anchorId);
+    if (!el) return;
+    if (el.tagName === 'DETAILS') el.open = true;
+    requestAnimationFrame(function() {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      el.classList.add('js-highlight');
+      setTimeout(function() { el.classList.remove('js-highlight'); }, 2200);
+    });
+  });
 }
 
 function showPage(tid) {
@@ -1922,13 +2393,19 @@ function showPage(tid) {
   const homeLink = document.getElementById('sbHome');
   if (tid === 'home') { homeLink.classList.add('active'); }
   else { homeLink.classList.remove('active'); }
+  const troubleshootingLink = document.getElementById('sbTroubleshooting');
+  if (tid === 'troubleshooting') { troubleshootingLink.classList.add('active'); }
+  else { troubleshootingLink.classList.remove('active'); }
   document.querySelectorAll('.sb-link[data-tid]').forEach(function(a) {
     if (a.dataset.tid === tid) { a.classList.add('active'); }
     else { a.classList.remove('active'); }
   });
 
-  // Auto-expand the active tutorial's category
-  if (tid !== 'home') {
+  // Auto-expand the active tutorial's category, and generate Prev/Next —
+  // both are meaningless for EXTRA_PAGES (no category, no chain position),
+  // so skip entirely for those.
+  const isExtraPage = EXTRA_PAGES.some(function(p) { return p.id === tid; });
+  if (tid !== 'home' && !isExtraPage) {
     const tut = TUTORIALS.find(function(t) { return t.id === tid; });
     if (tut) {
       const ci = CATEGORIES.findIndex(function(c) { return c.name === tut.cat; });
@@ -1940,7 +2417,9 @@ function showPage(tid) {
 
   // Page title
   const tut2 = TUTORIALS.find(function(t) { return t.id === tid; });
+  const extra2 = EXTRA_PAGES.find(function(p) { return p.id === tid; });
   if (tut2) { document.title = 'SpiderWeb v1 — Tutorial: ' + tut2.title; }
+  else if (extra2) { document.title = 'SpiderWeb v1 — ' + extra2.title; }
   else { document.title = 'SpiderWeb v1 — Tutorials'; }
 }
 
@@ -1975,7 +2454,7 @@ function injectFooterNav(tid) {
   container.insertAdjacentHTML('beforeend', html);
 }
 
-window.addEventListener('hashchange', function() { showPage(currentTutId()); });
+window.addEventListener('hashchange', function() { showPage(currentTutId()); scrollToFaqAnchor(); });
 
 /* =============================================
    HERO SEARCH
@@ -1994,7 +2473,13 @@ let _hsActive = -1;
 
 function buildTutIndex() {
   if (_tutIndex) return;
-  _tutIndex = TUTORIALS.map(function(t) {
+  // EXTRA_PAGES (like Troubleshooting & FAQ) aren't tutorials — no
+  // level/time/category — but are indexed the same way so they're
+  // findable through the same search box.
+  const allEntries = TUTORIALS.concat(EXTRA_PAGES.map(function(p) {
+    return Object.assign({}, p, { ready: true, isExtra: true });
+  }));
+  _tutIndex = allEntries.map(function(t) {
     let body = '';
     const page = document.getElementById('page-' + t.id);
     if (t.ready && page) {
@@ -2012,11 +2497,41 @@ function buildTutIndex() {
       t: t,
       title: t.title.toLowerCase(),
       kw: kw.toLowerCase(),
-      desc: t.desc.toLowerCase(),
+      desc: (t.desc || '').toLowerCase(),
       body: body,
       bodyLower: body.toLowerCase()
     };
   });
+
+  // Additionally, index each individual FAQ item on the Troubleshooting
+  // page as its own searchable entry — its question becomes the title,
+  // and its id (via t.id containing a "/") produces a deep-link that
+  // scrolls straight to that one answer instead of just the top of the
+  // whole page. This runs after the loop above so it can read the
+  // already-rendered <details> elements directly from the DOM.
+  const troubleshootingPage = document.getElementById('page-troubleshooting');
+  if (troubleshootingPage) {
+    troubleshootingPage.querySelectorAll('.faq-item[id]').forEach(function(details) {
+      const summary = details.querySelector('summary');
+      const question = summary ? summary.textContent.trim() : '';
+      if (!question) return;
+      const fullText = details.textContent.replace(/\s+/g, ' ').trim();
+      _tutIndex.push({
+        t: {
+          id: 'troubleshooting/' + details.id,
+          title: question,
+          emoji: '🆘',
+          ready: true,
+          isFaqItem: true
+        },
+        title: question.toLowerCase(),
+        kw: '',
+        desc: '',
+        body: fullText,
+        bodyLower: fullText.toLowerCase()
+      });
+    });
+  }
 }
 
 function escTxt(s) {
@@ -2125,12 +2640,13 @@ function renderTutSearch() {
       const t = h.item.t;
       const titleHtml = escTxt(t.title);
       const snipHtml = snippetFor(h.item, h.forms);
-      const levelClass = 'lv-' + t.level.toLowerCase();
+      // EXTRA_PAGES entries (like Troubleshooting & FAQ) have no
+      // difficulty/time — skip the badge instead of erroring on it.
+      const levelBadge = t.level ? '<span class="badge lv-' + t.level.toLowerCase() + '">' + t.level + '</span>' : '';
       if (t.ready) {
         html += '<a class="hs-result" href="#' + t.id + '">' +
                 '<span class="hr-emoji">' + t.emoji + '</span>' +
-                '<span class="hr-main"><span class="hr-title">' + titleHtml +
-                '<span class="badge ' + levelClass + '">' + t.level + '</span></span>' +
+                '<span class="hr-main"><span class="hr-title">' + titleHtml + levelBadge + '</span>' +
                 '<span class="hr-snippet">' + snipHtml + '</span></span></a>';
       } else {
         html += '<div class="hs-result soon">' +
@@ -2243,6 +2759,7 @@ function closeMobileNav() {
   document.getElementById('navFabLabel').textContent = 'Menu';
 }
 document.getElementById('sbHome').addEventListener('click', closeMobileNav);
+document.getElementById('sbTroubleshooting').addEventListener('click', closeMobileNav);
 
 /* =============================================
    INIT
@@ -2250,6 +2767,7 @@ document.getElementById('sbHome').addEventListener('click', closeMobileNav);
 buildSidebar();
 buildHub();
 showPage(currentTutId());
+scrollToFaqAnchor();
 
 /* =============================================
    SITE THEMING — reads config.js when present
