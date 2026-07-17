@@ -227,7 +227,7 @@ nav.main-nav { display: none !important; }
 .search-highlight-overlay {
   position: absolute; pointer-events: none; z-index: 9999;
   background: rgba(var(--gold-rgb), 0.35);
-  border-radius: 3px;
+  border-radius: 8px;
   transition: opacity 1.5s ease-out;
 }
 
@@ -466,6 +466,13 @@ nav.main-nav { display: none !important; }
   text-transform: uppercase; color: rgba(255,255,255,0.35);
   margin-bottom: 12px;
 }
+.search-clear-history {
+  font-size: 12px; font-weight: 400; letter-spacing: normal;
+  text-transform: none; color: rgba(255,255,255,0.45);
+  cursor: pointer; text-decoration: underline; text-underline-offset: 2px;
+  transition: color 0.15s;
+}
+.search-clear-history:hover { color: #fff; }
 .search-group { margin-bottom: 24px; }
 .search-group-label {
   font-size: 10px; font-weight: 700; letter-spacing: 0.14em;
@@ -767,6 +774,141 @@ nav.main-nav { display: none !important; }
 }
 .hero-subline p { margin: 0 0 0.85em; }
 .hero-subline p:last-child { margin-bottom: 0; }
+
+/* ============ HERO SEARCH BAR ============ */
+.hero-search-bar {
+  position: relative;
+  max-width: 520px;
+  margin-bottom: clamp(16px, 3vh, 36px);
+}
+.hero-search-input-wrap { position: relative; }
+.hero-search-icon {
+  position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+  color: rgba(255,255,255,0.5);
+  display: flex; pointer-events: none;
+  transition: color 0.18s;
+}
+#heroSearchInput {
+  width: 100%;
+  padding: 13px 42px 13px 44px;
+  font-family: var(--font-body); font-size: 14px;
+  border: 1px solid rgba(255,255,255,0.28);
+  border-radius: 9px;
+  background: rgba(255,255,255,0.10);
+  color: #fff;
+  outline: none;
+  transition: background 0.18s, border-color 0.18s, box-shadow 0.18s;
+}
+#heroSearchInput::placeholder { color: rgba(255,255,255,0.55); }
+#heroSearchInput:focus,
+#heroSearchInput:not(:placeholder-shown) {
+  background: rgba(255,255,255,0.16);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-color: var(--gold);
+  box-shadow: 0 10px 26px rgba(6,15,29,0.35);
+}
+#heroSearchInput:focus + .hero-search-clear,
+.hero-search-input-wrap:focus-within .hero-search-icon {
+  color: rgba(255,255,255,0.8);
+}
+.hero-search-clear {
+  position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+  border: none; background: none; cursor: pointer;
+  font-size: 13px; padding: 8px 9px;
+  color: rgba(255,255,255,0.55);
+}
+#heroSearchInput:placeholder-shown + .hero-search-clear { display: none; }
+.hero-search-results {
+  display: none;
+  position: fixed;
+  z-index: 3000;
+  margin: 0;
+  padding: 8px;
+  background: rgba(var(--navy-rgb), 0.7);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255,255,255,0.16);
+  border-radius: 9px;
+  box-shadow: 0 14px 38px rgba(6,15,29,0.35);
+  overflow: hidden;
+  text-align: left;
+  max-height: 380px;
+  overflow-y: auto;
+}
+.hero-search-results.visible { display: block; }
+.hero-search-suggestions {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  padding: 8px 8px 10px;
+}
+.hero-search-suggestion-chip {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.18);
+  color: rgba(255,255,255,0.8);
+  padding: 4px 12px; border-radius: 16px;
+  font-size: 12px; cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+.hero-search-suggestion-chip:hover {
+  background: rgba(var(--gold-rgb), 0.2);
+  border-color: var(--gold);
+  color: var(--gold-light);
+}
+.hero-search-group { padding: 6px 8px 4px; }
+.hero-search-group-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--gold);
+  padding-bottom: 6px; margin-bottom: 4px;
+  border-bottom: 1px solid rgba(var(--gold-rgb), 0.2);
+}
+.hero-search-recent-header {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--gold);
+  padding: 8px 8px 6px;
+  border-bottom: 1px solid rgba(var(--gold-rgb), 0.2);
+  margin-bottom: 4px;
+}
+.hero-search-clear-history {
+  font-size: 10px; font-weight: 400; letter-spacing: normal;
+  text-transform: none; color: rgba(255,255,255,0.45);
+  cursor: pointer; text-decoration: underline; text-underline-offset: 2px;
+  transition: color 0.15s;
+}
+.hero-search-clear-history:hover { color: #fff; }
+.hero-search-result {
+  display: block;
+  padding: 12px 14px;
+  border-radius: 8px;
+  margin-bottom: 2px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.hero-search-result:hover { background: rgba(255,255,255,0.08); }
+.hero-search-result-title {
+  font-family: var(--font-display); font-weight: 700; font-size: 13.5px;
+  color: #fff; line-height: 1.35;
+}
+.hero-search-result-snippet {
+  font-size: 12px; color: rgba(255,255,255,0.6); line-height: 1.5;
+  margin-top: 3px;
+}
+.hero-search-see-all {
+  display: block;
+  padding: 11px 14px;
+  border-radius: 8px;
+  font-size: 12.5px; font-weight: 600; color: var(--gold-light);
+  text-align: center; cursor: pointer;
+  background: rgba(255,255,255,0.06);
+  transition: background 0.12s;
+}
+.hero-search-see-all:hover { background: rgba(255,255,255,0.12); }
+.hero-search-no-results {
+  padding: 20px 18px;
+  font-size: 13px; color: rgba(255,255,255,0.6);
+  text-align: center; line-height: 1.6;
+}
 
 .hero-actions {
   display: flex; gap: 16px; flex-wrap: wrap; align-items: center;
@@ -4768,6 +4910,13 @@ section.cps-hero-section-wrapper {
       <div class="hero-content">
         <h1 class="hero-headline" id="hero-headline"></h1>
         <div class="hero-subline" id="hero-subline"></div>
+        <div class="hero-search-bar" id="heroSearchBar" style="display:none;">
+          <div class="hero-search-input-wrap">
+            <span class="hero-search-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+            <input type="text" id="heroSearchInput" placeholder="Search..." autocomplete="off"/>
+            <button class="hero-search-clear" id="heroSearchClear" title="Clear search" onclick="clearHeroSearch(); document.getElementById('heroSearchInput').focus();">✕</button>
+          </div>
+        </div>
         <div class="hero-actions">
           <button class="btn-primary" id="hero-cta-btn" onclick="showPage('contact')">
             Free Consultation <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0;"><line x1="3" y1="10" x2="16" y2="10"/><polyline points="10,4 16,10 10,16"/></svg>
@@ -4982,6 +5131,8 @@ const SITE_DEFAULTS = {
   splashBg: { style:"none", imagePath:"", overlayColor:"#0a1628", overlayOpacity:0.55, watermarkChoice:"primary", watermarkOpacity:0.06, watermarkSize:420 },
   heroHeadline: "",
   heroSubline: "",
+  heroSearchEnabled: false,
+  heroSearchPlaceholder: "",
   heroTrustBullets: [],
   heroPrimaryLabel: "", heroPrimaryLinkType: "internal", heroPrimaryLinkUrl: "contact",
   heroSecondaryLabel: "", heroSecondaryLinkType: "internal", heroSecondaryLinkUrl: "services",
@@ -5004,6 +5155,8 @@ const SITE_DEFAULTS = {
     noResultsSubtext: 'Try a different search term.',
     resultsPerPage: 5,
     excludedPages: [],
+    showClearHistory: false,
+    highlightResult: true,
   },
   siteAccess: 'public',
   sessionDays: 7,
@@ -6547,6 +6700,41 @@ function searchQuery(raw) {
   return _searchIndex.filter(item => tokens.every(t => item.text.includes(t)));
 }
 
+// ============ RECENT SEARCHES ============
+// Shared between the hero search bar and the full search overlay — a search
+// saved from either one shows up as "recent" in the other. Stored per-browser
+// via localStorage; only queries that actually found something get saved, so
+// the limited history isn't wasted on dead ends.
+const RECENT_SEARCHES_MAX = 6;
+function _recentSearchesKey() { return (window._SITE_KEY || 'site') + '_recentSearches'; }
+
+function getRecentSearches() {
+  try {
+    const raw = localStorage.getItem(_recentSearchesKey());
+    const arr = raw ? JSON.parse(raw) : [];
+    return Array.isArray(arr) ? arr : [];
+  } catch (e) { return []; }
+}
+
+function saveRecentSearch(query) {
+  const q = (query || '').trim();
+  if (!q) return;
+  try {
+    let arr = getRecentSearches().filter(s => s.toLowerCase() !== q.toLowerCase());
+    arr.unshift(q);
+    arr = arr.slice(0, RECENT_SEARCHES_MAX);
+    localStorage.setItem(_recentSearchesKey(), JSON.stringify(arr));
+  } catch (e) { /* localStorage unavailable — fail silently */ }
+}
+
+function clearRecentSearches() {
+  try { localStorage.removeItem(_recentSearchesKey()); } catch (e) {}
+  const searchInput = document.getElementById('searchInput');
+  if (searchInput && !searchInput.value.trim()) renderSearchResults('');
+  const heroInput = document.getElementById('heroSearchInput');
+  if (heroInput && !heroInput.value.trim()) renderHeroEmptyState();
+}
+
 function highlightSnippet(body, tokens) {
   let snippet = body.slice(0, 200);
   // Find best position — near first token hit
@@ -6611,12 +6799,30 @@ function applySuggestion(word) {
   renderSearchResults(input.value);
 }
 
+function applyRecentSearch(query) {
+  const input = document.getElementById('searchInput');
+  input.value = query;
+  input.focus();
+  renderSuggestions(query);
+  renderSearchResults(query);
+}
+
 function renderSearchResults(query) {
   const container = document.getElementById('searchResults');
   const srchCfg = CFG.search || {};
   const perPage = srchCfg.resultsPerPage || 5;
 
   if (!query.trim()) {
+    const recents = getRecentSearches();
+    let recentHtml = '';
+    if (recents.length) {
+      const clearLink = srchCfg.showClearHistory
+        ? `<span class="search-clear-history" onclick="clearRecentSearches()">Clear</span>` : '';
+      const recentChips = recents.map(q =>
+        `<div class="search-quick-chip" onclick="applyRecentSearch('${q.replace(/'/g, "\\'")}')">${q}</div>`
+      ).join('');
+      recentHtml = `<div class="search-quick-label" style="display:flex;justify-content:space-between;align-items:center;"><span>Recent Searches</span>${clearLink}</div><div class="search-quick-links" style="margin-bottom:24px;">${recentChips}</div>`;
+    }
     // Show quick links
     const pages = [
       { key:'home', label:'Home' },
@@ -6627,7 +6833,7 @@ function renderSearchResults(query) {
     const chips = pages.filter(p => !excluded.includes(p.key)).map(p =>
       `<div class="search-quick-chip" onclick="closeSearch();${p.key==='home'?"showPage('home')":p.key==='about'?"showPage('about')":`showPage('${(CFG.customPages||[])[parseInt(p.key.replace('cp-',''))]?.slug||''}')`}">${p.label}</div>`
     ).join('');
-    container.innerHTML = `<div class="search-quick-label">Quick Links</div><div class="search-quick-links">${chips}</div>`;
+    container.innerHTML = recentHtml + `<div class="search-quick-label">Quick Links</div><div class="search-quick-links">${chips}</div>`;
     return;
   }
 
@@ -6691,6 +6897,7 @@ function clearSearchHighlights() {
 
 function highlightSearchTermsInSection(sectionEl, tokens) {
   if (!sectionEl || !tokens.length) return;
+  if ((CFG.search || {}).highlightResult === false) return;
   clearSearchHighlights();
 
   // Match at element level — check each candidate element's full text for all tokens
@@ -6712,7 +6919,6 @@ function highlightSearchTermsInSection(sectionEl, tokens) {
   const bestEl = matchedEls.reduce((best, el) =>
     el.textContent.trim().length < best.textContent.trim().length ? el : best
   );
-  console.log('[highlight] tokens:', tokens, '| bestEl tag:', bestEl.tagName, '| text:', bestEl.textContent.trim().slice(0,80));
   try {
     const range = document.createRange();
     range.selectNodeContents(bestEl);
@@ -6741,7 +6947,9 @@ function highlightSearchTermsInSection(sectionEl, tokens) {
 function goToResult(idx) {
   const r = _searchAllResults[idx];
   if (!r) return;
-  const tokens = document.getElementById('searchInput').value.toLowerCase().trim().split(/\s+/).filter(Boolean);
+  const query = document.getElementById('searchInput').value;
+  const tokens = query.toLowerCase().trim().split(/\s+/).filter(Boolean);
+  saveRecentSearch(query);
   closeSearch();
 
   const doHighlight = () => {
@@ -6776,7 +6984,266 @@ function goToResult(idx) {
   }, 500);
 }
 
-function openSearch() {
+let _heroSearchResults = [];
+let _heroSearchShownAt = 0;
+
+function initHeroSearch() {
+  const bar = document.getElementById('heroSearchBar');
+  if (!bar) return;
+  const enabled = !!CFG.heroSearchEnabled;
+  bar.style.display = enabled ? '' : 'none';
+  if (!enabled) return;
+
+  const input = document.getElementById('heroSearchInput');
+  input.placeholder = CFG.heroSearchPlaceholder || 'Search...';
+
+  input.addEventListener('input', () => renderHeroSearch(input.value));
+  const showEmptyStateIfIdle = () => { if (!input.value.trim()) renderHeroEmptyState(); };
+  input.addEventListener('focus', showEmptyStateIfIdle);
+  // Backup trigger: clicking anywhere on the bar (icon, padding, etc.) should
+  // also surface recent searches even if the focus event is ever missed.
+  bar.addEventListener('click', showEmptyStateIfIdle);
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') { clearHeroSearch(); return; }
+    if (e.key === 'Enter') { e.preventDefault(); if (_heroSearchResults.length > 0) saveRecentSearch(input.value); openSearch(input.value); }
+  });
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('#heroSearchBar') && !e.target.closest('#heroSearchResults')) {
+      const panel = document.getElementById('heroSearchResults');
+      if (panel) panel.classList.remove('visible');
+    }
+  }, true);
+  window.addEventListener('resize', () => {
+    // Resize on mobile is almost always the virtual keyboard opening/closing
+    // as the input gets focused — the search bar hasn't actually gone
+    // anywhere, so just reposition, don't apply the "scrolled away" hide check.
+    const panel = document.getElementById('heroSearchResults');
+    if (panel && panel.classList.contains('visible')) positionHeroSearchResults();
+  });
+  window.addEventListener('scroll', () => {
+    const panel = document.getElementById('heroSearchResults');
+    if (panel && panel.classList.contains('visible')) repositionOrHideHeroSearchResults();
+  }, { passive: true });
+}
+
+// The hero search bar sits low in the hero (anchored near its bottom edge),
+// so there's often little room below it for the results dropdown before it
+// hits the bottom of the viewport. On focus, scroll up just enough to clear
+// space for it — but only if there isn't already enough room, to avoid an
+// unnecessary scroll jump when there's plenty of space.
+function ensureHeroSearchRoom() {
+  const wrap = document.querySelector('#heroSearchBar .hero-search-input-wrap');
+  if (!wrap) return;
+  const neededSpace = 400; // results max-height (380px) plus a little breathing room
+  const rect = wrap.getBoundingClientRect();
+  const available = window.innerHeight - rect.bottom;
+  if (available < neededSpace) {
+    window.scrollBy({ top: neededSpace - available, behavior: 'smooth' });
+  }
+}
+
+// The results panel lives at the body level (not nested in the hero) so it can
+// use position:fixed to escape #hero's overflow:hidden and the hero-content
+// stacking context — otherwise it gets clipped/trapped behind hero-dots,
+// the scroll indicator, and whatever section follows the hero. Because it's
+// fixed, it doesn't scroll with the page on its own — this recalculates its
+// screen position from the input wrap's current location. Pure positioning
+// only — no visibility logic — so it's always safe to call when first
+// showing the panel.
+function positionHeroSearchResults() {
+  const wrap = document.querySelector('#heroSearchBar .hero-search-input-wrap');
+  const panel = document.getElementById('heroSearchResults');
+  if (!wrap || !panel) return;
+  const rect = wrap.getBoundingClientRect();
+  panel.style.left = rect.left + 'px';
+  panel.style.width = rect.width + 'px';
+  panel.style.top = (rect.bottom + 8) + 'px';
+}
+
+// Used by the scroll/resize listeners specifically (not the initial render):
+// keeps an already-open panel glued to the search bar, and hides it if the
+// search bar itself scrolls fully out of view rather than leaving it
+// floating disconnected from anything. Skips the hide check for a brief
+// window right after opening — many mobile browsers auto-scroll a focused
+// input into view above the keyboard, which can otherwise race with this
+// check and hide the panel the instant it was shown.
+function repositionOrHideHeroSearchResults() {
+  const wrap = document.querySelector('#heroSearchBar .hero-search-input-wrap');
+  const panel = document.getElementById('heroSearchResults');
+  if (!wrap || !panel) return;
+  if (Date.now() - _heroSearchShownAt < 700) { positionHeroSearchResults(); return; }
+  const rect = wrap.getBoundingClientRect();
+  if (rect.bottom < 0 || rect.top > window.innerHeight) {
+    panel.classList.remove('visible');
+    return;
+  }
+  positionHeroSearchResults();
+}
+
+function heroPlainSnippet(body) {
+  if (!body) return '';
+  return body.length > 150 ? body.slice(0, 150).trim() + '…' : body;
+}
+
+function heroSuggestionsHtml(query) {
+  const trimmed = query.trimStart();
+  if (!trimmed) return '';
+  const parts = trimmed.split(/\s+/);
+  const lastWord = parts[parts.length - 1].toLowerCase();
+  if (lastWord.length < 2) return '';
+
+  if (!_wordIndex) _wordIndex = buildWordIndex();
+  const suggestions = Array.from(_wordIndex)
+    .filter(w => w.startsWith(lastWord) && w !== lastWord)
+    .sort((a, b) => a.length - b.length)
+    .slice(0, 6);
+  if (!suggestions.length) return '';
+
+  const prefix = parts.slice(0, -1).join(' ');
+  const chips = suggestions.map(w =>
+    `<div class="hero-search-suggestion-chip" onclick="applyHeroSuggestion('${prefix ? prefix + ' ' : ''}${w}')">${w}</div>`
+  ).join('');
+  return `<div class="hero-search-suggestions">${chips}</div>`;
+}
+
+function applyHeroSuggestion(word) {
+  const input = document.getElementById('heroSearchInput');
+  if (!input) return;
+  input.value = word + ' ';
+  input.focus();
+  renderHeroSearch(input.value);
+}
+
+function renderHeroSearch(query) {
+  const panel = document.getElementById('heroSearchResults');
+  if (!panel) return;
+  if (!query.trim()) {
+    _heroSearchResults = [];
+    renderHeroEmptyState();
+    return;
+  }
+
+  ensureHeroSearchRoom();
+  buildSearchIndex();
+  const srchCfg = CFG.search || {};
+  const all = searchQuery(query);
+  _heroSearchResults = all.slice(0, 6);
+
+  const suggestionsHtml = heroSuggestionsHtml(query);
+  let resultsHtml = '';
+
+  if (!_heroSearchResults.length) {
+    const msg = (srchCfg.noResultsMessage || "No results for '{query}'").replace('{query}', query);
+    const sub = srchCfg.noResultsSubtext || 'Try a different search term.';
+    resultsHtml = `<div class="hero-search-no-results"><div>${msg}</div><div>${sub}</div></div>`;
+  } else {
+    // Group results by the page they were found on, same as the full search overlay
+    const groups = {};
+    _heroSearchResults.forEach((r, idx) => {
+      if (!groups[r.pageKey]) groups[r.pageKey] = { label: r.pageLabel, items: [] };
+      groups[r.pageKey].items.push({ ...r, _idx: idx });
+    });
+    resultsHtml = Object.values(groups).map(g => {
+      const items = g.items.map(r => {
+        const title = r.heading || g.label;
+        const snippet = heroPlainSnippet(r.body);
+        return `<div class="hero-search-result" onclick="goToHeroResult(${r._idx})">
+          <div class="hero-search-result-title">${title}</div>
+          ${snippet ? `<div class="hero-search-result-snippet">${snippet}</div>` : ''}
+        </div>`;
+      }).join('');
+      return `<div class="hero-search-group"><div class="hero-search-group-label">${g.label}</div>${items}</div>`;
+    }).join('');
+    if (all.length > _heroSearchResults.length) {
+      resultsHtml += `<div class="hero-search-see-all" onclick="openSearch(document.getElementById('heroSearchInput').value)">See all ${all.length} results →</div>`;
+    }
+  }
+
+  panel.innerHTML = suggestionsHtml + resultsHtml;
+  panel.classList.add('visible');
+  _heroSearchShownAt = Date.now();
+  positionHeroSearchResults();
+}
+
+function goToHeroResult(i) {
+  const r = _heroSearchResults[i];
+  if (!r) return;
+  const input = document.getElementById('heroSearchInput');
+  const query = input ? input.value : '';
+  const tokens = query.toLowerCase().trim().split(/\s+/).filter(Boolean);
+  saveRecentSearch(query);
+  clearHeroSearch();
+
+  const doHighlight = () => {
+    if (!r.anchorId) return;
+    const target = document.getElementById(r.anchorId);
+    if (target) highlightSearchTermsInSection(target, tokens);
+  };
+
+  if (r.pageKey === 'home') showPage('home', r.anchorId);
+  else if (r.pageKey === 'about') showPage('about', r.anchorId);
+  else {
+    const cpIdx = parseInt(r.pageKey.replace('cp-', ''), 10);
+    const page = (CFG.customPages || [])[cpIdx];
+    if (page) showPage(page.slug, r.anchorId);
+  }
+
+  // Wait for scroll to fully stop before highlighting
+  let _heroScrollEndTimer = null;
+  const onScroll = () => {
+    clearTimeout(_heroScrollEndTimer);
+    _heroScrollEndTimer = setTimeout(() => {
+      window.removeEventListener('scroll', onScroll);
+      doHighlight();
+    }, 120);
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  // Fallback: if no scroll happens at all, run after 500ms
+  setTimeout(() => {
+    window.removeEventListener('scroll', onScroll);
+    clearTimeout(_heroScrollEndTimer);
+    doHighlight();
+  }, 500);
+}
+
+function clearHeroSearch() {
+  const input = document.getElementById('heroSearchInput');
+  const panel = document.getElementById('heroSearchResults');
+  if (input) input.value = '';
+  if (panel) { panel.classList.remove('visible'); panel.innerHTML = ''; }
+  _heroSearchResults = [];
+}
+
+function renderHeroEmptyState() {
+  const panel = document.getElementById('heroSearchResults');
+  if (!panel) return;
+  const recents = getRecentSearches();
+  if (!recents.length) {
+    panel.classList.remove('visible');
+    panel.innerHTML = '';
+    return;
+  }
+  const srchCfg = CFG.search || {};
+  const clearLink = srchCfg.showClearHistory
+    ? `<span class="hero-search-clear-history" onclick="clearRecentSearches()">Clear</span>` : '';
+  const chips = recents.map(q =>
+    `<div class="hero-search-suggestion-chip" onclick="applyHeroRecentSearch('${q.replace(/'/g, "\\'")}')">${q}</div>`
+  ).join('');
+  panel.innerHTML = `<div class="hero-search-recent-header"><span>Recent Searches</span>${clearLink}</div><div class="hero-search-suggestions">${chips}</div>`;
+  panel.classList.add('visible');
+  _heroSearchShownAt = Date.now();
+  positionHeroSearchResults();
+}
+
+function applyHeroRecentSearch(query) {
+  const input = document.getElementById('heroSearchInput');
+  if (!input) return;
+  input.value = query;
+  input.focus();
+  renderHeroSearch(query);
+}
+
+function openSearch(initialQuery) {
   // Capture active page BEFORE buildSearchIndex disturbs display state
   const activeEl = Array.from(document.querySelectorAll('[id^="page-"]'))
     .find(el => getComputedStyle(el).display !== 'none');
@@ -6792,8 +7259,10 @@ function openSearch() {
   input.placeholder = srchCfg.placeholder || 'Search...';
   overlay.classList.add('open');
   document.body.style.overflow = 'hidden';
+  const q = initialQuery || '';
+  input.value = q;
   setTimeout(() => input.focus(), 100);
-  renderSearchResults('');
+  renderSearchResults(q);
 
   // Infinite scroll via IntersectionObserver on sentinel
   let _sentinelObs = null;
@@ -9672,6 +10141,7 @@ document.addEventListener('DOMContentLoaded', () => {
   try { document.title = CFG.pageTitles.home || CFG.firmName; } catch(e) {}
   _run(buildPageHeaders,  'buildPageHeaders');
   _run(buildHero,         'buildHero');
+  _run(initHeroSearch,    'initHeroSearch');
 
   // Start header fully transparent — scroll handler fades it in on home page
   // (unless headerAlwaysSolid is enabled, in which case it starts solid)
@@ -9753,6 +10223,9 @@ if (CFG.googleAnalyticsId) {
   gtag('js', new Date()); gtag('config', CFG.googleAnalyticsId);
 }
 </script>
+<!-- HERO SEARCH RESULTS (body-level so it can float above the hero's own overflow:hidden and stacking context) -->
+<div class="hero-search-results" id="heroSearchResults"></div>
+
 <!-- SEARCH OVERLAY -->
 <div id="searchOverlay" class="search-overlay" role="dialog" aria-modal="true" aria-label="Search">
   <button class="search-close-btn" onclick="closeSearch()" aria-label="Close search">✕</button>
