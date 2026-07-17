@@ -888,7 +888,7 @@ kbd, .btn-demo {
 
     <div class="callout ok">
       <b>Use the Live Preview</b>
-      <p>Below the color fields, a <b>Live Preview</b> panel shows Light, Alt, and Dark sections side by side, updating as you change colors — so you can check that text stays readable on every background before you ever leave this page.</p>
+      <p>Below the color fields, a <b>Live Preview</b> panel shows Light, Alt, and Dark sections side by side, updating as you change colors — so you can check that text stays readable on every background before you ever leave this page. This isn't just about tone or taste: since Heading and Body Text colors apply site-wide while each background is its own separate color, it's possible to pick a pairing so close in color that text becomes fully <em>invisible</em> rather than just hard to read — check the Live Preview specifically for that, not only for a pleasant contrast.</p>
     </div>
 
     <h3>2. Typography</h3>
@@ -1128,6 +1128,11 @@ kbd, .btn-demo {
       <li><b>Heading</b> and <b>Body</b> — the popup's message.</li>
       <li><b>Text Color</b> — White, Black, Chrome Background Color, Light Background Color, or Match Section Background (which follows the Background setting below, automatically flipping to white on Dark).</li>
     </ol>
+
+    <div class="callout warn">
+      <b>A wrong pairing here makes text invisible, not just hard to read</b>
+      <p>Text Color is chosen independently of the popup's actual Background further down — picking White text on a background that ends up light (or Black on dark) doesn't just look poor, it hides the heading and body completely with no error or warning. <b>Match Section Background</b> sidesteps this entirely by flipping automatically; if you pick one of the fixed colors instead, double-check it in Save &amp; Preview specifically for this.</p>
+    </div>
 
     <h3>3. Add an image (optional)</h3>
     <p>The <b>Image Layout</b> dropdown offers five ways to include a picture — Top Banner, Full Background (Faded), Image Left/Text Right, Image Right/Text Left, or Full Image (No Crop) for a pre-designed graphic that already has its own message on it. Corner Toast always shows a small thumbnail regardless of this setting; these layouts apply to Centered Modal.</p>
@@ -2076,7 +2081,13 @@ kbd, .btn-demo {
       <details class="faq-item" id="faq-changes-not-showing">
         <summary>My changes aren't showing on the live site</summary>
         <div class="faq-body">
-          <p>Almost always, the new <code>config.js</code> didn't actually replace the old one where the live site reads it from. Check the file's "date modified" wherever you uploaded or saved it, then hard-refresh your browser (<kbd class="btn-demo ghost">Ctrl+F5</kbd> / <kbd class="btn-demo ghost">Cmd+Shift+R</kbd>) so you're not just looking at a cached copy. See <a href="#publish-changes">Publish Your Changes</a> for the full walkthrough.</p>
+          <p>Almost always, the new <code>config.js</code> didn't actually replace the old one where the live site reads it from. Before anything else, check for these three specific causes:</p>
+          <ul>
+            <li><b>Wrong folder</b> — the exported file has to sit in the exact same folder as <code>index.html</code>, not a subfolder or somewhere else entirely.</li>
+            <li><b>A renamed file</b> — if your browser already had a previous download of the same name, it may have saved this one as <code>config (1).js</code> instead of overwriting <code>config.js</code>. A manual rename can also introduce a capitalization mismatch like <code>Config.js</code>, which some systems treat as a completely different file from <code>config.js</code>.</li>
+            <li><b>A hidden second extension</b> — if your operating system hides file extensions by default, a file that looks like <code>config.js</code> in your file explorer might actually be saved as <code>config.js.txt</code> or <code>config.js.json</code>. Turning on "show file extensions" in your file explorer's settings reveals the true, full name.</li>
+          </ul>
+          <p>Once those are ruled out, hard-refresh your browser (<kbd class="btn-demo ghost">Ctrl+F5</kbd> / <kbd class="btn-demo ghost">Cmd+Shift+R</kbd>) so you're not just looking at a cached copy. See <a href="#publish-changes">Publish Your Changes</a> for the full walkthrough.</p>
         </div>
       </details>
       <details class="faq-item" id="faq-admin-out-of-date">
@@ -2089,6 +2100,17 @@ kbd, .btn-demo {
         <summary>I deleted something by accident</summary>
         <div class="faq-body">
           <p>If you haven't published since the deletion, re-importing your still-good live <code>config.js</code> undoes it. If you already published the deletion, a dated backup from before it happened is the way back. See <a href="#undo-delete">Undo an Accidental Deletion</a>.</p>
+        </div>
+      </details>
+      <details class="faq-item" id="faq-invisible-text">
+        <summary>I typed something into a field, but it's not showing up anywhere</summary>
+        <div class="faq-body">
+          <p>Before assuming the text didn't save: click into the field and try <b>Select All (Ctrl+A / Cmd+A) then Copy</b>. If text highlights and copies successfully, it's genuinely there — it's just the same color as its own background, making it invisible rather than missing. This happens in a few specific spots in this template:</p>
+          <ul>
+            <li><b>A Hero Section or Popup's Text Color</b> — both have a 5-option Text Color dropdown (White, Black, Chrome, Light Background, or Match Section Background) that's set independently of that section's actual Background. Picking "Black" while the background ends up dark hides the text completely. Switching Text Color to <b>"Match Section Background"</b> avoids this — it's built specifically to flip automatically instead of needing a manual pairing.</li>
+            <li><b>Rotating Cards</b> — each card lets you type a custom background color as a hex code, separate from a Dark/Light text choice. A light typed color paired with "Light" text vanishes with no warning, since nothing stops you from choosing a bad pair.</li>
+            <li><b>Site-wide Heading or Body Text color</b> — set too close to one of the four section background colors in <a href="#colors-fonts">Colors &amp; Fonts</a>, and every section using that background loses readable text at once, sitewide. The Live Preview panel in that tutorial is the way to catch this before publishing.</li>
+          </ul>
         </div>
       </details>
     </div>
