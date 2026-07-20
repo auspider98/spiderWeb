@@ -333,6 +333,32 @@ code {
   display: flex; align-items: center; gap: 8px;
   margin-bottom: 10px;
 }
+
+/* ============ SCREENSHOTS ============
+   A consistent frame for admin UI screenshots dropped into tutorials —
+   navy border matching the chrome/sidebar color, a subtle shadow to
+   read as a "cut-out" of the interface rather than a flat inline image,
+   and a caption slot below for what's being pointed out. */
+.tut-shot {
+  margin: 22px 0;
+}
+.tut-shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--chrome);
+  border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(6,15,29,0.14);
+}
+.tut-shot figcaption {
+  margin-top: 9px;
+  font-size: 12.5px;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.5;
+}
+.tut-shot.narrow { max-width: 420px; margin-left: auto; margin-right: auto; }
+.tut-shot.medium { max-width: 620px; margin-left: auto; margin-right: auto; }
 .callout {
   border-left: 4px solid var(--gold);
   background: var(--gold-pale);
@@ -779,6 +805,19 @@ kbd, .btn-demo {
       <li><b>Publish it.</b> Happy with what you see? Click <span class="btn-demo gold">⬇ Export config.js</span>. A fresh <code>config.js</code> downloads — move it into your website folder, replacing the old one, and upload it to your host if your site lives online. That's the whole loop.</li>
     </ol>
 
+    <div class="tut-shot">
+      <img src="screenshots/admin-import-zone.png" alt="The config.js drag-and-drop import zone at the top of the admin, shown as a dashed navy box with a folder icon">
+      <figcaption>The import zone from Step 2 — drag your current <code>config.js</code> onto it, or click to browse for the file.</figcaption>
+    </div>
+    <div class="tut-shot narrow">
+      <img src="screenshots/admin-sidebar-nav.png" alt="The admin sidebar showing the Content, Business Info, and Design groups, with Home Page selected and highlighted in gold">
+      <figcaption>The sidebar's three groups from Step 3 — Content, Business Info, and Design. The gold highlight marks the currently-open page.</figcaption>
+    </div>
+    <div class="tut-shot">
+      <img src="screenshots/admin-top-bar.png" alt="The admin's top bar showing the autosave status on the left, and the Save and Preview and Export config.js buttons on the right">
+      <figcaption>The top bar from Steps 5–7 — autosave status on the left, Save &amp; Preview and Export config.js on the right.</figcaption>
+    </div>
+
     <div class="callout ok">
       <b>Check your work</b>
       <p>Every tutorial in this hub after this one assumes you know this rhythm — open (import if needed) → edit → autosave confirms → preview → export → replace. If you can do this loop confidently, you're ready for anything else here.</p>
@@ -939,6 +978,10 @@ kbd, .btn-demo {
     </div>
 
     <h3>1. Add the page</h3>
+    <div class="tut-shot narrow">
+      <img src="screenshots/admin-sidebar-nav.png" alt="The admin sidebar's Content group, showing Home Page, About Us, and the plus Add page button beneath them">
+      <figcaption>The <b>+ Add page</b> link sits right in the Content group, under your existing pages.</figcaption>
+    </div>
     <ol class="steps">
       <li><b>In the sidebar, under Content</b>, find the <b>+ Add Page</b> button (near the list of existing pages) and click it. A new, empty page appears and opens automatically.</li>
       <li><b>Fill in Page Settings</b> — three fields appear together at the top: <b>Page Emoji</b> (the small icon shown next to the page's name in the menu), <b>Navigation Label</b> (what visitors see in the menu, e.g. <em>"Our Services"</em>), and <b>URL Slug</b> (the web address, e.g. <code>our-services</code> — the admin fills this in automatically from your label, shown with an <em>"auto"</em> tag, but you can type your own).</li>
@@ -1018,6 +1061,10 @@ kbd, .btn-demo {
 
     <h3>3. Arrange it</h3>
     <p>Every section card has a row of small controls in its header:</p>
+    <div class="tut-shot medium">
+      <img src="screenshots/admin-section-controls.png" alt="A Text Block section card showing its header controls: up arrow, down arrow, duplicate, export, copy to page, remove, and collapse, plus the Anchor ID field below">
+      <figcaption>A section card's full control row, plus the <code># Anchor ID</code> field just beneath it.</figcaption>
+    </div>
     <ul>
       <li><b>↑ / ↓</b> — move the section up or down the page.</li>
       <li><b>⧉</b> — duplicate the section, placing the copy directly below.</li>
@@ -1061,6 +1108,10 @@ kbd, .btn-demo {
 
     <h3>1. Copy to another page on this site (the easy way)</h3>
     <p>This is the method you'll use almost every time — it works for any page in your site, in one step.</p>
+    <div class="tut-shot medium">
+      <img src="screenshots/admin-section-controls.png" alt="A section card's header controls: up arrow, down arrow, duplicate, export, copy to page, and remove">
+      <figcaption>The → and ↑📋 icons referenced below live in this same row, second and third from the right.</figcaption>
+    </div>
     <ol class="steps">
       <li><b>Find the section</b> you want to copy, on the page it currently lives on.</li>
       <li><b>Click the → button</b> in its header (labeled "Copy to page"). A small picker drops down listing every other page on your site.</li>
@@ -1636,6 +1687,15 @@ kbd, .btn-demo {
       <li><b>Publish it.</b> Click <span class="btn-demo gold">⬇ Export config.js</span> — a fresh <code>config.js</code> lands in your Downloads folder. Move it into your website folder, replacing the old one (choose <em>yes</em> when asked about overwriting). If your site is hosted online, upload that same file to your host. Reload the live site: fixed.</li>
     </ol>
 
+    <div class="tut-shot">
+      <img src="screenshots/admin-import-zone.png" alt="The config.js drag-and-drop import zone at the top of the admin, shown as a dashed navy box with a folder icon">
+      <figcaption>The import zone from Step 2, for a new computer or browser.</figcaption>
+    </div>
+    <div class="tut-shot">
+      <img src="screenshots/admin-top-bar.png" alt="The admin's top bar showing the autosave status on the left, and the Save and Preview and Export config.js buttons on the right">
+      <figcaption>The top bar from Steps 4–6 — watch the status on the left change to "Autosaved," then use the two buttons on the right.</figcaption>
+    </div>
+
     <div class="callout ok">
       <b>Check your work</b>
       <p>Open the live site (not the preview tab) and reload the page — on most computers <kbd class="btn-demo ghost">Ctrl+F5</kbd> / <kbd class="btn-demo ghost">Cmd+Shift+R</kbd> forces a fresh copy. If the new wording shows, you're done. While the export is still in hand, copy it into your backup folder with today's date — publishing and backing up make one habit.</p>
@@ -1901,6 +1961,11 @@ kbd, .btn-demo {
       <li><b>Open <code>admin.html</code></b> and drag the restored <code>config.js</code> onto the import zone, so the admin's own memory matches the site again instead of still holding whatever it had before.</li>
     </ol>
 
+    <div class="tut-shot">
+      <img src="screenshots/admin-import-zone.png" alt="The config.js drag-and-drop import zone at the top of the admin, shown as a dashed navy box with a folder icon">
+      <figcaption>The import zone from Step 2 above — same spot used to bring the admin up to date after any file swap.</figcaption>
+    </div>
+
     <div class="callout warn">
       <b>Anything made after that backup is gone</b>
       <p>Restoring an older backup replaces everything with that snapshot — any edits made between that backup's date and now are lost, not merged. If some of those later changes were good ones, you'll need to redo them by hand after restoring.</p>
@@ -1944,6 +2009,11 @@ kbd, .btn-demo {
       <li><b>Drag that <code>config.js</code></b> onto the dashed <em>"Drag &amp; drop your config.js here"</em> zone at the top (or click it to browse for the file).</li>
       <li>A confirmation toast means the admin now matches the live site — everything you were missing should reappear.</li>
     </ol>
+
+    <div class="tut-shot">
+      <img src="screenshots/admin-import-zone.png" alt="The config.js drag-and-drop import zone at the top of the admin, shown as a dashed navy box with a folder icon">
+      <figcaption>This is the zone from Step 3 — drop your file directly onto the dashed box.</figcaption>
+    </div>
 
     <div class="callout ok">
       <b>Nothing was actually lost</b>
