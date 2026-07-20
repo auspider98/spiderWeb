@@ -5,14 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>SpiderWeb v1 — Tutorials</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@500;600;700;800&family=Mulish:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
 :root {
-  --navy: #0f2340;
+  --navy: #060f1d;
   --navy-mid: #162840;
-  --navy-light: #1a3560;
-  --gold: #c9a84c;
-  --gold-light: #e8c97a;
+  --navy-light: #0b1a32;
+  --gold: #f98424;
+  --gold-light: #e97d25;
   --gold-pale: #faf6ec;
   --warm-white: #fffdf9;
   --cream: #f9f6f0;
@@ -23,8 +23,8 @@
   --danger: #c0392b;
   --success: #2d7a5f;
   --sidebar-w: 264px;
-  --font-display: 'Raleway', sans-serif;
-  --font-body: 'DM Sans', system-ui, sans-serif;
+  --font-display: 'Titillium Web', sans-serif;
+  --font-body: 'Mulish', system-ui, sans-serif;
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; scroll-padding-top: 24px; overflow-x: hidden; }
@@ -359,6 +359,31 @@ code {
 }
 .tut-shot.narrow { max-width: 420px; margin-left: auto; margin-right: auto; }
 .tut-shot.medium { max-width: 620px; margin-left: auto; margin-right: auto; }
+
+/* ============ SCREENSHOT + STEPS, SIDE BY SIDE ============
+   For a tall/narrow screenshot paired with a short step list — puts
+   them in two columns instead of stacking, so the image doesn't eat
+   the page's whole vertical rhythm. The heading above this should stay
+   full-width; only wrap the image + steps themselves.
+   Stacks back to one column (image on top) below ~680px, since two
+   columns get cramped well before the site's usual 960px breakpoint. */
+.tut-two-col {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 28px;
+  align-items: start;
+  margin: 18px 0;
+}
+.tut-two-col .tut-shot {
+  margin: 0;
+}
+.tut-two-col .steps {
+  margin: 0;
+}
+@media (max-width: 680px) {
+  .tut-two-col { grid-template-columns: 1fr; }
+  .tut-two-col .tut-shot { max-width: 260px; margin: 0 auto; }
+}
 .callout {
   border-left: 4px solid var(--gold);
   background: var(--gold-pale);
@@ -978,15 +1003,17 @@ kbd, .btn-demo {
     </div>
 
     <h3>1. Add the page</h3>
-    <div class="tut-shot narrow">
-      <img src="screenshots/admin-sidebar-nav.png" alt="The admin sidebar's Content group, showing Home Page, About Us, and the plus Add page button beneath them">
-      <figcaption>The <b>+ Add page</b> link sits right in the Content group, under your existing pages.</figcaption>
+    <div class="tut-two-col">
+      <div class="tut-shot">
+        <img src="screenshots/admin-sidebar-nav.png" alt="The admin sidebar's Content group, showing Home Page, About Us, and the plus Add page button beneath them">
+        <figcaption>The <b>+ Add page</b> link sits right in the Content group, under your existing pages.</figcaption>
+      </div>
+      <ol class="steps">
+        <li><b>In the sidebar, under Content</b>, find the <b>+ Add Page</b> button (near the list of existing pages) and click it. A new, empty page appears and opens automatically.</li>
+        <li><b>Fill in Page Settings</b> — three fields appear together at the top: <b>Page Emoji</b> (the small icon shown next to the page's name in the menu), <b>Navigation Label</b> (what visitors see in the menu, e.g. <em>"Our Services"</em>), and <b>URL Slug</b> (the web address, e.g. <code>our-services</code> — the admin fills this in automatically from your label, shown with an <em>"auto"</em> tag, but you can type your own).</li>
+        <li><b>Leave "Show in navigation" on</b> for now — this toggle controls whether the page appears in the menu at all; turning it off hides the page and sends visitors to Home instead if they try to reach it directly.</li>
+      </ol>
     </div>
-    <ol class="steps">
-      <li><b>In the sidebar, under Content</b>, find the <b>+ Add Page</b> button (near the list of existing pages) and click it. A new, empty page appears and opens automatically.</li>
-      <li><b>Fill in Page Settings</b> — three fields appear together at the top: <b>Page Emoji</b> (the small icon shown next to the page's name in the menu), <b>Navigation Label</b> (what visitors see in the menu, e.g. <em>"Our Services"</em>), and <b>URL Slug</b> (the web address, e.g. <code>our-services</code> — the admin fills this in automatically from your label, shown with an <em>"auto"</em> tag, but you can type your own).</li>
-      <li><b>Leave "Show in navigation" on</b> for now — this toggle controls whether the page appears in the menu at all; turning it off hides the page and sends visitors to Home instead if they try to reach it directly.</li>
-    </ol>
 
     <div class="callout warn">
       <b>Careful with the URL Slug</b>
@@ -1362,11 +1389,20 @@ kbd, .btn-demo {
 
     <h3>3. Control visibility</h3>
     <p>Still inside <span class="btn-demo ghost">⚙️ Settings</span>, three toggles control where a page shows up:</p>
-    <ul>
-      <li><b>Show in nav</b> — off entirely hides the page and redirects visitors to Home if they try to reach it directly.</li>
-      <li><b>Hide from main nav</b> — the page still exists and is still reachable by direct link, it just won't appear in the header menu.</li>
-      <li><b>Hide from footer</b> — the same idea, but for the footer menu specifically.</li>
-    </ul>
+    <div class="tut-two-col">
+      <div class="tut-shot">
+        <img src="screenshots/admin-page-settings.png" alt="The Page Settings modal, showing Show in nav, Hide from main nav, and Hide from footer toggles, Emoji, Navigation Label, URL Slug, Parent Page, and Access Level fields">
+        <figcaption>The full ⚙️ Settings modal for a top-level page (no sub-pages yet, so no Organizer-only toggle).</figcaption>
+      </div>
+      <div>
+        <ul>
+          <li><b>Show in nav</b> — off entirely hides the page and redirects visitors to Home if they try to reach it directly.</li>
+          <li><b>Hide from main nav</b> — the page still exists and is still reachable by direct link, it just won't appear in the header menu.</li>
+          <li><b>Hide from footer</b> — the same idea, but for the footer menu specifically.</li>
+        </ul>
+        <p>The same modal also has an <b>Access Level</b> dropdown — a shortcut to the same Public/Members/Commissioner setting covered in <a href="#protect-page">Password-Protect a Page</a>, available here without needing to leave this page's editor.</p>
+      </div>
+    </div>
     <p>If a page has its own sub-pages, a fourth option appears: <b>Organizer only — no landing page.</b> Turn this on when a top-level menu item exists purely to hold a dropdown of sub-pages — clicking its label in the nav just expands the dropdown instead of navigating anywhere, and any direct link to it redirects to Home.</p>
 
     <div class="callout">
