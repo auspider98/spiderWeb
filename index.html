@@ -1133,27 +1133,25 @@ h2.section-title {
   margin-top: 4px;
 }
 /* ============ IMAGE GRID ============ */
+/* Tiles are a fixed size (set via --ig-tile) rather than N-per-row columns —
+   auto-fit + justify-content:center means the browser fits as many
+   same-sized tiles per row as the available width allows, wrapping to fewer
+   (down to one) as the screen narrows, with no breakpoints or column-count
+   special-casing needed at all. Tile size never changes, only how many sit
+   side by side. */
 .cps-ig-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, var(--ig-tile, 220px));
+  justify-content: center;
   margin-top: 56px;
 }
-.cps-ig-grid[data-cols="1"] { grid-template-columns: 1fr; }
-.cps-ig-grid[data-cols="2"] { grid-template-columns: repeat(2, 1fr); }
-.cps-ig-grid[data-cols="3"] { grid-template-columns: repeat(3, 1fr); }
-.cps-ig-grid[data-cols="4"] { grid-template-columns: repeat(4, 1fr); }
 .cps-ig-grid--gap-tight  { gap: 4px;  padding-left: 4px;  padding-right: 4px; }
-.cps-ig-grid--gap-normal { gap: 28px; padding-left: 28px; padding-right: 28px; }
-.cps-ig-grid--gap-loose  { gap: 56px; padding-left: 56px; padding-right: 56px; }
-/* A single column fills the full available width, so it needs proportionally
-   more left/right inset than a multi-column grid to avoid feeling oversized.
-   Gap between stacked images is intentionally left unchanged. */
-.cps-ig-grid[data-cols="1"].cps-ig-grid--gap-tight  { padding-left: 8px;   padding-right: 8px; }
-.cps-ig-grid[data-cols="1"].cps-ig-grid--gap-normal { padding-left: 56px;  padding-right: 56px; }
-.cps-ig-grid[data-cols="1"].cps-ig-grid--gap-loose  { padding-left: 112px; padding-right: 112px; }
+.cps-ig-grid--gap-normal { gap: 16px; padding-left: 16px; padding-right: 16px; }
+.cps-ig-grid--gap-loose  { gap: 32px; padding-left: 32px; padding-right: 32px; }
 .cps-ig-grid--rounded .cps-ig-tile { border-radius: 12px; }
 .cps-ig-tile {
   position: relative;
+  width: var(--ig-tile, 220px);
   aspect-ratio: 1 / 1;
   overflow: hidden;
   background: var(--cream);
@@ -1228,23 +1226,6 @@ h2.section-title {
     backdrop-filter: blur(var(--ig-blur, 16px));
     -webkit-backdrop-filter: blur(var(--ig-blur, 16px));
   }
-}
-/* Step down gradually rather than jumping straight from 4 to 2 */
-@media (max-width: 1200px) {
-  .cps-ig-grid[data-cols="4"] { grid-template-columns: repeat(3, 1fr); }
-}
-@media (max-width: 1024px) {
-  .cps-ig-grid[data-cols="3"],
-  .cps-ig-grid[data-cols="4"] { grid-template-columns: repeat(2, 1fr); }
-}
-@media (max-width: 768px) {
-  .cps-ig-grid,
-  .cps-ig-grid[data-cols="2"],
-  .cps-ig-grid[data-cols="3"],
-  .cps-ig-grid[data-cols="4"] { grid-template-columns: 1fr; }
-  .cps-ig-grid--gap-tight  { padding-left: 8px;   padding-right: 8px; }
-  .cps-ig-grid--gap-normal { padding-left: 56px;  padding-right: 56px; }
-  .cps-ig-grid--gap-loose  { padding-left: 112px; padding-right: 112px; }
 }
 
 .cps-fc-grid {
@@ -8187,8 +8168,8 @@ function renderCustomSection(sec, idx, isFirst, allSections, pageSlug) {
       const igAlign = sec.textAlign || 'center';
       const igRounded = sec.roundedCorners !== false;
       const igBlur = { light: 8, medium: 16, strong: 24 }[sec.blurStrength || 'medium'] || 16;
-      const igCols = sec.maxCols || 3;
-      const igStyle = `--ig-blur:${igBlur}px;`;
+      const igTile = { small: 160, medium: 220, large: 300 }[sec.tileSize || 'medium'] || 220;
+      const igStyle = `--ig-blur:${igBlur}px;--ig-tile:${igTile}px;`;
 
       const igTiles = igItems.map((it, i) => {
         const hasText = !!(it.title || it.subtitle);
@@ -8221,7 +8202,7 @@ function renderCustomSection(sec, idx, isFirst, allSections, pageSlug) {
         ${labelHTML}
         ${sec.heading ? `<${headTag} class="${headClass} cps-heading reveal">${sec.heading}</${headTag}>` : ''}
         ${sec.body ? `<div class="section-subtitle reveal reveal-delay-1" style="${subtitleStyle}">${formatBody(sec.body)}</div>` : ''}
-        <div class="cps-ig-grid cps-ig-grid--gap-${igGap} cps-ig-grid--align-${igAlign}${igRounded ? ' cps-ig-grid--rounded' : ''}" data-cols="${igCols}" style="${igStyle}">${igTiles}</div>
+        <div class="cps-ig-grid cps-ig-grid--gap-${igGap} cps-ig-grid--align-${igAlign}${igRounded ? ' cps-ig-grid--rounded' : ''}" style="${igStyle}">${igTiles}</div>
       </div>`;
       break;
     }
