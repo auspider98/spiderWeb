@@ -3906,10 +3906,10 @@ const SITE_CONFIG = {
           "type": "image-grid",
           "label": "Image Grid Section Label",
           "background": "light",
-          "anchorId": "image-grid-heading",
-          "heading": "Image Grid Heading",
+          "anchorId": "image-grid-4-columns-normal-fb-light-light",
+          "heading": "Image Grid - 4 Col - Loose - FB Light - RC - Light",
           "body": "Image Grid Body / Subtext",
-          "maxCols": 2,
+          "maxCols": 4,
           "gap": "loose",
           "textAlign": "center",
           "blurStrength": "light",
@@ -3920,7 +3920,7 @@ const SITE_CONFIG = {
               "alt": "Alt Text",
               "initialTitle": "Initial Title",
               "title": "Title",
-              "subtitle": "  - Image Path\n  - Alt Text\n  - Initial Title (optional)\n  - Title on blur (optional)\n  - Subtitle on blur (optional)\n  - Link Button Optional (Internal, External, File)",
+              "subtitle": " Subtitle",
               "linkType": "internal",
               "linkUrl": "home",
               "anchorId": ""
@@ -3947,6 +3947,426 @@ const SITE_CONFIG = {
             },
             {
               "imagePath": "images/image-04.jpg",
+              "alt": "Alt Text",
+              "initialTitle": "Initial Title",
+              "title": "Title",
+              "subtitle": "Subtitle",
+              "linkType": "internal",
+              "linkUrl": "home",
+              "anchorId": ""
+            }
+          ]
+        },
+        {
+          "type": "image-grid",
+          "label": "Image Grid Section Label",
+          "background": "light",
+          "anchorId": "image-grid-4-columns-normal-fb-medium-light",
+          "heading": "Image Grid - 4 Col - Normal - FB Med - RC - Light",
+          "body": "Image Grid Body / Subtext",
+          "maxCols": 4,
+          "gap": "normal",
+          "textAlign": "center",
+          "blurStrength": "medium",
+          "roundedCorners": true,
+          "items": [
+            {
+              "imagePath": "images/image-01.jpg",
+              "alt": "Alt Text",
+              "initialTitle": "Initial Title",
+              "title": "Title",
+              "subtitle": " Subtitle",
+              "linkType": "internal",
+              "linkUrl": "home",
+              "anchorId": ""
+            },
+            {
+              "imagePath": "images/image-02.jpg",
+              "alt": "Alt Text",
+              "initialTitle": "Initial Title",
+              "title": "Title",
+              "subtitle": "Subtitle",
+              "linkType": "internal",
+              "linkUrl": "home",
+              "anchorId": ""
+            },
+            {
+              "imagePath": "images/image-03.jpg",
+              "alt": "Alt Text",
+              "initialTitle": "Initial Title",
+              "title": "Title",
+              "subtitle": "Subtitle",
+              "linkType": "internal",
+              "linkUrl": "home",
+              "anchorId": ""
+            },
+            {
+              "imagePath": "images/image-04.jpg",
+              "alt": "Alt Text",
+              "initialTitle": "Initial Title",
+              "title": "Title",
+              "subtitle": "Subtitle",
+              "linkType": "internal",
+              "linkUrl": "home",
+              "anchorId": ""
+            }
+          ]
+        },
+        {
+          "type": "image-grid",
+          "label": "Image Grid Section Label",
+          "background": "light",
+          "anchorId": "image-grid-4-columns-tight-fb-strong-light",
+          "heading": "Image Grid - 4 Col - Tight - FB Strong - RC - Light",
+          "body": "Image Grid Body / Subtext",
+          "maxCols": 4,
+          "gap": "tight",
+          "textAlign": "center",
+          "blurStrength": "strong",
+          "roundedCorners": true,
+          "items": [
+            {
+              "imagePath": "images/image-01.jpg",
+              "alt": "Alt Text",
+              "initialTitle": "Initial Title",
+              "title": "Title",
+              "subtitle": " Subtitle",
+              "linkType": "internal",
+              "linkUrl": "home",
+              "anchorId": ""
+            },
+            {
+              "imagePath": "images/image-02.jpg",
+              "alt": "Alt Text",
+              "initialTitle": "Initial Title",
+              "title": "Title",
+              "subtitle": "Subtitle",
+              "linkType": "internal",
+              "linkUrl": "home",
+              "anchorId": ""
+            },
+            {
+              "imagePath": "images/image-03.jpg",
+              "alt": "Alt Text",
+              "initialTitle": "Initial Title",
+              "title": "Title",
+              "subtitle": "Subtitle",
+              "linkType": "internal",
+              "linkUrl": "home",
+              "anchorId": ""
+            },
+            {
+              "imagePath": "images/image-04.jpg",
+              "alt": "Alt Text",
+              "initialTitle": "Initial Title",
+              "title": "Title",
+              "subtitle": "Subtitle",
+              "linkType": "internal",
+              "linkUrl": "home",
+              "anchorId": ""
+            }
+          ]
+        },
+        {
+          "type": "image-grid",
+          "label": "Image Grid Section Label",
+          "background": "light",
+          "anchorId": "image-grid-4-col-tight-fb-strong-light",
+          "heading": "Image Grid - 4 Col - Tight - FB Strong - Light",
+          "body": "Image Grid Body / Subtext",
+          "maxCols": 4,
+          "gap": "tight",
+          "textAlign": "center",
+          "blurStrength": "strong",
+          "roundedCorners": false,
+          "items": [
+            {
+              "imagePath": "images/image-01.jpg",
+              "alt": "Alt Text",
+              "initialTitle": "Initial Title",
+              "title": "Title",
+              "subtitle": " Subtitle",
+              "linkType": "internal",
+              "linkUrl": "home",
+              "anchorId": ""
+            },
+            {
+              "imagePath": "images/image-02.jpg",
+              "alt": "Alt Text",
+              "initialTitle": "Initial Title",
+              "title": "Title",
+              "subtitle": "Subtitle",
+              "linkType": "internal",
+              "linkUrl": "home",
+              "anchorId": ""
+            },
+            {
+              "imagePath": "images/image-03.jpg",
+              "alt": "Alt Text",
+              "initialTitle": "Initial Title",
+              "title": "Title",
+              "subtitle": "Subtitle",
+              "linkType": "internal",
+              "linkUrl": "home",
+              "anchorId": ""
+            },
+            {
+              "imagePath": "images/image-04.jpg",
+              "alt": "Alt Text",
+              "initialTitle": "Initial Title",
+              "title": "Title",
+              "subtitle": "Subtitle",
+              "linkType": "internal",
+              "linkUrl": "home",
+              "anchorId": ""
+            }
+          ]
+        },
+        {
+          "type": "image-grid",
+          "label": "Image Grid Section Label",
+          "background": "alt",
+          "anchorId": "image-grid-3-col-loose-fb-light-rc-alt",
+          "heading": "Image Grid - 3 Col - Loose - FB Light - RC - Alt",
+          "body": "Image Grid Body / Subtext",
+          "maxCols": 3,
+          "gap": "loose",
+          "textAlign": "left",
+          "blurStrength": "light",
+          "roundedCorners": true,
+          "items": [
+            {
+              "imagePath": "images/image-01.jpg",
+              "alt": "Alt Text",
+              "initialTitle": "Initial Title",
+              "title": "Title",
+              "subtitle": " Subtitle",
+              "linkType": "internal",
+              "linkUrl": "home",
+              "anchorId": ""
+            },
+            {
+              "imagePath": "images/image-02.jpg",
+              "alt": "Alt Text",
+              "initialTitle": "Initial Title",
+              "title": "Title",
+              "subtitle": "Subtitle",
+              "linkType": "internal",
+              "linkUrl": "home",
+              "anchorId": ""
+            },
+            {
+              "imagePath": "images/image-03.jpg",
+              "alt": "Alt Text",
+              "initialTitle": "Initial Title",
+              "title": "Title",
+              "subtitle": "Subtitle",
+              "linkType": "internal",
+              "linkUrl": "home",
+              "anchorId": ""
+            },
+            {
+              "imagePath": "images/image-04.jpg",
+              "alt": "Alt Text",
+              "initialTitle": "Initial Title",
+              "title": "Title",
+              "subtitle": "Subtitle",
+              "linkType": "internal",
+              "linkUrl": "home",
+              "anchorId": ""
+            }
+          ]
+        },
+        {
+          "type": "image-grid",
+          "label": "Image Grid Section Label",
+          "background": "alt",
+          "anchorId": "image-grid-3-col-normal-fb-med-alt",
+          "heading": "Image Grid - 3 Col - Normal - FB Med - Alt",
+          "body": "Image Grid Body / Subtext",
+          "maxCols": 3,
+          "gap": "normal",
+          "textAlign": "left",
+          "blurStrength": "medium",
+          "roundedCorners": false,
+          "items": [
+            {
+              "imagePath": "images/image-01.jpg",
+              "alt": "Alt Text",
+              "initialTitle": "Initial Title",
+              "title": "Title",
+              "subtitle": " Subtitle",
+              "linkType": "internal",
+              "linkUrl": "home",
+              "anchorId": ""
+            },
+            {
+              "imagePath": "images/image-02.jpg",
+              "alt": "Alt Text",
+              "initialTitle": "Initial Title",
+              "title": "Title",
+              "subtitle": "Subtitle",
+              "linkType": "internal",
+              "linkUrl": "home",
+              "anchorId": ""
+            },
+            {
+              "imagePath": "images/image-03.jpg",
+              "alt": "Alt Text",
+              "initialTitle": "Initial Title",
+              "title": "Title",
+              "subtitle": "Subtitle",
+              "linkType": "internal",
+              "linkUrl": "home",
+              "anchorId": ""
+            },
+            {
+              "imagePath": "images/image-04.jpg",
+              "alt": "Alt Text",
+              "initialTitle": "Initial Title",
+              "title": "Title",
+              "subtitle": "Subtitle",
+              "linkType": "internal",
+              "linkUrl": "home",
+              "anchorId": ""
+            }
+          ]
+        },
+        {
+          "type": "image-grid",
+          "label": "Image Grid Section Label",
+          "background": "dark",
+          "anchorId": "image-grid-2-col-loose-fb-strong-dark",
+          "heading": "Image Grid - 2 Col - Loose - FB Strong - Dark",
+          "body": "Image Grid Body / Subtext",
+          "maxCols": 2,
+          "gap": "loose",
+          "textAlign": "left",
+          "blurStrength": "strong",
+          "roundedCorners": true,
+          "items": [
+            {
+              "imagePath": "images/image-01.jpg",
+              "alt": "Alt Text",
+              "initialTitle": "Initial Title",
+              "title": "Title",
+              "subtitle": " Subtitle",
+              "linkType": "internal",
+              "linkUrl": "home",
+              "anchorId": ""
+            },
+            {
+              "imagePath": "images/image-02.jpg",
+              "alt": "Alt Text",
+              "initialTitle": "Initial Title",
+              "title": "Title",
+              "subtitle": "Subtitle",
+              "linkType": "internal",
+              "linkUrl": "home",
+              "anchorId": ""
+            },
+            {
+              "imagePath": "images/image-03.jpg",
+              "alt": "Alt Text",
+              "initialTitle": "Initial Title",
+              "title": "Title",
+              "subtitle": "Subtitle",
+              "linkType": "internal",
+              "linkUrl": "home",
+              "anchorId": ""
+            },
+            {
+              "imagePath": "images/image-04.jpg",
+              "alt": "Alt Text",
+              "initialTitle": "Initial Title",
+              "title": "Title",
+              "subtitle": "Subtitle",
+              "linkType": "internal",
+              "linkUrl": "home",
+              "anchorId": ""
+            }
+          ]
+        },
+        {
+          "type": "image-grid",
+          "label": "Image Grid Section Label",
+          "background": "dark",
+          "anchorId": "image-grid-2-col-tight-fb-light-dark",
+          "heading": "Image Grid - 2 Col - Tight - FB Light - Dark",
+          "body": "Image Grid Body / Subtext",
+          "maxCols": 2,
+          "gap": "tight",
+          "textAlign": "left",
+          "blurStrength": "light",
+          "roundedCorners": false,
+          "items": [
+            {
+              "imagePath": "images/image-01.jpg",
+              "alt": "Alt Text",
+              "initialTitle": "Initial Title",
+              "title": "Title",
+              "subtitle": " Subtitle",
+              "linkType": "internal",
+              "linkUrl": "home",
+              "anchorId": ""
+            },
+            {
+              "imagePath": "images/image-02.jpg",
+              "alt": "Alt Text",
+              "initialTitle": "Initial Title",
+              "title": "Title",
+              "subtitle": "Subtitle",
+              "linkType": "internal",
+              "linkUrl": "home",
+              "anchorId": ""
+            },
+            {
+              "imagePath": "images/image-03.jpg",
+              "alt": "Alt Text",
+              "initialTitle": "Initial Title",
+              "title": "Title",
+              "subtitle": "Subtitle",
+              "linkType": "internal",
+              "linkUrl": "home",
+              "anchorId": ""
+            },
+            {
+              "imagePath": "images/image-04.jpg",
+              "alt": "Alt Text",
+              "initialTitle": "Initial Title",
+              "title": "Title",
+              "subtitle": "Subtitle",
+              "linkType": "internal",
+              "linkUrl": "home",
+              "anchorId": ""
+            }
+          ]
+        },
+        {
+          "type": "image-grid",
+          "label": "Image Grid Section Label",
+          "background": "dark",
+          "anchorId": "image-grid-1-col-loose-fb-light-rc-dark",
+          "heading": "Image Grid - 1 Col - Loose - FB Light - RC - Dark",
+          "body": "Image Grid Body / Subtext",
+          "maxCols": 1,
+          "gap": "loose",
+          "textAlign": "left",
+          "blurStrength": "light",
+          "roundedCorners": true,
+          "items": [
+            {
+              "imagePath": "images/image-01.jpg",
+              "alt": "Alt Text",
+              "initialTitle": "Initial Title",
+              "title": "Title",
+              "subtitle": " Subtitle",
+              "linkType": "internal",
+              "linkUrl": "home",
+              "anchorId": ""
+            },
+            {
+              "imagePath": "images/image-02.jpg",
               "alt": "Alt Text",
               "initialTitle": "Initial Title",
               "title": "Title",
@@ -8177,7 +8597,7 @@ const SITE_CONFIG = {
   "aboutBio3": "She is a member of the Alabama Bar Association, the American Academy of Adoption Attorneys (AAAA), and has been recognized as a Super Lawyer in Alabama Family Law for eight consecutive years. She is admitted to practice in all Alabama courts and regularly handles cases in Jefferson, Shelby, St. Clair, and Cullman counties.",
   "aboutBio4": "When she's not advocating for families in court, Amy volunteers with the Alabama Foster Care Association and speaks at community workshops on adoption awareness.",
   "footerBio": "Footer Bio - A short description of the business for the footer...",
-  "_savedAt": 1784649173668,
+  "_savedAt": 1784664709445,
   "contactSubmitLabel": "Submit Button Label",
   "contactSuccessMsg": "Success Message",
   "mapsApiKey": "",

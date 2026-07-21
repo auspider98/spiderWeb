@@ -1145,6 +1145,12 @@ h2.section-title {
 .cps-ig-grid--gap-tight  { gap: 4px;  padding-left: 4px;  padding-right: 4px; }
 .cps-ig-grid--gap-normal { gap: 28px; padding-left: 28px; padding-right: 28px; }
 .cps-ig-grid--gap-loose  { gap: 56px; padding-left: 56px; padding-right: 56px; }
+/* A single column fills the full available width, so it needs proportionally
+   more left/right inset than a multi-column grid to avoid feeling oversized.
+   Gap between stacked images is intentionally left unchanged. */
+.cps-ig-grid[data-cols="1"].cps-ig-grid--gap-tight  { padding-left: 8px;   padding-right: 8px; }
+.cps-ig-grid[data-cols="1"].cps-ig-grid--gap-normal { padding-left: 56px;  padding-right: 56px; }
+.cps-ig-grid[data-cols="1"].cps-ig-grid--gap-loose  { padding-left: 112px; padding-right: 112px; }
 .cps-ig-grid--rounded .cps-ig-tile { border-radius: 12px; }
 .cps-ig-tile {
   position: relative;
@@ -1236,6 +1242,9 @@ h2.section-title {
   .cps-ig-grid[data-cols="2"],
   .cps-ig-grid[data-cols="3"],
   .cps-ig-grid[data-cols="4"] { grid-template-columns: 1fr; }
+  .cps-ig-grid--gap-tight  { padding-left: 8px;   padding-right: 8px; }
+  .cps-ig-grid--gap-normal { padding-left: 56px;  padding-right: 56px; }
+  .cps-ig-grid--gap-loose  { padding-left: 112px; padding-right: 112px; }
 }
 
 .cps-fc-grid {
