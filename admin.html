@@ -1592,6 +1592,7 @@ html, body { height: 100%; font-family: 'DM Sans', system-ui, sans-serif; backgr
                 <option>Josefin Sans</option>
                 <option>Raleway</option>
                 <option>Cinzel</option>
+                <option>Titillium Web</option>
               </select>
             </div>
             <div class="field-group">
@@ -1942,9 +1943,9 @@ let DATA = {
   hours:[],
   socialLinks:[],
   stats:[],
-  colors:{navy:"#0f2340",navyLight:"#1a3560",gold:"#c9a84c",goldLight:"#e8c97a",goldPale:"#faf6ec",warmWhite:"#fffdf9",cream:"#f9f6f0",chrome:"#060f1d"},
-  fontColors:{heading:"#0f2340",body:"#5c5a53",onDark:"#ffffff",onDarkMuted:"#f3f8fb"},
-  fontDisplay:"Playfair Display", fontBody:"DM Sans",
+  colors:{navy:"#060f1d",navyLight:"#0b1a32",gold:"#f98424",goldLight:"#e97d25",goldPale:"#faf6ec",warmWhite:"#fffdf9",cream:"#f9f6f0",chrome:"#060f1d"},
+  fontColors:{heading:"#5c5c5c",body:"#5c5a53",onDark:"#ffffff",onDarkMuted:"#f3f8fb"},
+  fontDisplay:"Titillium Web", fontBody:"Mulish",
   metaDescription:"", metaKeywords:"",
   googleAnalyticsId:"", formEndpoint:"",
   pageTitles:{home:"",about:"",contact:"",privacy:""},
@@ -4262,6 +4263,22 @@ function onFeatureCardLinkTypeChange(pi, si, ii, sel) {
   if (anchorEl) anchorEl.style.display = val === 'internal' ? '' : 'none';
 }
 
+function onImageGridLinkTypeChange(pi, si, ii, sel) {
+  const val = sel.value;
+  const intEl = document.getElementById('cp-ig-internal-' + pi + '-' + si + '-' + ii);
+  const urlEl = document.getElementById('cp-ig-url-' + pi + '-' + si + '-' + ii);
+  const anchorEl = document.getElementById('cp-ig-anchor-' + pi + '-' + si + '-' + ii);
+  if (intEl) intEl.style.display = val === 'internal' ? '' : 'none';
+  if (urlEl) {
+    urlEl.style.display = (val === 'external' || val === 'file') ? '' : 'none';
+    const label = urlEl.querySelector('label');
+    const input = urlEl.querySelector('input');
+    if (label) label.textContent = val === 'file' ? 'File Path / URL' : 'External URL';
+    if (input) input.placeholder = val === 'file' ? 'files/doc.pdf' : 'https://';
+  }
+  if (anchorEl) anchorEl.style.display = val === 'internal' ? '' : 'none';
+}
+
 function onTierLinkTypeChange(pi, si, ii, sel) {
   const val = sel.value;
   const intEl = document.getElementById('cp-tier-internal-' + pi + '-' + si + '-' + ii);
@@ -4414,6 +4431,7 @@ const CP_SECTION_TYPES = [
   { value:'flip-cards',     label:'🃏 Flip Cards' },
   { value:'rotating-cards', label:'🃏 Rotating Cards' },
   { value:'pricing',        label:'🃏 Tier Cards' },
+  { value:'image-grid',     label:'🃏 Image Grid' },
   // 📋 Process & Information
   { value:'steps',          label:'📋 Process Steps' },
   { value:'timeline',       label:'📋 Timeline' },
@@ -4523,6 +4541,7 @@ function applySectionTypeDefaults(defaults, type) {
   if (type === 'hero-section') { defaults.heightVariant = 'full'; defaults.customHeight = 400; defaults.vAlign = 'center'; defaults.hAlign = 'center'; defaults.textColor = 'white'; defaults.entranceAnimation = 'default'; defaults.entranceDistance = 100; defaults.headingMaxWidth = 820; defaults.headingFullWidth = false; defaults.subtitleMaxWidth = 620; defaults.subtitleFullWidth = false; defaults.bottomSpacing = false; defaults.bg = { type:'image', bgColor:'#0f2340', imagePosition:'center center', mobileImagePosition:'center center', overlayColor:'#0f2340', overlayOpacity:0.5, shadowEnabled:true, slides:[], autoplay:true, showDots:true, slideDuration:8 }; defaults.linkType = 'none'; defaults.linkUrl = ''; defaults.linkLabel = ''; defaults.linkStyle = 'text'; }
   if (type === 'popup') { defaults.popupStyle = 'modal'; defaults.imageLayout = 'none'; defaults.imagePath = ''; defaults.imagePosition = 'center center'; defaults.mobileImagePosition = 'center center'; defaults.overlayTextOnImage = true; defaults.imageClickable = false; defaults.overlayColor = '#0f2340'; defaults.overlayOpacity = 0.55; defaults.textAlign = 'center'; defaults.textColor = 'theme'; defaults.roundedCorners = true; defaults.triggerAnchorId = ''; defaults.triggerDelay = 0.6; defaults.cta_primary_linkType = 'none'; defaults.cta_secondary_linkType = 'none'; }
   if (type === 'rotating-cards') { defaults.items = []; defaults.visibleCards = 1; defaults.cardHeight = 420; defaults.showDots = true; defaults.showArrows = true; defaults.showPeek = true; defaults.autoplay = false; defaults.autoplaySpeed = 4; }
+  if (type === 'image-grid') { defaults.items = []; defaults.maxCols = 3; defaults.gap = 'normal'; defaults.roundedCorners = true; defaults.textAlign = 'center'; defaults.blurStrength = 'medium'; }
 }
 
 function addHomeSection() {
@@ -4884,6 +4903,15 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
     sec.fullWidth = secCard.querySelector('[data-field="fullWidth"]')?.checked || false;
     sec.maxCols   = parseInt(get('maxCols')) || 2;
     sec.items     = collectCpSubItems(secCard, pi, si, ['num','title','body','linkLabel','linkType','linkUrl','anchorId','imagePath','imageSize']);
+  }
+
+  if (type === 'image-grid') {
+    sec.maxCols = parseInt(get('maxCols')) || 3;
+    sec.gap = get('gap') || 'normal';
+    sec.textAlign = get('textAlign') || 'center';
+    sec.blurStrength = get('blurStrength') || 'medium';
+    sec.roundedCorners = secCard.querySelector('[data-field="roundedCorners"]')?.checked !== false;
+    sec.items = collectCpSubItems(secCard, pi, si, ['imagePath','alt','initialTitle','title','subtitle','linkType','linkUrl','anchorId']);
   }
 
   // Locations
@@ -7764,6 +7792,117 @@ function buildCpSectionTypeFields(sec, pi, si) {
         <button class="btn-add" onclick="addCpSubItem(${piArg},${si},'items',{imagePath:'',alt:'',title:'',caption:''})">+ Add Image</button>`;
     }
 
+    case 'image-grid': {
+      const igCols = sec.maxCols || 3;
+      const igItems = sec.items || [];
+      const igPiArg = typeof pi === 'string' ? "'" + pi + "'" : pi;
+      const igRows = igItems.map((it, ii) => {
+        const lt = it.linkType || 'none';
+        const intOpts = getInternalPageOptions(it.linkUrl || '');
+        const showInt = lt === 'internal' ? '' : 'display:none;';
+        const showUrl = (lt === 'external' || lt === 'file') ? '' : 'display:none;';
+        const urlLabel = lt === 'file' ? 'File Path / URL' : 'External URL';
+        const urlPlaceholder = lt === 'file' ? 'files/doc.pdf' : 'https://';
+        const selInt = lt === 'internal' ? ' selected' : '';
+        const selExt = lt === 'external' ? ' selected' : '';
+        const selFile = lt === 'file' ? ' selected' : '';
+        const igLabel = it.title ? it.title.substring(0,40) : ('Image #' + (ii+1));
+        return `<div class="cp-sub-item" data-sub-idx="${ii}">
+          <div class="cp-sub-item-header" style="cursor:pointer;" onclick="const b=this.nextElementSibling;b.style.display=b.style.display===''?'none':'';this.querySelector('.ig-chev').textContent=b.style.display==='none'?'&#9656;':'&#9662;';">
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span class="cp-sub-item-drag-handle" title="Drag to reorder" onclick="event.stopPropagation();">&#8903;</span>
+              <span class="cp-sub-item-label">${escHtml(igLabel)}</span>
+              <span class="ig-chev" style="font-size:10px;color:var(--muted);margin-left:2px;">&#9656;</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:4px;">
+              <button class="cp-move-btn" onclick="moveCpSubItem(${igPiArg},${si},'items',${ii},-1);event.stopPropagation();" title="Move up">&#8593;</button>
+              <button class="cp-move-btn" onclick="moveCpSubItem(${igPiArg},${si},'items',${ii},1);event.stopPropagation();" title="Move down">&#8595;</button>
+              <button class="btn-remove" onclick="removeCpSubItem(${igPiArg},${si},'items',${ii});event.stopPropagation();">&#215;</button>
+            </div>
+          </div>
+          <div class="cp-sub-item-body" style="display:none;">
+            <div class="field-group" style="margin-bottom:6px;"><label>Image Path</label>
+              <input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="imagePath" value="${escHtml(it.imagePath||'')}" placeholder="images/photo.jpg"/></div>
+            <div class="field-group" style="margin-bottom:6px;"><label>Alt Text</label>
+              <input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="alt" value="${escHtml(it.alt||'')}" placeholder="Describe the image…"/></div>
+            <div class="field-group" style="margin-bottom:6px;"><label>Initial Title (optional)</label>
+              <input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="initialTitle" value="${escHtml(it.initialTitle||'')}" placeholder="Shown on the image before it's revealed"/></div>
+            <div class="field-hint" style="margin-bottom:8px;">Displayed on the image itself at all times. On hover (or scroll reveal on mobile), it disappears and the frosted Title / Subtitle below take its place.</div>
+            <div class="form-row-2" style="margin-bottom:6px;">
+              <div class="field-group" style="margin:0;"><label>Title (optional)</label>
+                <input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="title" value="${escHtml(it.title||'')}" oninput="const lbl=this.closest('.cp-sub-item').querySelector('.cp-sub-item-label');lbl.textContent=this.value.trim()||'Image #${ii+1}';"/></div>
+              <div class="field-group" style="margin:0;"><label>Subtitle (optional)</label>
+                <textarea rows="2" style="width:100%;box-sizing:border-box;resize:vertical;min-height:56px;overflow:hidden;font-family:inherit;font-size:13px;" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="subtitle">${escHtml(it.subtitle||'')}</textarea></div>
+            </div>
+            <div class="field-hint" style="margin-bottom:8px;">Leave Title and Subtitle both blank for a plain image with no hover/scroll reveal effect.</div>
+            <div class="field-group" style="margin-bottom:6px;"><label>Link Type</label>
+              <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkType" onchange="onImageGridLinkTypeChange(${igPiArg},${si},${ii},this)">
+                <option value="none">None</option>
+                <option value="internal"${selInt}>Internal Page</option>
+                <option value="external"${selExt}>External URL</option>
+                <option value="file"${selFile}>File / Document</option>
+              </select>
+            </div>
+            <div class="field-group" id="cp-ig-internal-${pi}-${si}-${ii}" style="margin-bottom:4px;${showInt}">
+              <label>Internal Page</label>
+              <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkUrl"
+                onchange="updateAnchorSelect(document.getElementById('cp-ig-anchor-sel-${pi}-${si}-${ii}'),this.value,'')">${intOpts}</select>
+              <div class="field-group cp-anchor-select" id="cp-ig-anchor-${pi}-${si}-${ii}" style="margin-top:6px;margin-bottom:0;">
+                <label>Scroll to Section (optional)</label>
+                <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="anchorId" id="cp-ig-anchor-sel-${pi}-${si}-${ii}">
+                  ${getAnchorOptions(it.linkUrl||'', it.anchorId||'')}
+                </select>
+              </div>
+            </div>
+            <div class="field-group" id="cp-ig-url-${pi}-${si}-${ii}" style="margin-bottom:4px;${showUrl}">
+              <label>${urlLabel}</label>
+              <input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkUrl" value="${escHtml(it.linkUrl||'')}" placeholder="${urlPlaceholder}"/>
+            </div>
+          </div>
+        </div>`;
+      }).join('');
+      return `
+        <div class="field-group"><label>Heading (optional)</label><input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
+        <div class="field-group"><label>Body / Subtext (optional)</label><textarea ${p} data-field="body" rows="2">${v('body')}</textarea></div>
+        <div class="field-group" style="margin-bottom:10px;"><label>Columns</label>
+          <select ${p} data-field="maxCols">
+            <option value="1"${igCols===1?' selected':''}>1 Column</option>
+            <option value="2"${igCols===2?' selected':''}>2 Columns</option>
+            <option value="3"${igCols===3?' selected':''}>3 Columns</option>
+            <option value="4"${igCols===4?' selected':''}>4 Columns</option>
+          </select>
+        </div>
+        <div class="form-row-2" style="margin-bottom:10px;">
+          <div class="field-group" style="margin:0;"><label>Gap / Spacing</label>
+            <select ${p} data-field="gap">
+              <option value="tight"${(sec.gap||'normal')==='tight'?' selected':''}>Tight</option>
+              <option value="normal"${(sec.gap||'normal')==='normal'?' selected':''}>Normal</option>
+              <option value="loose"${sec.gap==='loose'?' selected':''}>Loose</option>
+            </select>
+          </div>
+          <div class="field-group" style="margin:0;"><label>Text Alignment</label>
+            <select ${p} data-field="textAlign">
+              <option value="left"${sec.textAlign==='left'?' selected':''}>Left</option>
+              <option value="center"${(sec.textAlign||'center')==='center'?' selected':''}>Center</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row-2" style="margin-bottom:10px;">
+          <div class="field-group" style="margin:0;"><label>Frost Blur Strength</label>
+            <select ${p} data-field="blurStrength">
+              <option value="light"${sec.blurStrength==='light'?' selected':''}>Light</option>
+              <option value="medium"${(sec.blurStrength||'medium')==='medium'?' selected':''}>Medium</option>
+              <option value="strong"${sec.blurStrength==='strong'?' selected':''}>Strong</option>
+            </select>
+          </div>
+          <div class="field-group" style="margin:0;">
+            <div class="switch-row"><span class="switch-label">Rounded Corners</span><label class="switch"><input type="checkbox" ${p} data-field="roundedCorners" ${sec.roundedCorners!==false?'checked':''}/><span class="switch-slider"></span></label></div>
+          </div>
+        </div>
+        <div class="cp-sub-items" data-cp-drag="${pi}-${si}-items">${igRows}</div>
+        <button class="btn-add" onclick="addCpSubItem(${igPiArg},${si},'items',{imagePath:'',alt:'',initialTitle:'',title:'',subtitle:'',linkType:'none',linkUrl:''})">+ Add Image</button>`;
+    }
+
     case 'accordion': {
       const items = (sec.items || []);
       const accPiArg = typeof pi === 'string' ? ("'" + pi + "'") : pi;
@@ -9493,6 +9632,14 @@ function collectCpSections(card, pi, existingSections) {
         sec.maxCols = parseInt(get('maxCols')) || 2;
         sec.colFullWidth = secCard.querySelector('[data-field="colFullWidth"]')?.checked || false;
         sec.items = collectCpSubItems(secCard, pi, si, ['num','title','body','linkLabel','linkType','linkUrl','anchorId','imagePath','imageSize']); break;
+      case 'image-grid':
+        sec.label = get('label'); sec.heading = get('heading'); sec.body = get('body');
+        sec.maxCols = parseInt(get('maxCols')) || 3;
+        sec.gap = get('gap') || 'normal';
+        sec.textAlign = get('textAlign') || 'center';
+        sec.blurStrength = get('blurStrength') || 'medium';
+        sec.roundedCorners = secCard.querySelector('[data-field="roundedCorners"]')?.checked !== false;
+        sec.items = collectCpSubItems(secCard, pi, si, ['imagePath','alt','initialTitle','title','subtitle','linkType','linkUrl','anchorId']); break;
       case 'bullets':
         sec.heading = get('heading'); sec.subtitle = get('subtitle');
         sec.fullWidth = secCard.querySelector('[data-field="fullWidth"]')?.checked || false;
