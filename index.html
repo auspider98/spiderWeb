@@ -1155,6 +1155,8 @@ h2.section-title {
   aspect-ratio: 1 / 1;
   overflow: hidden;
   background: var(--cream);
+  z-index: 1;
+  transition: transform 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
 }
 /* Missing/broken image fallback color, matched to the section's own background mode */
 .cps-section-light .cps-ig-tile { background: var(--cream); }
@@ -1164,9 +1166,8 @@ h2.section-title {
   position: absolute; inset: 0;
   width: 100%; height: 100%;
   object-fit: cover;
-  transition: transform 0.5s var(--ease-out);
+  transition: transform 0.35s var(--ease-out);
 }
-.cps-ig-tile:hover img { transform: scale(1.04); }
 /* Initial title — shown on the image at all times until revealed */
 .cps-ig-initial {
   position: absolute; inset: 0;
@@ -1193,7 +1194,7 @@ h2.section-title {
   -webkit-backdrop-filter: blur(0px);
   opacity: 0;
   transform: translateY(10px);
-  transition: opacity 0.35s var(--ease-out), transform 0.35s var(--ease-out), backdrop-filter 0.35s var(--ease-out);
+  transition: opacity 0.3s var(--ease-out), transform 0.3s var(--ease-out), backdrop-filter 0.35s var(--ease-out);
   text-align: left;
 }
 .cps-ig-grid--align-center .cps-ig-overlay { align-items: center; text-align: center; }
@@ -1207,25 +1208,58 @@ h2.section-title {
 }
 .cps-ig-subtitle p { margin: 0 0 0.5em; }
 .cps-ig-subtitle p:last-child { margin-bottom: 0; }
-/* Desktop: real hover reveals the frost and fades out the initial title */
-@media (hover: hover) {
-  .cps-ig-tile:hover .cps-ig-initial { opacity: 0; }
-  .cps-ig-tile:hover .cps-ig-overlay {
-    opacity: 1;
-    transform: translateY(0);
-    backdrop-filter: blur(var(--ig-blur, 16px));
-    -webkit-backdrop-filter: blur(var(--ig-blur, 16px));
-  }
+/* Four-stage reveal sequence — lift, then blur, then text, then shadow —
+   driven entirely by JS-scheduled classes (see igScheduleReveal in
+   initImageGridReveal) so desktop hover and touch scroll-reveal share
+   identical timing on every device. This replaces the old (hover: hover) /
+   (hover: none) split: neither the lift nor the shadow depend on native
+   :hover or a scroll-toggled .cps-ig-revealed class anymore, since
+   backdrop-filter's transition-delay isn't reliable on mobile — timing every
+   stage via setTimeout keeps all four consistent with each other instead of
+   mixing CSS-delay and JS-delay. Selectors stay scoped through .cps-ig-grid
+   to keep specificity above the generic .reveal.visible scroll-entrance
+   class elsewhere in the codebase, which also animates `transform` on this
+   same element and would otherwise silently win via source order. */
+.cps-ig-grid .cps-ig-tile.cps-ig-lift-on { transform: scale(1.13); z-index: 2; }
+.cps-ig-grid .cps-ig-tile.cps-ig-shadow-on { box-shadow: 0 18px 40px rgba(0,0,0,0.34); }
+.cps-ig-tile.cps-ig-blur-on .cps-ig-overlay {
+  backdrop-filter: blur(var(--ig-blur, 16px));
+  -webkit-backdrop-filter: blur(var(--ig-blur, 16px));
 }
-/* Touch: JS toggles this class as tiles pass through the center band while scrolling */
-@media (hover: none) {
-  .cps-ig-tile.cps-ig-revealed .cps-ig-initial { opacity: 0; }
-  .cps-ig-tile.cps-ig-revealed .cps-ig-overlay {
-    opacity: 1;
-    transform: translateY(0);
-    backdrop-filter: blur(var(--ig-blur, 16px));
-    -webkit-backdrop-filter: blur(var(--ig-blur, 16px));
-  }
+.cps-ig-tile.cps-ig-text-on .cps-ig-initial { opacity: 0; }
+.cps-ig-tile.cps-ig-text-on .cps-ig-overlay {
+  opacity: 1;
+  transform: translateY(0);
+}
+/* "Blurred, Clear on Reveal" mode — the reverse of the default: the resting
+   state carries the frosted look (same treatment the default mode's revealed
+   state uses), and hover/scroll-reveal clears the blur away instead of
+   applying it. Which state gets the blur is the only thing that changes —
+   Initial Title still belongs to resting, Title/Subtitle still belong to
+   revealed, exactly as in the default mode. */
+.cps-ig-grid--reveal-blur-first .cps-ig-initial {
+  background: rgba(var(--navy-rgb), 0.4);
+  backdrop-filter: blur(var(--ig-blur, 16px));
+  -webkit-backdrop-filter: blur(var(--ig-blur, 16px));
+}
+.cps-ig-grid--reveal-blur-first .cps-ig-initial-scrim { display: none; }
+.cps-ig-grid--reveal-blur-first .cps-ig-overlay {
+  background: linear-gradient(to top, rgba(0,0,0,0.55), rgba(0,0,0,0) 65%);
+}
+.cps-ig-grid--reveal-blur-first .cps-ig-tile.cps-ig-blur-on .cps-ig-overlay {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+/* "No Blur" mode — image never blurs at either state; only the lift and the
+   Initial Title / Title-Subtitle text swap happen. The overlay uses a plain
+   gradient scrim (same treatment Initial Title already uses) for legibility
+   instead of the frosted navy panel. */
+.cps-ig-grid--reveal-no-blur .cps-ig-overlay {
+  background: linear-gradient(to top, rgba(0,0,0,0.55), rgba(0,0,0,0) 65%);
+}
+.cps-ig-grid--reveal-no-blur .cps-ig-tile.cps-ig-blur-on .cps-ig-overlay {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .cps-fc-grid {
@@ -6736,22 +6770,61 @@ function initProcessObserver() {
   document.querySelectorAll('.process-step').forEach(s => obs.observe(s));
 }
 
+// Four-stage reveal timeline for Image Grid — lift, then blur, then text,
+// then shadow — used by both desktop hover and touch scroll-reveal so
+// timing/behavior is identical on every device. Every stage is scheduled
+// with setTimeout rather than CSS transition-delay, since many mobile
+// browsers don't reliably honor transition-delay on backdrop-filter (some
+// snap it to the new value instantly no matter what the CSS says) — timing
+// all four stages the same way keeps them consistent with each other
+// instead of mixing CSS-delay and JS-delay.
+const _igTimers = new WeakMap();
+const IG_STAGES = [
+  { cls: 'cps-ig-lift-on',   delay: 0   },
+  { cls: 'cps-ig-blur-on',   delay: 150 },
+  { cls: 'cps-ig-shadow-on', delay: 300 },
+  { cls: 'cps-ig-text-on',   delay: 500 },
+];
+function igScheduleReveal(tile) {
+  if (_igTimers.has(tile)) return;
+  const timers = IG_STAGES.map(stage =>
+    setTimeout(() => tile.classList.add(stage.cls), stage.delay)
+  );
+  _igTimers.set(tile, timers);
+}
+function igCancelReveal(tile) {
+  const timers = _igTimers.get(tile);
+  if (timers) {
+    timers.forEach(clearTimeout);
+    _igTimers.delete(tile);
+  }
+  IG_STAGES.forEach(stage => tile.classList.remove(stage.cls));
+}
+
 function initImageGridReveal() {
-  // Touch devices have no hover — reveal whichever tile(s) sit in a band
-  // near the vertical center of the viewport as the user scrolls, releasing
-  // them again once they scroll back out (mirrors the hover metaphor).
-  // Tiles with no title/subtitle are never observed — nothing to reveal.
-  if (window.matchMedia('(hover: hover)').matches) return;
+  // Tiles with no title/subtitle are never wired up — nothing to reveal.
   const tiles = document.querySelectorAll('.cps-ig-tile[data-has-text="true"]');
   if (!tiles.length) return;
 
+  if (window.matchMedia('(hover: hover)').matches) {
+    tiles.forEach(tile => {
+      tile.addEventListener('mouseenter', () => igScheduleReveal(tile));
+      tile.addEventListener('mouseleave', () => igCancelReveal(tile));
+    });
+    return;
+  }
+
+  // Touch devices have no hover — reveal whichever tile(s) sit in a band
+  // near the vertical center of the viewport as the user scrolls, releasing
+  // them again once they scroll back out (mirrors the hover metaphor).
   const update = () => {
     const mid = window.innerHeight / 2;
     const band = window.innerHeight * 0.15;
     tiles.forEach(tile => {
       const rect = tile.getBoundingClientRect();
       const tileMid = rect.top + rect.height / 2;
-      tile.classList.toggle('cps-ig-revealed', Math.abs(tileMid - mid) < band);
+      const inBand = Math.abs(tileMid - mid) < band;
+      if (inBand) igScheduleReveal(tile); else igCancelReveal(tile);
     });
   };
 
@@ -8169,6 +8242,7 @@ function renderCustomSection(sec, idx, isFirst, allSections, pageSlug) {
       const igRounded = sec.roundedCorners !== false;
       const igBlur = { light: 8, medium: 16, strong: 24 }[sec.blurStrength || 'medium'] || 16;
       const igTile = { small: 160, medium: 220, large: 300 }[sec.tileSize || 'medium'] || 220;
+      const igReveal = (sec.revealStyle === 'clear-first' || sec.revealStyle === 'no-blur') ? sec.revealStyle : 'blur-first';
       const igStyle = `--ig-blur:${igBlur}px;--ig-tile:${igTile}px;`;
 
       const igTiles = igItems.map((it, i) => {
@@ -8180,10 +8254,11 @@ function renderCustomSection(sec, idx, isFirst, allSections, pageSlug) {
               ? `onclick="showPage('${escAttr(it.linkUrl)}','${escAttr(it.anchorId||'')}')" style="cursor:pointer;"`
               : `onclick="openSmartLink('${escAttr(it.linkType)}','${escAttr(it.linkUrl)}')" style="cursor:pointer;"`)
           : '';
-        const initialHtml = hasInitial ? `
+        const needsInitialLayer = hasInitial || (igReveal === 'blur-first' && hasText);
+        const initialHtml = needsInitialLayer ? `
           <div class="cps-ig-initial">
             <div class="cps-ig-initial-scrim"></div>
-            <div class="cps-ig-initial-title">${it.initialTitle}</div>
+            ${it.initialTitle ? `<div class="cps-ig-initial-title">${it.initialTitle}</div>` : ''}
           </div>` : '';
         const overlayHtml = hasText ? `
           <div class="cps-ig-overlay">
@@ -8202,7 +8277,7 @@ function renderCustomSection(sec, idx, isFirst, allSections, pageSlug) {
         ${labelHTML}
         ${sec.heading ? `<${headTag} class="${headClass} cps-heading reveal">${sec.heading}</${headTag}>` : ''}
         ${sec.body ? `<div class="section-subtitle reveal reveal-delay-1" style="${subtitleStyle}">${formatBody(sec.body)}</div>` : ''}
-        <div class="cps-ig-grid cps-ig-grid--gap-${igGap} cps-ig-grid--align-${igAlign}${igRounded ? ' cps-ig-grid--rounded' : ''}" style="${igStyle}">${igTiles}</div>
+        <div class="cps-ig-grid cps-ig-grid--gap-${igGap} cps-ig-grid--align-${igAlign} cps-ig-grid--reveal-${igReveal}${igRounded ? ' cps-ig-grid--rounded' : ''}" style="${igStyle}">${igTiles}</div>
       </div>`;
       break;
     }
