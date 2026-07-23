@@ -1141,12 +1141,19 @@ h2.section-title {
   margin-top: 4px;
 }
 /* ============ IMAGE GRID ============ */
-/* Tiles are a fixed size (set via --ig-tile) rather than N-per-row columns —
-   auto-fit + justify-content:center means the browser fits as many
+/* Tiles are a fixed size (width/height set via --ig-tile-w/--ig-tile-h,
+   computed per-section in the renderer) rather than N-per-row columns —
+   flex-wrap + justify-content:center means the browser fits as many
    same-sized tiles per row as the available width allows, wrapping to fewer
    (down to one) as the screen narrows, with no breakpoints or column-count
-   special-casing needed at all. Tile size never changes, only how many sit
-   side by side. */
+   special-casing needed at all. Tile Size always pins the SMALLER of the two
+   ratio numbers (e.g. the 3 in both 3:4 and 4:3) so "Large" always means the
+   same visual scale regardless of orientation — the other side scales up
+   from it, rather than Tile Size always mapping onto literal CSS width.
+   Tiles only shrink (flex-shrink + aspect-ratio, rather than a fixed height)
+   in the edge case where even a single tile doesn't fit the viewport width
+   (e.g. a wide/large tile on a narrow phone) — normal multi-per-row layout
+   never needs to shrink, since wrapping handles that instead. */
 .cps-ig-grid {
   display: flex;
   flex-wrap: wrap;
@@ -1159,9 +1166,11 @@ h2.section-title {
 .cps-ig-grid--rounded .cps-ig-tile { border-radius: 12px; }
 .cps-ig-tile {
   position: relative;
-  flex: 0 0 var(--ig-tile, 220px);
-  width: var(--ig-tile, 220px);
-  aspect-ratio: var(--ig-ratio, 1 / 1);
+  flex: 0 1 var(--ig-tile-w, 220px);
+  min-width: 0;
+  width: var(--ig-tile-w, 220px);
+  max-width: 100%;
+  aspect-ratio: var(--ig-tile-ratio, 1 / 1);
   overflow: hidden;
   background: var(--cream);
   z-index: 1;
@@ -8278,9 +8287,20 @@ function renderCustomSection(sec, idx, isFirst, allSections, pageSlug) {
       const igRounded = sec.roundedCorners !== false;
       const igBlur = { light: 8, medium: 16, strong: 24 }[sec.blurStrength || 'medium'] || 16;
       const igTile = { small: 160, medium: 220, large: 300 }[sec.tileSize || 'medium'] || 220;
-      const igRatio = { square: '1 / 1', landscape: '4 / 3', portrait: '3 / 4', wide: '16 / 9' }[sec.tileRatio || 'square'] || '1 / 1';
+      const igRatioParts = { square: [1,1], landscape: [4,3], portrait: [3,4], wide: [16,9] }[sec.tileRatio || 'square'] || [1,1];
+      const [igRw, igRh] = igRatioParts;
+      // Tile Size pins whichever side corresponds to the smaller ratio
+      // number, so "Large" reads as the same visual scale across every
+      // ratio — e.g. Landscape's smaller number (3) is its height, so
+      // height gets the tile size and width scales up from it, while
+      // Portrait's smaller number (3) is its width, so width gets the tile
+      // size instead. Without this, the side that happens to land on CSS
+      // width would silently determine the tile's actual footprint.
+      let igTileW, igTileH;
+      if (igRw <= igRh) { igTileW = igTile; igTileH = Math.round(igTile * igRh / igRw); }
+      else { igTileH = igTile; igTileW = Math.round(igTile * igRw / igRh); }
       const igReveal = (sec.revealStyle === 'clear-first' || sec.revealStyle === 'no-blur') ? sec.revealStyle : 'blur-first';
-      const igStyle = `--ig-blur:${igBlur}px;--ig-tile:${igTile}px;--ig-ratio:${igRatio};`;
+      const igStyle = `--ig-blur:${igBlur}px;--ig-tile-w:${igTileW}px;--ig-tile-h:${igTileH}px;--ig-tile-ratio:${igTileW} / ${igTileH};`;
 
       const igTiles = igItems.map((it, i) => {
         const hasText = !!(it.title || it.subtitle);
