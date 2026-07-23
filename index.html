@@ -27,6 +27,14 @@
   --chrome:     #000000;
   --cream:      #f9f6f0;
   --warm-white: #fffdf9;
+  /* Image Grid missing-image fallback shades — computed at runtime in
+     applyColors() as a darker version of each section mode's own background,
+     or a lighter version if that background is at/near pure black (see
+     igFallbackShade). These defaults are just a close approximation for
+     before JS runs, using the default palette above. */
+  --ig-fallback-light: #ebe9e5;
+  --ig-fallback-alt:   #e5e2dd;
+  --ig-fallback-dark:  #0e203b;
   --text-body:  #4a4740;
   --text-muted: #7a7670;
   --text-head:  #0f2340;
@@ -1140,8 +1148,8 @@ h2.section-title {
    special-casing needed at all. Tile size never changes, only how many sit
    side by side. */
 .cps-ig-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, var(--ig-tile, 220px));
+  display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   margin-top: 56px;
 }
@@ -1151,17 +1159,20 @@ h2.section-title {
 .cps-ig-grid--rounded .cps-ig-tile { border-radius: 12px; }
 .cps-ig-tile {
   position: relative;
+  flex: 0 0 var(--ig-tile, 220px);
   width: var(--ig-tile, 220px);
-  aspect-ratio: 1 / 1;
+  aspect-ratio: var(--ig-ratio, 1 / 1);
   overflow: hidden;
   background: var(--cream);
   z-index: 1;
   transition: transform 0.2s var(--ease-out), box-shadow 0.2s var(--ease-out);
 }
-/* Missing/broken image fallback color, matched to the section's own background mode */
-.cps-section-light .cps-ig-tile { background: var(--cream); }
-.cps-section-alt .cps-ig-tile { background: var(--warm-white); }
-.cps-section-dark .cps-ig-tile { background: #3a3a3a; }
+/* Missing/broken image fallback color: a darker shade of the section's own
+   background (lighter instead, if that background is at/near pure black —
+   see igFallbackShade in applyColors()) */
+.cps-section-light .cps-ig-tile { background: var(--ig-fallback-light); }
+.cps-section-alt .cps-ig-tile { background: var(--ig-fallback-alt); }
+.cps-section-dark .cps-ig-tile { background: var(--ig-fallback-dark); }
 .cps-ig-tile img {
   position: absolute; inset: 0;
   width: 100%; height: 100%;
@@ -5457,6 +5468,31 @@ function applyColors() {
   const goldRgb = hexToRgb(c.gold);
   if (navyRgb) document.documentElement.style.setProperty('--navy-rgb', navyRgb);
   if (goldRgb) document.documentElement.style.setProperty('--gold-rgb', goldRgb);
+  // Image Grid missing-image fallback shades: a darker version of each
+  // section mode's own background, or lighter if that background is at/near
+  // pure black (darkening black further wouldn't read as a visible tile).
+  document.documentElement.style.setProperty('--ig-fallback-light', igFallbackShade(c.warmWhite || '#fffdf9'));
+  document.documentElement.style.setProperty('--ig-fallback-alt',   igFallbackShade(c.cream || '#f9f6f0'));
+  document.documentElement.style.setProperty('--ig-fallback-dark',  igFallbackShade(c.navy));
+}
+
+function shadeHex(hex, amount) {
+  // amount: -1..1 — negative blends toward black (darken), positive toward white (lighten)
+  const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex || '');
+  if (!m) return hex;
+  const target = amount < 0 ? 0 : 255;
+  const t = Math.abs(amount);
+  const blend = v => Math.round(v + (target - v) * t);
+  const [r, g, b] = [m[1], m[2], m[3]].map(h => blend(parseInt(h, 16)));
+  return '#' + [r, g, b].map(v => v.toString(16).padStart(2, '0')).join('');
+}
+
+function igFallbackShade(hex) {
+  const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex || '');
+  if (!m) return hex;
+  const [r, g, b] = [m[1], m[2], m[3]].map(h => parseInt(h, 16));
+  const isNearBlack = (r + g + b) / 3 < 20;
+  return shadeHex(hex, isNearBlack ? 0.12 : -0.08);
 }
 
 function hexToRgb(hex) {
@@ -6781,9 +6817,9 @@ function initProcessObserver() {
 const _igTimers = new WeakMap();
 const IG_STAGES = [
   { cls: 'cps-ig-lift-on',   delay: 0   },
-  { cls: 'cps-ig-blur-on',   delay: 150 },
-  { cls: 'cps-ig-shadow-on', delay: 300 },
-  { cls: 'cps-ig-text-on',   delay: 500 },
+  { cls: 'cps-ig-blur-on',   delay: 100 },
+  { cls: 'cps-ig-shadow-on', delay: 150 },
+  { cls: 'cps-ig-text-on',   delay: 200 },
 ];
 function igScheduleReveal(tile) {
   if (_igTimers.has(tile)) return;
@@ -8242,8 +8278,9 @@ function renderCustomSection(sec, idx, isFirst, allSections, pageSlug) {
       const igRounded = sec.roundedCorners !== false;
       const igBlur = { light: 8, medium: 16, strong: 24 }[sec.blurStrength || 'medium'] || 16;
       const igTile = { small: 160, medium: 220, large: 300 }[sec.tileSize || 'medium'] || 220;
+      const igRatio = { square: '1 / 1', landscape: '4 / 3', portrait: '3 / 4', wide: '16 / 9' }[sec.tileRatio || 'square'] || '1 / 1';
       const igReveal = (sec.revealStyle === 'clear-first' || sec.revealStyle === 'no-blur') ? sec.revealStyle : 'blur-first';
-      const igStyle = `--ig-blur:${igBlur}px;--ig-tile:${igTile}px;`;
+      const igStyle = `--ig-blur:${igBlur}px;--ig-tile:${igTile}px;--ig-ratio:${igRatio};`;
 
       const igTiles = igItems.map((it, i) => {
         const hasText = !!(it.title || it.subtitle);
@@ -8267,7 +8304,7 @@ function renderCustomSection(sec, idx, isFirst, allSections, pageSlug) {
           </div>` : '';
         return `
         <div class="cps-ig-tile reveal reveal-delay-${(i % 4) + 1}" data-has-text="${hasText}" ${clickAttr}>
-          <img src="${escAttr(it.imagePath||'')}" alt="${escAttr(it.alt||it.title||it.initialTitle||'')}" loading="lazy"/>
+          ${it.imagePath ? `<img src="${escAttr(it.imagePath)}" alt="${escAttr(it.alt||'')}" loading="lazy" onerror="this.style.display='none'"/>` : ''}
           ${initialHtml}
           ${overlayHtml}
         </div>`;
